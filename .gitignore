@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.eggs/
+*.egg
+venv/
+.venv/
+env/
+
+# YOLO
+yolo/models/*.pt
+yolo/models/*.onnx
+yolo/datasets/campus/images/train/*
+yolo/datasets/campus/images/val/*
+yolo/datasets/campus/images/test/*
+yolo/datasets/campus/labels/train/*
+yolo/datasets/campus/labels/val/*
+yolo/datasets/campus/labels/test/*
+runs/
+
+# Frontend ONNX models
+frontend/models/*.onnx
+
+# Environment
+.env
+.env.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+docker-compose.override.yml

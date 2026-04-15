@@ -1,0 +1,348 @@
+{
+  "campus_name": "Campus Universitario Path2Class",
+  "version": "1.0.0",
+  "nodes": {
+    "A_F0_entrance_main": {
+      "label": "Ingresso principale, Edificio A",
+      "building": "A",
+      "floor": 0,
+      "type": "entrance",
+      "qr_id": "QR_A_F0_MAIN",
+      "accessible": true,
+      "coordinates": {"x": 0, "y": 0}
+    },
+    "A_F0_entrance_side": {
+      "label": "Ingresso laterale, Edificio A",
+      "building": "A",
+      "floor": 0,
+      "type": "entrance",
+      "qr_id": "QR_A_F0_SIDE",
+      "accessible": true,
+      "coordinates": {"x": 50, "y": 0}
+    },
+    "A_F0_hall": {
+      "label": "Atrio, Piano 0, Edificio A",
+      "building": "A",
+      "floor": 0,
+      "type": "corridor",
+      "qr_id": null,
+      "accessible": true,
+      "coordinates": {"x": 25, "y": 15}
+    },
+    "A_F0_corridor_north": {
+      "label": "Corridoio nord, Piano 0, Edificio A",
+      "building": "A",
+      "floor": 0,
+      "type": "corridor",
+      "qr_id": "QR_A_F0_CORNORTH",
+      "accessible": true,
+      "coordinates": {"x": 25, "y": 40}
+    },
+    "A_F0_corridor_south": {
+      "label": "Corridoio sud, Piano 0, Edificio A",
+      "building": "A",
+      "floor": 0,
+      "type": "corridor",
+      "qr_id": null,
+      "accessible": true,
+      "coordinates": {"x": 25, "y": -10}
+    },
+    "A_F0_stairs_east": {
+      "label": "Scale est, Piano 0, Edificio A",
+      "building": "A",
+      "floor": 0,
+      "type": "staircase",
+      "qr_id": null,
+      "accessible": false,
+      "coordinates": {"x": 45, "y": 40}
+    },
+    "A_F0_elevator": {
+      "label": "Ascensore, Piano 0, Edificio A",
+      "building": "A",
+      "floor": 0,
+      "type": "elevator",
+      "qr_id": null,
+      "accessible": true,
+      "coordinates": {"x": 48, "y": 40}
+    },
+    "A_F0_room_001": {
+      "label": "Aula 0.01",
+      "building": "A",
+      "floor": 0,
+      "type": "room",
+      "qr_id": null,
+      "accessible": true,
+      "coordinates": {"x": 10, "y": 40}
+    },
+    "A_F0_room_002": {
+      "label": "Aula 0.02",
+      "building": "A",
+      "floor": 0,
+      "type": "room",
+      "qr_id": null,
+      "accessible": true,
+      "coordinates": {"x": 18, "y": 40}
+    },
+    "A_F0_cafeteria": {
+      "label": "Caffetteria",
+      "building": "A",
+      "floor": 0,
+      "type": "landmark",
+      "qr_id": null,
+      "accessible": true,
+      "coordinates": {"x": 5, "y": 15}
+    },
+    "A_F1_stairs_east": {
+      "label": "Scale est, Piano 1, Edificio A",
+      "building": "A",
+      "floor": 1,
+      "type": "staircase",
+      "qr_id": null,
+      "accessible": false,
+      "coordinates": {"x": 45, "y": 40}
+    },
+    "A_F1_elevator": {
+      "label": "Ascensore, Piano 1, Edificio A",
+      "building": "A",
+      "floor": 1,
+      "type": "elevator",
+      "qr_id": null,
+      "accessible": true,
+      "coordinates": {"x": 48, "y": 40}
+    },
+    "A_F1_corridor_main": {
+      "label": "Corridoio principale, Piano 1, Edificio A",
+      "building": "A",
+      "floor": 1,
+      "type": "corridor",
+      "qr_id": "QR_A_F1_MAIN",
+      "accessible": true,
+      "coordinates": {"x": 25, "y": 40}
+    },
+    "A_F1_room_101": {
+      "label": "Aula 1.01",
+      "building": "A",
+      "floor": 1,
+      "type": "room",
+      "qr_id": null,
+      "accessible": true,
+      "coordinates": {"x": 10, "y": 40}
+    },
+    "A_F1_room_102": {
+      "label": "Aula 1.02",
+      "building": "A",
+      "floor": 1,
+      "type": "room",
+      "qr_id": null,
+      "accessible": true,
+      "coordinates": {"x": 18, "y": 40}
+    },
+    "A_F1_room_112": {
+      "label": "Laboratorio 1.12",
+      "building": "A",
+      "floor": 1,
+      "type": "room",
+      "qr_id": null,
+      "accessible": true,
+      "coordinates": {"x": 35, "y": 35}
+    },
+    "A_F1_room_118": {
+      "label": "Aula 1.18",
+      "building": "A",
+      "floor": 1,
+      "type": "room",
+      "qr_id": null,
+      "accessible": true,
+      "coordinates": {"x": 40, "y": 35}
+    },
+    "A_F1_room_122": {
+      "label": "Aula 1.22",
+      "building": "A",
+      "floor": 1,
+      "type": "room",
+      "qr_id": null,
+      "accessible": true,
+      "coordinates": {"x": 42, "y": 30}
+    },
+    "A_F2_stairs_east": {
+      "label": "Scale est, Piano 2, Edificio A",
+      "building": "A",
+      "floor": 2,
+      "type": "staircase",
+      "qr_id": null,
+      "accessible": false,
+      "coordinates": {"x": 45, "y": 40}
+    },
+    "A_F2_elevator": {
+      "label": "Ascensore, Piano 2, Edificio A",
+      "building": "A",
+      "floor": 2,
+      "type": "elevator",
+      "qr_id": null,
+      "accessible": true,
+      "coordinates": {"x": 48, "y": 40}
+    },
+    "A_F2_corridor_main": {
+      "label": "Corridoio principale, Piano 2, Edificio A",
+      "building": "A",
+      "floor": 2,
+      "type": "corridor",
+      "qr_id": "QR_A_F2_MAIN",
+      "accessible": true,
+      "coordinates": {"x": 25, "y": 40}
+    },
+    "A_F2_room_214": {
+      "label": "Aula 2.14",
+      "building": "A",
+      "floor": 2,
+      "type": "room",
+      "qr_id": null,
+      "accessible": true,
+      "coordinates": {"x": 30, "y": 35}
+    },
+    "A_F2_room_201": {
+      "label": "Aula 2.01",
+      "building": "A",
+      "floor": 2,
+      "type": "room",
+      "qr_id": null,
+      "accessible": true,
+      "coordinates": {"x": 10, "y": 40}
+    },
+    "A_F3_stairs_east": {
+      "label": "Scale est, Piano 3, Edificio A",
+      "building": "A",
+      "floor": 3,
+      "type": "staircase",
+      "qr_id": null,
+      "accessible": false,
+      "coordinates": {"x": 45, "y": 40}
+    },
+    "A_F3_elevator": {
+      "label": "Ascensore, Piano 3, Edificio A",
+      "building": "A",
+      "floor": 3,
+      "type": "elevator",
+      "qr_id": null,
+      "accessible": true,
+      "coordinates": {"x": 48, "y": 40}
+    },
+    "A_F3_corridor_main": {
+      "label": "Corridoio principale, Piano 3, Edificio A",
+      "building": "A",
+      "floor": 3,
+      "type": "corridor",
+      "qr_id": "QR_A_F3_MAIN",
+      "accessible": true,
+      "coordinates": {"x": 25, "y": 40}
+    },
+    "A_F3_room_302": {
+      "label": "Laboratorio 3.02",
+      "building": "A",
+      "floor": 3,
+      "type": "room",
+      "qr_id": null,
+      "accessible": true,
+      "coordinates": {"x": 15, "y": 35}
+    },
+    "A_F3_room_307": {
+      "label": "Aula 3.07",
+      "building": "A",
+      "floor": 3,
+      "type": "room",
+      "qr_id": null,
+      "accessible": true,
+      "coordinates": {"x": 30, "y": 35}
+    },
+    "B_F0_entrance_main": {
+      "label": "Ingresso principale, Edificio B",
+      "building": "B",
+      "floor": 0,
+      "type": "entrance",
+      "qr_id": "QR_B_F0_MAIN",
+      "accessible": true,
+      "coordinates": {"x": 100, "y": 0}
+    },
+    "B_F0_corridor_main": {
+      "label": "Corridoio principale, Piano 0, Edificio B",
+      "building": "B",
+      "floor": 0,
+      "type": "corridor",
+      "qr_id": null,
+      "accessible": true,
+      "coordinates": {"x": 100, "y": 20}
+    },
+    "B_F0_stairs": {
+      "label": "Scale, Piano 0, Edificio B",
+      "building": "B",
+      "floor": 0,
+      "type": "staircase",
+      "qr_id": null,
+      "accessible": false,
+      "coordinates": {"x": 110, "y": 20}
+    },
+    "B_F0_elevator": {
+      "label": "Ascensore, Piano 0, Edificio B",
+      "building": "B",
+      "floor": 0,
+      "type": "elevator",
+      "qr_id": null,
+      "accessible": true,
+      "coordinates": {"x": 112, "y": 20}
+    },
+    "outdoor_path_A_B": {
+      "label": "Percorso esterno tra Edificio A e Edificio B",
+      "building": null,
+      "floor": 0,
+      "type": "outdoor",
+      "qr_id": null,
+      "accessible": true,
+      "coordinates": {"x": 70, "y": 0}
+    }
+  },
+  "edges": [
+    {"from": "A_F0_entrance_main", "to": "A_F0_hall", "distance": 15, "type": "corridor", "accessible": true},
+    {"from": "A_F0_entrance_side", "to": "A_F0_hall", "distance": 20, "type": "corridor", "accessible": true},
+    {"from": "A_F0_hall", "to": "A_F0_corridor_north", "distance": 25, "type": "corridor", "accessible": true},
+    {"from": "A_F0_hall", "to": "A_F0_corridor_south", "distance": 15, "type": "corridor", "accessible": true},
+    {"from": "A_F0_hall", "to": "A_F0_cafeteria", "distance": 10, "type": "corridor", "accessible": true},
+    {"from": "A_F0_corridor_north", "to": "A_F0_room_001", "distance": 8, "type": "corridor", "accessible": true},
+    {"from": "A_F0_corridor_north", "to": "A_F0_room_002", "distance": 5, "type": "corridor", "accessible": true},
+    {"from": "A_F0_corridor_north", "to": "A_F0_stairs_east", "distance": 20, "type": "corridor", "accessible": true},
+    {"from": "A_F0_corridor_north", "to": "A_F0_elevator", "distance": 22, "type": "corridor", "accessible": true},
+
+    {"from": "A_F0_stairs_east", "to": "A_F1_stairs_east", "distance": 12, "type": "staircase", "accessible": false},
+    {"from": "A_F0_elevator", "to": "A_F1_elevator", "distance": 10, "type": "elevator", "accessible": true},
+
+    {"from": "A_F1_stairs_east", "to": "A_F1_corridor_main", "distance": 5, "type": "corridor", "accessible": true},
+    {"from": "A_F1_elevator", "to": "A_F1_corridor_main", "distance": 5, "type": "corridor", "accessible": true},
+    {"from": "A_F1_corridor_main", "to": "A_F1_room_101", "distance": 10, "type": "corridor", "accessible": true},
+    {"from": "A_F1_corridor_main", "to": "A_F1_room_102", "distance": 8, "type": "corridor", "accessible": true},
+    {"from": "A_F1_corridor_main", "to": "A_F1_room_112", "distance": 15, "type": "corridor", "accessible": true},
+    {"from": "A_F1_corridor_main", "to": "A_F1_room_118", "distance": 18, "type": "corridor", "accessible": true},
+    {"from": "A_F1_corridor_main", "to": "A_F1_room_122", "distance": 20, "type": "corridor", "accessible": true},
+
+    {"from": "A_F1_stairs_east", "to": "A_F2_stairs_east", "distance": 12, "type": "staircase", "accessible": false},
+    {"from": "A_F1_elevator", "to": "A_F2_elevator", "distance": 10, "type": "elevator", "accessible": true},
+
+    {"from": "A_F2_stairs_east", "to": "A_F2_corridor_main", "distance": 5, "type": "corridor", "accessible": true},
+    {"from": "A_F2_elevator", "to": "A_F2_corridor_main", "distance": 5, "type": "corridor", "accessible": true},
+    {"from": "A_F2_corridor_main", "to": "A_F2_room_214", "distance": 12, "type": "corridor", "accessible": true},
+    {"from": "A_F2_corridor_main", "to": "A_F2_room_201", "distance": 10, "type": "corridor", "accessible": true},
+
+    {"from": "A_F2_stairs_east", "to": "A_F3_stairs_east", "distance": 12, "type": "staircase", "accessible": false},
+    {"from": "A_F2_elevator", "to": "A_F3_elevator", "distance": 10, "type": "elevator", "accessible": true},
+
+    {"from": "A_F3_stairs_east", "to": "A_F3_corridor_main", "distance": 5, "type": "corridor", "accessible": true},
+    {"from": "A_F3_elevator", "to": "A_F3_corridor_main", "distance": 5, "type": "corridor", "accessible": true},
+    {"from": "A_F3_corridor_main", "to": "A_F3_room_302", "distance": 10, "type": "corridor", "accessible": true},
+    {"from": "A_F3_corridor_main", "to": "A_F3_room_307", "distance": 15, "type": "corridor", "accessible": true},
+
+    {"from": "A_F0_entrance_main", "to": "outdoor_path_A_B", "distance": 40, "type": "outdoor", "accessible": true},
+    {"from": "outdoor_path_A_B", "to": "B_F0_entrance_main", "distance": 40, "type": "outdoor", "accessible": true},
+
+    {"from": "B_F0_entrance_main", "to": "B_F0_corridor_main", "distance": 10, "type": "corridor", "accessible": true},
+    {"from": "B_F0_corridor_main", "to": "B_F0_stairs", "distance": 15, "type": "corridor", "accessible": true},
+    {"from": "B_F0_corridor_main", "to": "B_F0_elevator", "distance": 17, "type": "corridor", "accessible": true}
+  ]
+}

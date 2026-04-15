@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#16213e">
+  <meta name="description" content="Path2Class — Navigazione AR nel campus universitario">
+
+  <title>Path2Class</title>
+
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- ===== SCREEN: Start (QR scan / destination selection) ===== -->
+  <div id="screen-start" class="screen active">
+    <header class="app-header">
+      <h1>Path2Class</h1>
+      <p class="subtitle">Navigazione campus</p>
+    </header>
+
+    <div class="card" id="location-info" style="display:none;">
+      <p class="label">Sei qui:</p>
+      <p class="value" id="current-location-label">—</p>
+    </div>
+
+    <div class="card">
+      <label for="destination-select">Dove vuoi andare?</label>
+      <input type="text" id="destination-search" placeholder="Cerca aula, laboratorio, ufficio..." autocomplete="off">
+      <ul id="destination-list" class="destination-list"></ul>
+    </div>
+
+    <div class="card">
+      <label for="accessibility-toggle">
+        <input type="checkbox" id="accessibility-toggle">
+        Evita le scale (percorso accessibile)
+      </label>
+    </div>
+
+    <div class="card">
+      <label>Lingua assistente:</label>
+      <select id="language-select">
+        <option value="it" selected>Italiano</option>
+        <option value="en">English</option>
+        <option value="pt">Portugues</option>
+        <option value="es">Espanol</option>
+      </select>
+    </div>
+
+    <button id="btn-start-ar" class="btn-primary" disabled>Naviga con AR</button>
+    <button id="btn-start-text" class="btn-secondary" disabled>Naviga con testo</button>
+
+    <div id="qr-scan-area" class="card">
+      <p>Oppure scansiona un QR code Path2Class per impostare la tua posizione:</p>
+      <button id="btn-scan-qr" class="btn-secondary">Scansiona QR</button>
+    </div>
+  </div>
+
+  <!-- ===== SCREEN: AR Navigation ===== -->
+  <div id="screen-ar" class="screen">
+    <div class="ar-container">
+      <video id="camera-feed" autoplay playsinline muted></video>
+      <canvas id="ar-canvas"></canvas>
+    </div>
+
+    <div id="ar-status-bar" class="status-bar">
+      <span id="ar-status-text">Inizializzazione...</span>
+      <span id="ar-step-counter"></span>
+    </div>
+
+    <div id="ar-next-step" class="ar-step-card">
+      <p id="ar-step-label">—</p>
+    </div>
+
+    <div class="ar-bottom-bar">
+      <button id="btn-ar-chat" class="btn-icon" title="Chiedi aiuto">💬</button>
+      <button id="btn-ar-text-mode" class="btn-icon" title="Modalita testo">📝</button>
+      <button id="btn-ar-stop" class="btn-icon" title="Termina">✕</button>
+    </div>
+  </div>
+
+  <!-- ===== SCREEN: Text Navigation ===== -->
+  <div id="screen-text" class="screen">
+    <header class="app-header">
+      <h1>Path2Class</h1>
+      <button id="btn-text-back" class="btn-back">← Indietro</button>
+    </header>
+
+    <div class="card">
+      <h2>Istruzioni percorso</h2>
+      <p id="text-route-summary"></p>
+      <ol id="text-route-steps" class="route-steps"></ol>
+    </div>
+
+    <button id="btn-text-chat" class="btn-primary">Chiedi aiuto all'assistente</button>
+  </div>
+
+  <!-- ===== PANEL: Chat (overlay) ===== -->
+  <div id="chat-panel" class="chat-panel">
+    <div class="chat-header">
+      <span>Assistente Path2Class</span>
+      <button id="btn-chat-close" class="btn-close">✕</button>
+    </div>
+    <div id="chat-messages" class="chat-messages"></div>
+    <div class="chat-input-bar">
+      <input type="text" id="chat-input" placeholder="Scrivi un messaggio..." autocomplete="off">
+      <button id="btn-chat-send" class="btn-send">Invia</button>
+    </div>
+  </div>
+
+  <!-- ===== SCREEN: Arrival ===== -->
+  <div id="screen-arrival" class="screen">
+    <div class="arrival-content">
+      <div class="arrival-icon">&#10003;</div>
+      <h2>Sei arrivato!</h2>
+      <p id="arrival-destination">—</p>
+      <button id="btn-new-navigation" class="btn-primary">Nuova navigazione</button>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/api-client.js"></script>
+  <script src="js/orientation.js"></script>
+  <script src="js/camera.js"></script>
+  <script src="js/ar-overlay.js"></script>
+  <script src="js/qr-scanner.js"></script>
+  <script src="js/navigation.js"></script>
+  <script src="js/chat.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

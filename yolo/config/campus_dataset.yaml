@@ -1,0 +1,23 @@
+# Path2Class — YOLO Dataset Configuration
+# Used by Ultralytics YOLOv8 for training, validation and testing.
+
+# Paths (relative to this file, or absolute)
+path: ../datasets/campus
+train: images/train
+val: images/val
+test: images/test
+
+# Number of classes
+nc: 9
+
+# Class names (order must match annotation class_id)
+names:
+  0: sign_room_number
+  1: sign_building_name
+  2: direction_arrow
+  3: entrance_door
+  4: elevator_door
+  5: staircase
+  6: ramp
+  7: path2class_qr
+  8: campus_landmark
