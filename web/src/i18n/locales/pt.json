@@ -1,0 +1,117 @@
+{
+  "common": {
+    "back": "Voltar",
+    "close": "Fechar",
+    "live": "Ao vivo",
+    "eta": "TCE",
+    "from": "De",
+    "to": "Para",
+    "nearby": "Por perto",
+    "recents": "Recentes",
+    "you_are_at": "Você está em"
+  },
+  "splash": {
+    "tagline": "PERDIDO? NUNCA MAIS.",
+    "simulate_qr": "Simular leitura do QR",
+    "campus_name": "ORIENT GREEN CAMPUS"
+  },
+  "landing": {
+    "location_title": "Orient Green Campus — 1º Andar",
+    "location_sub": "Ala Oeste",
+    "search_placeholder": "Buscar sala ou serviço...",
+    "search_aria": "Buscar sala ou serviço",
+    "change_language_aria": "Alterar idioma",
+    "accessible_route": "Rota acessível",
+    "room_21w": "21 W",
+    "room_21w_meta": "Sala de aula · 2º andar ala oeste",
+    "invalid_loc_title": "QR code desconhecido",
+    "invalid_loc_body": "Não reconhecemos {{loc}}. Tente escanear novamente.",
+    "invalid_loc_back": "Voltar ao início",
+    "nearby_items": {
+      "notice_board": {
+        "name": "Mural de avisos",
+        "meta": "Corredor oeste · 2ºA"
+      },
+      "elevator": {
+        "name": "Elevador",
+        "meta": "Corredor oeste · entrada"
+      },
+      "emergency_exit": {
+        "name": "Saída de emergência",
+        "meta": "Escada leste"
+      }
+    }
+  },
+  "destination": {
+    "eyebrow": "Destino",
+    "accessible_chip": "Rota acessível via elevador",
+    "title": "Sala 21 W",
+    "meta": "Sala de aula · 2º andar · Ala Oeste",
+    "eta_minutes": "~{{minutes}} min",
+    "distance_meters": "{{m}} m",
+    "cta_ar": "Iniciar navegação AR",
+    "cta_text": "Usar instruções em texto"
+  },
+  "permission": {
+    "title": "Acesso à câmera necessário",
+    "body": "O Path2Class usa sua câmera para sobrepor direções ao corredor em tempo real. O vídeo nunca sai do seu dispositivo.",
+    "allow": "Permitir",
+    "use_text": "Usar instruções em texto"
+  },
+  "ar": {
+    "area_label": "Prédio B · 2ºA Oeste",
+    "close_aria": "Fechar AR",
+    "switch_aria": "Alternar para instruções em texto",
+    "progress_aria": "Progresso da rota",
+    "instruction_standard": "Siga em frente, 15 m",
+    "instruction_accessible": "Vire à esquerda em direção ao elevador, 8 m",
+    "next_line": "A seguir: Sala 17 W à sua esquerda",
+    "eta_label": "~90s",
+    "demo": {
+      "label": "Demo",
+      "wrong_turn": "Curva errada",
+      "arrive": "Chegar",
+      "a11y": "A11y"
+    },
+    "deviation": {
+      "aria": "Direção errada, recalculando rota",
+      "title": "Direção errada",
+      "body": "Recalculando sua rota…"
+    }
+  },
+  "text_nav": {
+    "eyebrow": "Instruções em texto",
+    "from_location": "Entrada B · 2ºA",
+    "floor_plan_title": "Planta · 2ºA Oeste",
+    "cta_next": "Cheguei ao próximo ponto",
+    "cta_arrived": "Cheguei",
+    "steps_standard": [
+      { "icon": "arrow-up", "text": "Saia da entrada do corredor, siga em frente por 12 m." },
+      { "icon": "door", "text": "Passe pela Sala 17 W à sua esquerda." },
+      { "icon": "bookmark", "text": "Siga adiante passando pelo mural de avisos." },
+      { "icon": "door", "text": "Sala 21 W à sua direita. Porta com placa azul." }
+    ],
+    "steps_accessible": [
+      { "icon": "arrow-up", "text": "Vire à esquerda na entrada para alcançar o elevador (8 m)." },
+      { "icon": "elevator", "text": "Pegue o elevador até o 2º andar." },
+      { "icon": "arrow-up", "text": "Saia do elevador, vire à direita no corredor." },
+      { "icon": "door", "text": "Siga em frente. Sala 21 W à sua direita." }
+    ]
+  },
+  "arrived": {
+    "title": "Você chegou",
+    "subtitle": "Sala 21 W — 2º andar ala oeste",
+    "matches_title": "Corresponde ao ambiente",
+    "matches_body": "Porta azul · placa 21 W",
+    "actions": {
+      "save": "Salvar",
+      "report": "Reportar",
+      "feedback": "Feedback"
+    },
+    "navigate_elsewhere": "Ir para outro lugar"
+  },
+  "assistant": {
+    "open_aria": "Abrir assistente",
+    "welcome": "Olá! Posso ajudar você a se orientar, simplificar instruções ou responder perguntas sobre este corredor."
+  }
+}

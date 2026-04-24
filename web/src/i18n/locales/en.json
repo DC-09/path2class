@@ -1,0 +1,117 @@
+{
+  "common": {
+    "back": "Back",
+    "close": "Close",
+    "live": "Live",
+    "eta": "ETA",
+    "from": "From",
+    "to": "To",
+    "nearby": "Nearby",
+    "recents": "Recents",
+    "you_are_at": "You are at"
+  },
+  "splash": {
+    "tagline": "LOST? NOT ANYMORE",
+    "simulate_qr": "Simulate QR scan",
+    "campus_name": "ORIENTE GREEN CAMPUS"
+  },
+  "landing": {
+    "location_title": "Orient Green Campus — 1st Floor",
+    "location_sub": "West Wing",
+    "search_placeholder": "Search room or service...",
+    "search_aria": "Search room or service",
+    "change_language_aria": "Change language",
+    "accessible_route": "Accessible route",
+    "room_21w": "21 W",
+    "room_21w_meta": "Classroom · 2nd floor west wing",
+    "invalid_loc_title": "Unknown QR code",
+    "invalid_loc_body": "We couldn't recognise {{loc}}. Please try scanning again.",
+    "invalid_loc_back": "Back to start",
+    "nearby_items": {
+      "notice_board": {
+        "name": "Notice board",
+        "meta": "West corridor · 2F"
+      },
+      "elevator": {
+        "name": "Elevator",
+        "meta": "West corridor · entrance"
+      },
+      "emergency_exit": {
+        "name": "Emergency exit",
+        "meta": "East stairwell"
+      }
+    }
+  },
+  "destination": {
+    "eyebrow": "Destination",
+    "accessible_chip": "Accessible route via elevator",
+    "title": "Room 21 W",
+    "meta": "Classroom · 2nd floor · West wing",
+    "eta_minutes": "~{{minutes}} min",
+    "distance_meters": "{{m}} m",
+    "cta_ar": "Start AR navigation",
+    "cta_text": "Use text directions"
+  },
+  "permission": {
+    "title": "Camera access needed",
+    "body": "Path2Class uses your camera to overlay directions onto the corridor in real time. Your video feed never leaves your device.",
+    "allow": "Allow",
+    "use_text": "Use text directions instead"
+  },
+  "ar": {
+    "area_label": "Building B · 2F West",
+    "close_aria": "Close AR",
+    "switch_aria": "Switch to text directions",
+    "progress_aria": "Route progress",
+    "instruction_standard": "Continue straight, 15 m",
+    "instruction_accessible": "Turn left to the elevator, 8 m",
+    "next_line": "Next: Room 17 W on your left",
+    "eta_label": "~90s",
+    "demo": {
+      "label": "Demo",
+      "wrong_turn": "Wrong turn",
+      "arrive": "Arrive",
+      "a11y": "A11y"
+    },
+    "deviation": {
+      "aria": "Wrong direction, recalculating route",
+      "title": "Wrong direction",
+      "body": "Recalculating your route…"
+    }
+  },
+  "text_nav": {
+    "eyebrow": "Text directions",
+    "from_location": "Entrance B · 2F",
+    "floor_plan_title": "Floor plan · 2F West",
+    "cta_next": "I've reached the next landmark",
+    "cta_arrived": "I've arrived",
+    "steps_standard": [
+      { "icon": "arrow-up", "text": "Leave the corridor entrance, walk straight 12 m." },
+      { "icon": "door", "text": "Pass Room 17 W on your left." },
+      { "icon": "bookmark", "text": "Continue past the notice board." },
+      { "icon": "door", "text": "Room 21 W on your right. Blue door sign." }
+    ],
+    "steps_accessible": [
+      { "icon": "arrow-up", "text": "Turn left at entrance to reach elevator (8 m)." },
+      { "icon": "elevator", "text": "Take elevator to floor 2." },
+      { "icon": "arrow-up", "text": "Exit elevator, turn right into corridor." },
+      { "icon": "door", "text": "Continue straight. Room 21 W on your right." }
+    ]
+  },
+  "arrived": {
+    "title": "You've arrived",
+    "subtitle": "Room 21 W — 2nd floor west wing",
+    "matches_title": "Matches your surroundings",
+    "matches_body": "Blue door · number plate 21 W",
+    "actions": {
+      "save": "Save",
+      "report": "Report",
+      "feedback": "Feedback"
+    },
+    "navigate_elsewhere": "Navigate somewhere else"
+  },
+  "assistant": {
+    "open_aria": "Open assistant",
+    "welcome": "Hi! I can help you navigate, simplify instructions, or answer questions about this corridor."
+  }
+}

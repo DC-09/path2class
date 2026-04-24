@@ -28,6 +28,9 @@ frontend/models/*.onnx
 .env
 .env.local
 
+# Claude Code project-local state
+.claude/
+
 # IDE
 .vscode/
 .idea/

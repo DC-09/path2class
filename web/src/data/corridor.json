@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "locationKey": "entrance_b_corridor_2w",
+  "building": "B",
+  "floor": 2,
+  "destination": {
+    "nodeId": "room_21w",
+    "etaMinutes": { "standard": 2, "accessible": 3 },
+    "distanceMeters": 42
+  }
+}

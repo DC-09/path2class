@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Path2Class — Interactive Prototype</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #1E3A5F;
+    --cyan: #7BC4D9;
+    --cyan-glow: #A8E3F5;
+    --amber: #F5B946;
+    --coral: #E86A5C;
+    --sand: #E8DFC9;
+    --bg-top: #F4F3EF;
+    --bg-bot: #DDD6C4;
+  }
+  html, body, #root {
+    margin: 0; padding: 0; height: 100%; width: 100%;
+    background: #0D0E11;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    color: var(--navy);
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+  .ease-glass { transition-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1); }
+  .press:active { transform: scale(0.98); }
+
+  /* Warm gradient background for the in-phone screens */
+  .warm-bg {
+    background: radial-gradient(ellipse at 50% 0%, #F4F3EF 0%, #E8DFC9 55%, #DDD6C4 100%);
+    position: relative;
+  }
+  .warm-bg::before {
+    content: "";
+    position: absolute; inset: 0;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.12  0 0 0 0 0.10  0 0 0 0 0.06  0 0 0 0.35 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/></svg>");
+    opacity: 0.25;
+    mix-blend-mode: multiply;
+  }
+
+  /* Glass surface — specular rim, convex lens, hairline border */
+  .glass {
+    position: relative;
+    background: rgba(232, 223, 201, 0.10);
+    -webkit-backdrop-filter: blur(24px) saturate(150%);
+    backdrop-filter: blur(24px) saturate(150%);
+    border: 1px solid rgba(255,255,255,0.22);
+    box-shadow: 0 18px 40px -12px rgba(30,58,95,0.22), 0 2px 6px rgba(30,58,95,0.08);
+  }
+  .glass::before {
+    /* Top specular rim — 2px gradient */
+    content: "";
+    position: absolute; left: 0; right: 0; top: 0; height: 2px;
+    background: linear-gradient(to bottom, rgba(255,255,255,0.55), rgba(255,255,255,0));
+    pointer-events: none;
+    border-top-left-radius: inherit;
+    border-top-right-radius: inherit;
+  }
+  .glass::after {
+    /* Convex lens secondary highlight at 30% from top */
+    content: "";
+    position: absolute; left: 6%; right: 6%; top: 28%; height: 1px;
+    background: rgba(255,255,255,0.18);
+    pointer-events: none;
+    filter: blur(0.3px);
+  }
+  .glass-strong {
+    background: rgba(255, 255, 255, 0.55);
+    -webkit-backdrop-filter: blur(40px) saturate(160%);
+    backdrop-filter: blur(40px) saturate(160%);
+  }
+  .glass-light {
+    background: rgba(255, 255, 255, 0.36);
+  }
+
+  /* Cyan glow button */
+  .cyan-fill {
+    background: linear-gradient(180deg, #A8E3F5 0%, #7BC4D9 100%);
+    color: #0F2640;
+    box-shadow: 0 10px 30px -6px rgba(123,196,217,0.55), inset 0 1px 0 rgba(255,255,255,0.6);
+  }
+  .cyan-glow-soft { box-shadow: 0 0 24px rgba(168,227,245,0.55); }
+  .amber-glow { box-shadow: 0 0 24px rgba(245,185,70,0.45); }
+
+  /* Animations */
+  @keyframes floaty { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-6px) } }
+  .floaty { animation: floaty 4s ease-in-out infinite; }
+
+  @keyframes pulseCyan {
+    0%,100% { transform: scale(1); opacity: 1; filter: drop-shadow(0 0 12px rgba(168,227,245,0.7)); }
+    50%    { transform: scale(1.05); opacity: 0.85; filter: drop-shadow(0 0 22px rgba(168,227,245,0.95)); }
+  }
+  .pulse-cyan { animation: pulseCyan 2s ease-in-out infinite; transform-origin: center; }
+
+  @keyframes pulseDot { 0%,100% { opacity:1; transform:scale(1) } 50% { opacity:0.4; transform:scale(0.8) } }
+  .pulse-dot { animation: pulseDot 1.4s ease-in-out infinite; }
+
+  @keyframes pulseAmber {
+    0%,100% { box-shadow: 0 0 16px rgba(245,185,70,0.35); }
+    50%    { box-shadow: 0 0 32px rgba(245,185,70,0.70); }
+  }
+  .pulse-amber { animation: pulseAmber 2.2s ease-in-out infinite; }
+
+  @keyframes typing { 0%,100% { opacity: 0.3; transform: translateY(0) } 50% { opacity: 1; transform: translateY(-2px) } }
+  .typing-dot { animation: typing 1s ease-in-out infinite; }
+
+  @keyframes confetti {
+    0%   { transform: translate(0,-40px) rotate(0deg); opacity: 0 }
+    10%  { opacity: 1 }
+    100% { transform: translate(var(--dx), 520px) rotate(var(--rot)); opacity: 0 }
+  }
+  .confetti { animation: confetti var(--dur) linear infinite; animation-delay: var(--delay); }
+
+  @keyframes ringSweep { from { stroke-dashoffset: 283 } to { stroke-dashoffset: 0 } }
+  .ring-sweep { animation: ringSweep 2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+
+  @keyframes fadeSlide {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .scene-in { animation: fadeSlide 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+
+  @keyframes sheetUp {
+    from { transform: translateY(100%); }
+    to   { transform: translateY(0); }
+  }
+  .sheet-up { animation: sheetUp 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); }
+
+  @keyframes backdropIn { from { opacity: 0 } to { opacity: 1 } }
+  .backdrop-in { animation: backdropIn 0.3s ease-out; }
+
+  .tight { letter-spacing: -0.02em; }
+  .wide  { letter-spacing: 0.16em; }
+
+  /* Hide scrollbars in chat */
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+  /* Phone frame specular */
+  .phone-shell {
+    background: linear-gradient(135deg, #3A3A3C 0%, #1C1C1E 60%, #2C2C2E 100%);
+    box-shadow:
+      0 60px 120px -20px rgba(0,0,0,0.7),
+      inset 0 0 0 1px rgba(255,255,255,0.06),
+      inset 2px 2px 0 rgba(255,255,255,0.12);
+    position: relative;
+  }
+  .phone-shell::before {
+    content: "";
+    position: absolute; top: 2px; left: 10%; right: 60%; height: 1px;
+    background: linear-gradient(to right, transparent, rgba(255,255,255,0.35), transparent);
+    border-radius: inherit;
+    pointer-events: none;
+  }
+
+  /* Ambient light behind phone */
+  .ambient {
+    position: absolute;
+    width: 900px; height: 900px;
+    border-radius: 999px;
+    background: radial-gradient(circle, rgba(123,196,217,0.10) 0%, rgba(123,196,217,0) 60%);
+    pointer-events: none;
+    filter: blur(20px);
+  }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel" data-presets="react" src="./src/glass.jsx"></script>
+<script type="text/babel" data-presets="react" src="./src/icons.jsx"></script>
+<script type="text/babel" data-presets="react" src="./src/screens_basic.jsx"></script>
+<script type="text/babel" data-presets="react" src="./src/screen_ar.jsx"></script>
+<script type="text/babel" data-presets="react" src="./src/screen_text.jsx"></script>
+<script type="text/babel" data-presets="react" src="./src/screen_arrival.jsx"></script>
+<script type="text/babel" data-presets="react" src="./src/chat.jsx"></script>
+<script type="text/babel" data-presets="react" src="./src/app.jsx"></script>
+</body>
+</html>

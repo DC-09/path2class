@@ -1,0 +1,1186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Path2Class — Interactive Prototype</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --warm-top: #F4F3EF;
+    --warm-bot: #DDD6C4;
+    --glass-tint: #E8DFC9;
+    --cyan: #7BC4D9;
+    --cyan-glow: #A8E3F5;
+    --navy: #1E3A5F;
+    --amber: #F5B946;
+    --coral: #E86A5C;
+  }
+  html, body, #root { height: 100%; margin: 0; }
+  body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background: #0D0E11;
+    color: var(--navy);
+    -webkit-font-smoothing: antialiased;
+    overflow: hidden;
+  }
+  .warm-bg {
+    background:
+      radial-gradient(ellipse at top, #F4F3EF 0%, #E8E1D0 55%, #DDD6C4 100%);
+    position: relative;
+  }
+  .warm-bg::after {
+    content: '';
+    position: absolute; inset: 0;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.2  0 0 0 0 0.18  0 0 0 0 0.14  0 0 0 0.08 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    opacity: 0.5;
+    mix-blend-mode: multiply;
+    pointer-events: none;
+  }
+  .ambient-stage {
+    background:
+      radial-gradient(ellipse at center top, #1c1f26 0%, #0D0E11 55%),
+      #0D0E11;
+  }
+  /* Liquid Glass */
+  .glass {
+    background: rgba(255,255,255,0.32);
+    backdrop-filter: blur(24px) saturate(150%);
+    -webkit-backdrop-filter: blur(24px) saturate(150%);
+    border: 1px solid rgba(255,255,255,0.28);
+    box-shadow:
+      0 16px 40px -12px rgba(30,58,95,0.25),
+      inset 0 1px 0 0 rgba(255,255,255,0.45);
+    position: relative;
+  }
+  .glass::before {
+    content: '';
+    position: absolute; left: 0; right: 0; top: 0;
+    height: 40%;
+    background: linear-gradient(to bottom, rgba(255,255,255,0.18), rgba(255,255,255,0));
+    border-radius: inherit;
+    pointer-events: none;
+  }
+  .glass-strong {
+    background: rgba(255,255,255,0.55);
+    backdrop-filter: blur(36px) saturate(160%);
+    -webkit-backdrop-filter: blur(36px) saturate(160%);
+    border: 1px solid rgba(255,255,255,0.32);
+    box-shadow:
+      0 30px 60px -20px rgba(30,58,95,0.35),
+      inset 0 1px 0 0 rgba(255,255,255,0.55);
+  }
+  .glass-dim {
+    background: rgba(255,255,255,0.18);
+    backdrop-filter: blur(18px) saturate(140%);
+    -webkit-backdrop-filter: blur(18px) saturate(140%);
+    border: 1px solid rgba(255,255,255,0.2);
+  }
+  .cyan-glow {
+    background: linear-gradient(180deg, #8ED3E5 0%, #5FB1C9 100%);
+    box-shadow:
+      0 10px 30px -6px rgba(123,196,217,0.6),
+      0 0 0 1px rgba(255,255,255,0.4) inset,
+      0 -4px 10px rgba(30,58,95,0.15) inset;
+    color: #0F2438;
+  }
+  .amber-glow { box-shadow: 0 0 24px rgba(245,185,70,0.5), 0 0 0 1px rgba(245,185,70,0.4) inset; }
+  .coral-glow { box-shadow: 0 0 28px rgba(232,106,92,0.45); }
+
+  .tight { letter-spacing: -0.02em; }
+  .trk-wide { letter-spacing: 0.14em; }
+
+  /* Phone frame */
+  .phone-frame {
+    width: 414px; height: 868px;
+    border-radius: 56px;
+    background: linear-gradient(145deg, #3a3a3d 0%, #1c1c1e 40%, #2a2a2c 100%);
+    padding: 12px;
+    box-shadow:
+      0 50px 100px -30px rgba(0,0,0,0.7),
+      0 0 0 2px rgba(255,255,255,0.04),
+      inset 0 2px 1px rgba(255,255,255,0.1);
+    position: relative;
+  }
+  .phone-frame::before {
+    content: '';
+    position: absolute;
+    inset: 2px;
+    border-radius: 54px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0) 30%);
+    pointer-events: none;
+  }
+  .phone-screen {
+    width: 100%; height: 100%;
+    border-radius: 44px;
+    overflow: hidden;
+    position: relative;
+    background: #E8E1D0;
+  }
+  .dynamic-island {
+    position: absolute; top: 10px; left: 50%; transform: translateX(-50%);
+    width: 120px; height: 34px;
+    background: #0a0a0a;
+    border-radius: 22px;
+    z-index: 200;
+  }
+  .home-indicator {
+    position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%);
+    width: 134px; height: 5px;
+    background: rgba(10,10,10,0.65);
+    border-radius: 100px;
+    z-index: 200;
+  }
+
+  /* Animations */
+  @keyframes float-y { 0%,100% { transform: translateY(0);} 50% { transform: translateY(-6px);} }
+  @keyframes pulse-cyan {
+    0%,100% { transform: scale(1); opacity: 1; filter: drop-shadow(0 0 12px rgba(168,227,245,0.7));}
+    50% { transform: scale(1.05); opacity: 0.85; filter: drop-shadow(0 0 28px rgba(168,227,245,1));}
+  }
+  @keyframes pulse-amber {
+    0%,100% { box-shadow: 0 0 24px rgba(245,185,70,0.5), 0 0 0 1px rgba(245,185,70,0.4) inset;}
+    50% { box-shadow: 0 0 40px rgba(245,185,70,0.85), 0 0 0 1px rgba(245,185,70,0.7) inset;}
+  }
+  @keyframes pulse-dot {
+    0%,100% { opacity: 0.4; transform: scale(0.8);}
+    50% { opacity: 1; transform: scale(1.15);}
+  }
+  @keyframes typing {
+    0%,60%,100% { opacity: 0.3; transform: translateY(0);}
+    30% { opacity: 1; transform: translateY(-3px);}
+  }
+  @keyframes fall {
+    0% { transform: translateY(-20px) rotate(0deg); opacity: 0;}
+    15% { opacity: 1;}
+    100% { transform: translateY(900px) rotate(720deg); opacity: 0;}
+  }
+  @keyframes fade-in {
+    from { opacity: 0; transform: translateY(10px);}
+    to { opacity: 1; transform: translateY(0);}
+  }
+  @keyframes slide-up {
+    from { transform: translateY(100%);}
+    to { transform: translateY(0);}
+  }
+  @keyframes draw-ring {
+    to { stroke-dashoffset: 0;}
+  }
+  .float-y { animation: float-y 4s ease-in-out infinite;}
+  .pulse-cyan { animation: pulse-cyan 2s ease-in-out infinite;}
+  .pulse-amber { animation: pulse-amber 1.8s ease-in-out infinite;}
+  .pulse-dot { animation: pulse-dot 1.4s ease-in-out infinite;}
+  .typing-dot { animation: typing 1.2s ease-in-out infinite;}
+  .fade-in { animation: fade-in 0.45s cubic-bezier(0.2,0.8,0.2,1);}
+  .slide-up { animation: slide-up 0.4s cubic-bezier(0.2,0.8,0.2,1);}
+  .transition-smooth { transition: all 400ms cubic-bezier(0.2,0.8,0.2,1);}
+  .press:active { transform: scale(0.97);}
+
+  /* Scrollbar hidden */
+  .no-scrollbar::-webkit-scrollbar { display: none;}
+  .no-scrollbar { scrollbar-width: none;}
+
+  /* Confetti */
+  .confetti-piece {
+    position: absolute; top: -20px;
+    width: 8px; height: 8px; border-radius: 2px;
+    animation: fall linear forwards;
+  }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel" data-presets="react">
+
+const { useState, useEffect, useRef, useMemo } = React;
+
+// ---------- Icons (inline SVG so no deps) ----------
+const Icon = ({ name, size = 20, stroke = 1.75, className = "" }) => {
+  const common = { width: size, height: size, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: stroke, strokeLinecap: "round", strokeLinejoin: "round", className };
+  switch (name) {
+    case 'pin':return <svg {...common}><path d="M12 21s-7-6.5-7-12a7 7 0 1 1 14 0c0 5.5-7 12-7 12z" /><circle cx="12" cy="9" r="2.5" /></svg>;
+    case 'globe':return <svg {...common}><circle cx="12" cy="12" r="9" /><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18" /></svg>;
+    case 'wheelchair':return <svg {...common}><circle cx="12" cy="4" r="1.5" /><path d="M10 6v5h5l3 6" /><path d="M14 17a5 5 0 1 1-7-5" /></svg>;
+    case 'search':return <svg {...common}><circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" /></svg>;
+    case 'chevron-right':return <svg {...common}><path d="m9 6 6 6-6 6" /></svg>;
+    case 'chevron-left':return <svg {...common}><path d="m15 6-6 6 6 6" /></svg>;
+    case 'clock':return <svg {...common}><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></svg>;
+    case 'sparkle':return <svg {...common}><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M6 18l2.5-2.5M15.5 8.5 18 6" /><circle cx="12" cy="12" r="2.5" /></svg>;
+    case 'camera':return <svg {...common}><path d="M4 8h3l2-2h6l2 2h3v11H4z" /><circle cx="12" cy="13" r="3.5" /></svg>;
+    case 'x':return <svg {...common}><path d="M6 6l12 12M18 6 6 18" /></svg>;
+    case 'arrow-up':return <svg {...common}><path d="M12 19V5M5 12l7-7 7 7" /></svg>;
+    case 'switch':return <svg {...common}><path d="M4 8h13l-3-3M20 16H7l3 3" /></svg>;
+    case 'help':return <svg {...common}><circle cx="12" cy="12" r="9" /><path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 1.5-2.5 2-2.5 4" /><circle cx="12" cy="17" r="0.5" fill="currentColor" /></svg>;
+    case 'alert':return <svg {...common}><path d="M12 3 2 20h20z" /><path d="M12 10v5M12 18v.5" /></svg>;
+    case 'check':return <svg {...common}><path d="m5 12 5 5 9-11" /></svg>;
+    case 'send':return <svg {...common}><path d="M5 12h14M13 6l6 6-6 6" /></svg>;
+    case 'door':return <svg {...common}><rect x="6" y="3" width="12" height="18" rx="1" /><circle cx="15" cy="12" r="0.8" fill="currentColor" /></svg>;
+    case 'elevator':return <svg {...common}><rect x="4" y="3" width="16" height="18" rx="1" /><path d="M12 3v18M9 9l-2 2 2 2M15 15l2-2-2-2" /></svg>;
+    case 'stairs':return <svg {...common}><path d="M3 21h4v-4h4v-4h4V9h4V5h4" /></svg>;
+    case 'flag':return <svg {...common}><path d="M4 21V4h13l-2 4 2 4H4" /></svg>;
+    case 'bookmark':return <svg {...common}><path d="M6 3h12v18l-6-4-6 4z" /></svg>;
+    case 'message':return <svg {...common}><path d="M4 5h16v12H8l-4 4z" /></svg>;
+    case 'ban':return <svg {...common}><circle cx="12" cy="12" r="9" /><path d="m5 5 14 14" /></svg>;
+    case 'plus':return <svg {...common}><path d="M12 5v14M5 12h14" /></svg>;
+    case 'home':return <svg {...common}><path d="M4 11 12 4l8 7v9h-6v-6h-4v6H4z" /></svg>;
+    case 'refresh':return <svg {...common}><path d="M21 12a9 9 0 1 1-3-6.7L21 8" /><path d="M21 3v5h-5" /></svg>;
+    default:return null;
+  }
+};
+
+// ---------- Glass primitives ----------
+const GlassCard = ({ children, className = "", radius = "3xl", strong = false, ...props }) =>
+<div className={`${strong ? 'glass-strong' : 'glass'} rounded-${radius} ${className}`} {...props}>
+    {children}
+  </div>;
+
+const GlassButton = ({ children, onClick, variant = "glass", className = "", icon, iconRight }) => {
+  const base = "transition-smooth press inline-flex items-center justify-center gap-2 font-medium tight rounded-full";
+  const styles = variant === 'cyan' ? 'cyan-glow' : variant === 'ghost' ? 'glass-dim text-[color:var(--navy)]' : 'glass text-[color:var(--navy)]';
+  return (
+    <button onClick={onClick} className={`${base} ${styles} ${className}`}>
+      {icon && <Icon name={icon} size={18} />}
+      {children}
+      {iconRight && <Icon name={iconRight} size={18} />}
+    </button>);
+
+};
+const GlassChip = ({ children, active = false, onClick, icon, tone = "cyan", className = "" }) => {
+  const activeRing = tone === 'amber' ? 'pulse-amber' : 'ring-2 ring-[color:var(--cyan)]/40';
+  return (
+    <button onClick={onClick} className={`transition-smooth press glass rounded-full px-3 py-1.5 inline-flex items-center gap-1.5 text-[12px] font-medium text-[color:var(--navy)] ${active ? activeRing : ''} ${className}`}>
+      {icon && <Icon name={icon} size={14} />}
+      {children}
+    </button>);
+
+};
+
+// ---------- QR icon (abstract geometric) ----------
+const QRArt = () =>
+<svg viewBox="0 0 120 120" className="w-[180px] h-[180px]">
+    <defs>
+      <linearGradient id="qg" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stopColor="#1E3A5F" />
+        <stop offset="1" stopColor="#4B6B8F" />
+      </linearGradient>
+    </defs>
+    {/* 3 corner markers */}
+    {[[8, 8], [84, 8], [8, 84]].map(([x, y], i) =>
+  <g key={i}>
+        <rect x={x} y={y} width="28" height="28" rx="6" fill="url(#qg)" />
+        <rect x={x + 6} y={y + 6} width="16" height="16" rx="3" fill="#F4F3EF" />
+        <rect x={x + 10} y={y + 10} width="8" height="8" rx="1.5" fill="#1E3A5F" />
+      </g>
+  )}
+    {/* pattern cells */}
+    {Array.from({ length: 40 }).map((_, i) => {
+    const cx = 40 + i % 5 * 8;const cy = 44 + Math.floor(i / 5) * 8;
+    const on = [1, 3, 5, 7, 9, 12, 15, 17, 20, 22, 24, 27, 30, 33, 35, 38].includes(i);
+    return on ? <rect key={i} x={cx} y={cy} width="6" height="6" rx="1.5" fill="#1E3A5F" /> : null;
+  })}
+    <rect x="44" y="84" width="10" height="10" rx="2" fill="#7BC4D9" />
+    <rect x="60" y="88" width="6" height="6" rx="1.5" fill="#1E3A5F" />
+    <rect x="72" y="84" width="10" height="10" rx="2" fill="#1E3A5F" />
+  </svg>;
+
+
+// ---------- Door illustration ----------
+const DoorArt = ({ number = "21 W" }) =>
+<svg viewBox="0 0 240 160" className="w-full h-full">
+    <defs>
+      <linearGradient id="dg" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stopColor="#E8DFC9" />
+        <stop offset="1" stopColor="#C9BE9E" />
+      </linearGradient>
+      <linearGradient id="dp" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stopColor="#3a5575" />
+        <stop offset="1" stopColor="#1E3A5F" />
+      </linearGradient>
+    </defs>
+    <rect width="240" height="160" fill="url(#dg)" />
+    {/* frame */}
+    <rect x="56" y="22" width="128" height="130" rx="3" fill="#8a7f65" opacity="0.35" />
+    <rect x="62" y="28" width="116" height="124" rx="2" fill="#F4F3EF" />
+    {/* two door panels */}
+    <rect x="66" y="32" width="54" height="116" rx="1" fill="url(#dp)" />
+    <rect x="122" y="32" width="54" height="116" rx="1" fill="url(#dp)" />
+    {/* panel insets */}
+    <rect x="72" y="40" width="42" height="38" rx="1" fill="none" stroke="#A8C0D8" strokeOpacity="0.25" />
+    <rect x="72" y="82" width="42" height="60" rx="1" fill="none" stroke="#A8C0D8" strokeOpacity="0.25" />
+    <rect x="128" y="40" width="42" height="38" rx="1" fill="none" stroke="#A8C0D8" strokeOpacity="0.25" />
+    <rect x="128" y="82" width="42" height="60" rx="1" fill="none" stroke="#A8C0D8" strokeOpacity="0.25" />
+    {/* handles */}
+    <rect x="114" y="82" width="3" height="14" rx="1" fill="#F5B946" />
+    <rect x="123" y="82" width="3" height="14" rx="1" fill="#F5B946" />
+    {/* number plate */}
+    <rect x="92" y="46" width="56" height="22" rx="3" fill="#F4F3EF" stroke="#1E3A5F" strokeOpacity="0.2" />
+    <text x="120" y="62" textAnchor="middle" fontFamily="Inter" fontWeight="700" fontSize="13" fill="#1E3A5F">{number}</text>
+  </svg>;
+
+
+// ---------- Corridor scene (AR background) ----------
+const CorridorScene = () =>
+<svg viewBox="0 0 390 700" className="absolute inset-0 w-full h-full" preserveAspectRatio="xMidYMid slice">
+    <defs>
+      <linearGradient id="floor" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stopColor="#C9BE9E" />
+        <stop offset="1" stopColor="#8a7f65" />
+      </linearGradient>
+      <linearGradient id="wallL" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0" stopColor="#D6D1C4" />
+        <stop offset="1" stopColor="#EDE8DC" />
+      </linearGradient>
+      <linearGradient id="wallR" x1="1" y1="0" x2="0" y2="0">
+        <stop offset="0" stopColor="#D6D1C4" />
+        <stop offset="1" stopColor="#EDE8DC" />
+      </linearGradient>
+      <linearGradient id="ceil" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stopColor="#2a2e35" />
+        <stop offset="1" stopColor="#4a4f58" />
+      </linearGradient>
+      <radialGradient id="farlight" cx="0.5" cy="0.5" r="0.5">
+        <stop offset="0" stopColor="#FFE9B8" stopOpacity="0.85" />
+        <stop offset="1" stopColor="#FFE9B8" stopOpacity="0" />
+      </radialGradient>
+    </defs>
+    {/* ceiling */}
+    <polygon points="0,0 390,0 280,180 110,180" fill="url(#ceil)" />
+    {/* left wall */}
+    <polygon points="0,0 110,180 110,520 0,700" fill="url(#wallL)" />
+    {/* right wall */}
+    <polygon points="390,0 280,180 280,520 390,700" fill="url(#wallR)" />
+    {/* floor */}
+    <polygon points="110,520 280,520 390,700 0,700" fill="url(#floor)" />
+    {/* far back wall */}
+    <rect x="110" y="180" width="170" height="340" fill="#CFC9B8" />
+    {/* far light */}
+    <ellipse cx="195" cy="300" rx="90" ry="120" fill="url(#farlight)" />
+    {/* perspective floor lines */}
+    {[0.15, 0.3, 0.5, 0.75].map((t, i) => {
+    const y1 = 520 + (700 - 520) * t;
+    const x1l = 110 - 110 * t;
+    const x1r = 280 + 110 * t;
+    return <line key={i} x1={x1l} y1={y1} x2={x1r} y2={y1} stroke="#8a7f65" strokeOpacity="0.35" strokeWidth="1" />;
+  })}
+    {/* center perspective lines */}
+    <line x1="195" y1="350" x2="0" y2="700" stroke="#8a7f65" strokeOpacity="0.25" />
+    <line x1="195" y1="350" x2="390" y2="700" stroke="#8a7f65" strokeOpacity="0.25" />
+    {/* doors left */}
+    <rect x="40" y="260" width="34" height="200" rx="2" fill="#3a5575" opacity="0.85" />
+    <rect x="46" y="270" width="22" height="8" rx="1" fill="#F4F3EF" />
+    <text x="57" y="276" textAnchor="middle" fontSize="5" fontFamily="Inter" fontWeight="700" fill="#1E3A5F">17 W</text>
+    <rect x="86" y="248" width="22" height="130" rx="1" fill="#3a5575" opacity="0.7" />
+    {/* elevator on left (further back) */}
+    <rect x="112" y="220" width="26" height="90" rx="1" fill="#2a3d55" />
+    <line x1="125" y1="222" x2="125" y2="308" stroke="#4a6078" strokeWidth="0.5" />
+    <rect x="140" y="240" width="4" height="8" rx="0.5" fill="#F5B946" opacity="0.8" />
+    {/* doors right */}
+    <rect x="316" y="260" width="34" height="200" rx="2" fill="#3a5575" opacity="0.85" />
+    <rect x="285" y="248" width="22" height="130" rx="1" fill="#3a5575" opacity="0.7" />
+    {/* notice board (far) */}
+    <rect x="150" y="320" width="80" height="50" rx="1" fill="#C4AE7A" stroke="#8a7f65" />
+    <rect x="155" y="326" width="30" height="6" fill="#F4F3EF" />
+    <rect x="188" y="326" width="38" height="6" fill="#F4F3EF" />
+    <rect x="155" y="336" width="70" height="3" fill="#F4F3EF" opacity="0.7" />
+    <rect x="155" y="342" width="54" height="3" fill="#F4F3EF" opacity="0.7" />
+    <rect x="155" y="350" width="42" height="14" fill="#7BC4D9" opacity="0.4" />
+    {/* ambient */}
+    <rect x="0" y="0" width="390" height="700" fill="url(#floor)" opacity="0" />
+  </svg>;
+
+
+// ---------- Mini floor plan ----------
+const MiniFloorPlan = ({ accessibility, stepIndex }) => {
+  // path nodes
+  const nodes = accessibility ?
+  [[40, 60], [70, 60], [70, 35], [150, 35], [260, 35], [340, 35], [340, 60]] :
+  [[40, 60], [150, 60], [240, 60], [310, 60], [340, 60]];
+  const pathD = nodes.map((n, i) => i === 0 ? `M${n[0]} ${n[1]}` : `L${n[0]} ${n[1]}`).join(' ');
+  const dotIndex = Math.min(stepIndex, nodes.length - 1);
+  const dot = nodes[dotIndex];
+  return (
+    <svg viewBox="0 0 380 120" className="w-full h-[120px]">
+      {/* corridor box */}
+      <rect x="20" y="30" width="340" height="60" rx="4" fill="#F4F3EF" stroke="#1E3A5F" strokeOpacity="0.2" />
+      {/* elevator */}
+      <rect x="22" y="32" width="34" height="28" fill={accessibility ? '#F5B946' : '#E8DFC9'} opacity={accessibility ? 0.35 : 0.5} />
+      <text x="39" y="50" textAnchor="middle" fontSize="7" fontFamily="Inter" fontWeight="600" fill="#1E3A5F">ELV</text>
+      {/* stairs */}
+      <rect x="324" y="32" width="34" height="28" fill="#E8DFC9" opacity={accessibility ? 0.25 : 0.5} />
+      <text x="341" y="50" textAnchor="middle" fontSize="7" fontFamily="Inter" fontWeight="600" fill={accessibility ? '#1E3A5F' : '#1E3A5F'} opacity={accessibility ? 0.4 : 1}>STR</text>
+      {accessibility &&
+      <g>
+          <circle cx="341" cy="46" r="10" fill="none" stroke="#E86A5C" strokeWidth="1.5" />
+          <line x1="334" y1="39" x2="348" y2="53" stroke="#E86A5C" strokeWidth="1.5" />
+        </g>
+      }
+      {/* door notches top */}
+      {[90, 150, 210, 270].map((x, i) =>
+      <rect key={i} x={x} y="26" width="22" height="6" fill="#3a5575" opacity="0.7" />
+      )}
+      {[120, 240].map((x, i) =>
+      <rect key={i} x={x} y="88" width="22" height="6" fill="#3a5575" opacity="0.7" />
+      )}
+      {/* 21W marker */}
+      <g>
+        <rect x="268" y="88" width="24" height="6" fill="#7BC4D9" />
+        <circle cx="280" cy="86" r="6" fill="#7BC4D9" />
+        <text x="280" y="89" textAnchor="middle" fontSize="6" fontFamily="Inter" fontWeight="700" fill="#F4F3EF">21W</text>
+      </g>
+      {/* route */}
+      <path d={pathD} fill="none" stroke="#7BC4D9" strokeWidth="2.5" strokeDasharray="5 3" strokeLinecap="round" />
+      {/* user dot */}
+      <circle cx={dot[0]} cy={dot[1]} r="7" fill="#7BC4D9" opacity="0.3">
+        <animate attributeName="r" values="7;11;7" dur="1.4s" repeatCount="indefinite" />
+        <animate attributeName="opacity" values="0.3;0;0.3" dur="1.4s" repeatCount="indefinite" />
+      </circle>
+      <circle cx={dot[0]} cy={dot[1]} r="4.5" fill="#7BC4D9" stroke="#F4F3EF" strokeWidth="1.5" />
+    </svg>);
+
+};
+
+// ---------- Screens ----------
+const Splash = ({ go }) =>
+<div className="warm-bg absolute inset-0 flex flex-col items-center justify-between py-24 fade-in">
+    <div className="relative z-10 flex flex-col items-center text-center px-8">
+      <div className="text-[32px] font-bold tight text-[color:var(--navy)]">Path2Class</div>
+      <div className="text-[13px] text-[color:var(--navy)]/70 mt-1.5 trk-wide uppercase">LOST? NOT ANYMORE</div>
+    </div>
+    <div className="relative z-10 float-y">
+      <GlassCard className="w-[280px] h-[280px] flex items-center justify-center">
+        <QRArt />
+      </GlassCard>
+    </div>
+    <div className="relative z-10 px-8 w-full flex flex-col items-center gap-3">
+      <GlassButton variant="cyan" icon="camera" onClick={() => go('landing')} className="w-full py-4 text-[15px] font-semibold">
+        Simulate QR scan
+      </GlassButton>
+      <div className="text-[11px] text-[color:var(--navy)]/50 trk-wide uppercase">ORIENTE GREEN CAMPUS</div>
+    </div>
+  </div>;
+
+
+const Landing = ({ state, set, go, openAssistant }) => {
+  const [showResult, setShowResult] = useState(false);
+  const cycleLang = () => {
+    const order = ['it', 'en', 'pt'];
+    set({ language: order[(order.indexOf(state.language) + 1) % 3] });
+  };
+  return (
+    <div className="warm-bg absolute inset-0 fade-in overflow-hidden">
+      {/* Status header */}
+      <div className="relative z-10 px-5 pt-14 pb-4">
+        <GlassCard className="p-4">
+          <div className="flex items-center gap-1.5 text-[10px] trk-wide uppercase text-[color:var(--navy)]/60">
+            <Icon name="pin" size={12} /> You are at
+          </div>
+          <div className="text-[20px] font-semibold tight text-[color:var(--navy)] mt-1">
+            Orient Green Campus — 1st Floor<br />
+            <span className="text-[color:var(--navy)]/80 font-medium text-[15px]">West Wing</span>
+          </div>
+          <div className="flex items-center gap-2 mt-4">
+            <GlassChip icon="globe" onClick={cycleLang}>
+              {state.language.toUpperCase()}
+            </GlassChip>
+            <GlassChip icon="wheelchair" active={state.accessibility} tone="amber" onClick={() => set({ accessibility: !state.accessibility })}>
+              Accessible route
+            </GlassChip>
+          </div>
+        </GlassCard>
+      </div>
+
+      {/* Search */}
+      <div className="relative z-10 px-5">
+        <GlassCard className="px-4 py-3.5 flex items-center gap-3" onClick={() => setShowResult(true)}>
+          <Icon name="search" size={18} className="text-[color:var(--navy)]/50" />
+          <input
+            placeholder="Search room or service..."
+            onFocus={() => setShowResult(true)}
+            className="bg-transparent outline-none flex-1 text-[15px] placeholder:text-[color:var(--navy)]/40 text-[color:var(--navy)]" />
+          
+        </GlassCard>
+        {showResult &&
+        <div className="mt-3 fade-in">
+            <GlassCard className="p-3 flex items-center gap-3 press transition-smooth" onClick={() => go('destination')}>
+              <div className="w-12 h-12 rounded-2xl overflow-hidden glass-dim flex items-center justify-center">
+                <Icon name="door" size={22} className="text-[color:var(--navy)]" />
+              </div>
+              <div className="flex-1">
+                <div className="text-[15px] font-semibold text-[color:var(--navy)] tight">21 W</div>
+                <div className="text-[12px] text-[color:var(--navy)]/60">Classroom · 2nd floor west wing</div>
+              </div>
+              <Icon name="chevron-right" size={18} className="text-[color:var(--navy)]/50" />
+            </GlassCard>
+          </div>
+        }
+      </div>
+
+      {/* Recent / quick list */}
+      <div className="relative z-10 px-5 mt-6">
+        <div className="text-[10px] trk-wide uppercase text-[color:var(--navy)]/50 mb-2 px-1">Nearby</div>
+        <div className="space-y-2">
+          {[
+          { n: 'Notice board', m: 'West corridor · 2F' },
+          { n: 'Elevator', m: 'West corridor · entrance' },
+          { n: 'Emergency exit', m: 'East stairwell' }].
+          map((r, i) =>
+          <GlassCard key={i} className="p-3 flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl glass-dim flex items-center justify-center">
+                <Icon name={i === 1 ? 'elevator' : i === 2 ? 'flag' : 'bookmark'} size={18} className="text-[color:var(--navy)]/70" />
+              </div>
+              <div className="flex-1">
+                <div className="text-[14px] font-medium text-[color:var(--navy)] tight">{r.n}</div>
+                <div className="text-[11px] text-[color:var(--navy)]/55">{r.m}</div>
+              </div>
+            </GlassCard>
+          )}
+        </div>
+      </div>
+
+      <AssistantFab onClick={openAssistant} />
+    </div>);
+
+};
+
+const Destination = ({ state, go }) =>
+<div className="warm-bg absolute inset-0 fade-in flex flex-col">
+    <div className="pt-14 px-5 flex items-center justify-between relative z-10">
+      <button onClick={() => go('landing')} className="glass rounded-full w-10 h-10 flex items-center justify-center press transition-smooth">
+        <Icon name="chevron-left" size={20} />
+      </button>
+      <div className="text-[11px] trk-wide uppercase text-[color:var(--navy)]/60">Destination</div>
+      <div className="w-10" />
+    </div>
+
+    <div className="relative z-10 flex-1 px-5 pt-4 flex flex-col">
+      <GlassCard className="overflow-hidden" radius="[32px]" strong>
+        <div className="h-[180px] overflow-hidden">
+          <DoorArt number="21 W" />
+        </div>
+        <div className="p-5">
+          {state.accessibility &&
+        <div className="amber-glow inline-flex items-center gap-1.5 glass rounded-full px-3 py-1.5 text-[11px] font-semibold text-[color:var(--navy)] mb-3">
+              <Icon name="wheelchair" size={13} /> Accessible route via elevator
+            </div>
+        }
+          <div className="text-[28px] font-semibold tight text-[color:var(--navy)] leading-tight">Room 21 W</div>
+          <div className="text-[13px] text-[color:var(--navy)]/70 mt-1">Classroom · 2nd floor · West wing</div>
+          <div className="flex items-center gap-2 mt-4">
+            <div className="glass rounded-full px-3 py-1.5 inline-flex items-center gap-1.5 text-[12px] font-medium text-[color:var(--navy)]">
+              <Icon name="clock" size={13} /> ~{state.accessibility ? 3 : 2} min
+            </div>
+            <div className="glass rounded-full px-3 py-1.5 inline-flex items-center gap-1.5 text-[12px] font-medium text-[color:var(--navy)]">
+              <Icon name="pin" size={13} /> 42 m
+            </div>
+          </div>
+        </div>
+      </GlassCard>
+
+      <div className="mt-5 space-y-3">
+        <GlassButton variant="cyan" icon="camera" onClick={() => go('permission')} className="w-full py-4 text-[15px] font-semibold">
+          Start AR navigation
+        </GlassButton>
+        <GlassButton onClick={() => go('text')} className="w-full py-4 text-[14px]">
+          Use text directions
+        </GlassButton>
+      </div>
+    </div>
+  </div>;
+
+
+const Permission = ({ go }) =>
+<div className="warm-bg absolute inset-0 fade-in flex items-center justify-center px-6">
+    <div className="relative z-10 w-full">
+      <GlassCard className="p-6" strong radius="[32px]">
+        <div className="w-16 h-16 rounded-2xl cyan-glow flex items-center justify-center mx-auto">
+          <Icon name="camera" size={28} />
+        </div>
+        <div className="text-[24px] font-semibold tight text-[color:var(--navy)] text-center mt-5">Camera access needed</div>
+        <div className="text-[14px] text-[color:var(--navy)]/75 text-center mt-2 leading-[1.55]">
+          Path2Class uses your camera to overlay directions onto the corridor in real time. Your video feed never leaves your device.
+        </div>
+        <div className="space-y-2.5 mt-6">
+          <GlassButton variant="cyan" onClick={() => go('ar')} className="w-full py-3.5 text-[15px] font-semibold">
+            Allow
+          </GlassButton>
+          <GlassButton onClick={() => go('text')} className="w-full py-3.5 text-[14px]">
+            Use text directions instead
+          </GlassButton>
+        </div>
+      </GlassCard>
+    </div>
+  </div>;
+
+
+const ARNav = ({ state, set, go, openAssistant, onAssistantOpen }) => {
+  const [deviation, setDeviation] = useState(false);
+  const arrowRotate = state.arrowDirection === 'left' ? -35 : state.arrowDirection === 'right' ? 35 : 0;
+
+  useEffect(() => {
+    if (deviation) {
+      const t = setTimeout(() => {
+        setDeviation(false);
+        set({ arrowDirection: state.arrowDirection === 'left' ? 'straight' : 'left' });
+      }, 2200);
+      return () => clearTimeout(t);
+    }
+  }, [deviation]);
+
+  return (
+    <div className="absolute inset-0 overflow-hidden">
+      <CorridorScene />
+      {/* warm tint */}
+      <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse at 50% 30%, rgba(255,233,184,0.15), transparent 60%)" }} />
+
+      {/* TOP STATUS BAR */}
+      <div className="absolute top-12 left-4 right-4 z-20">
+        <GlassCard className="px-4 py-2.5 flex items-center justify-between">
+          <div className="flex items-center gap-1.5 text-[11px] font-medium text-[color:var(--navy)]">
+            <Icon name="pin" size={12} /> Building B · 2F West
+          </div>
+          <div className="flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-[color:var(--cyan)] pulse-dot" />
+            <span className="text-[10px] trk-wide uppercase font-semibold text-[color:var(--navy)]/70">Live</span>
+          </div>
+          <div className="flex items-center gap-1">
+            {[0, 1, 2, 3].map((i) =>
+            <span key={i} className={`w-1.5 h-1.5 rounded-full ${i < 2 ? 'bg-[color:var(--cyan)]' : 'bg-[color:var(--navy)]/20'}`} />
+            )}
+          </div>
+        </GlassCard>
+      </div>
+
+      {/* AR ARROW */}
+      <div className="absolute left-1/2 top-[58%] -translate-x-1/2 -translate-y-1/2 z-10 pointer-events-none pulse-cyan" style={{ transform: `translate(-50%,-50%) rotate(${arrowRotate}deg)` }}>
+        <svg width="120" height="140" viewBox="0 0 120 140">
+          <defs>
+            <linearGradient id="arr" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stopColor="#D4F2FB" />
+              <stop offset="1" stopColor="#7BC4D9" />
+            </linearGradient>
+          </defs>
+          {/* ground shadow */}
+          <ellipse cx="60" cy="130" rx="38" ry="5" fill="#7BC4D9" opacity="0.35" />
+          <path d="M60 8 L108 70 L82 70 L82 112 L38 112 L38 70 L12 70 Z" fill="url(#arr)" stroke="#F4F3EF" strokeOpacity="0.8" strokeWidth="2" />
+          <path d="M60 8 L108 70 L82 70" fill="rgba(255,255,255,0.25)" />
+        </svg>
+      </div>
+
+      {/* LANDMARK highlight - 17W */}
+      <div className="absolute z-10 pointer-events-none" style={{ left: '8%', top: '37%', width: '12%', height: '29%' }}>
+        <div className="w-full h-full rounded-lg border-2 border-[color:var(--cyan)] glass-dim" style={{ boxShadow: '0 0 24px rgba(123,196,217,0.5), inset 0 0 16px rgba(168,227,245,0.3)' }} />
+        <div className="absolute -top-7 left-1/2 -translate-x-1/2 glass rounded-full px-2.5 py-1 text-[10px] font-semibold text-[color:var(--navy)] whitespace-nowrap">
+          Room 17 W
+        </div>
+      </div>
+
+      {/* ELEVATOR highlight (a11y) */}
+      {state.accessibility &&
+      <div className="absolute z-10 pointer-events-none pulse-amber" style={{ left: '28%', top: '31%', width: '8%', height: '13%', borderRadius: '4px', border: '2px solid #F5B946', background: 'rgba(245,185,70,0.15)' }}>
+          <div className="absolute -top-7 left-1/2 -translate-x-1/2 glass rounded-full px-2.5 py-1 text-[10px] font-semibold text-[color:var(--navy)] whitespace-nowrap" style={{ boxShadow: '0 0 16px rgba(245,185,70,0.6)' }}>
+            Elevator · your route
+          </div>
+        </div>
+      }
+
+      {/* FLOATING CONTROLS top-right */}
+      <div className="absolute top-[92px] right-4 flex flex-col gap-2 z-20">
+        {[
+        { n: 'x', a: () => go('destination') },
+        { n: 'switch', a: () => go('text') },
+        { n: 'help', a: openAssistant }].
+        map((b, i) =>
+        <button key={i} onClick={b.a} className="glass rounded-full w-11 h-11 flex items-center justify-center press transition-smooth">
+            <Icon name={b.n} size={18} className="text-[color:var(--navy)]" />
+          </button>
+        )}
+      </div>
+
+      {/* BOTTOM INSTRUCTION BANNER */}
+      <div className="absolute left-4 right-4 bottom-20 z-20">
+        <GlassCard className="p-4" strong>
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl cyan-glow flex items-center justify-center shrink-0">
+              <Icon name={state.accessibility ? 'elevator' : 'arrow-up'} size={18} />
+            </div>
+            <div className="flex-1">
+              <div className="text-[16px] font-semibold tight text-[color:var(--navy)]">
+                {state.accessibility ? 'Turn left to the elevator, 8 m' : 'Continue straight, 15 m'}
+              </div>
+              <div className="text-[11px] text-[color:var(--navy)]/60 mt-0.5">
+                Next: Room 17 W on your left
+              </div>
+            </div>
+            <div className="text-right">
+              <div className="text-[10px] trk-wide uppercase text-[color:var(--navy)]/50">ETA</div>
+              <div className="text-[14px] font-bold tight text-[color:var(--navy)]">~90s</div>
+            </div>
+          </div>
+        </GlassCard>
+      </div>
+
+      {/* DEV CONTROLS */}
+      <div className="absolute left-4 bottom-4 z-20">
+        <div className="glass rounded-full px-2 py-1.5 flex items-center gap-1 text-[10px]">
+          <span className="text-[color:var(--navy)]/50 trk-wide uppercase px-2">Demo</span>
+          <button onClick={() => setDeviation(true)} className="glass-dim rounded-full px-2.5 py-1 press transition-smooth text-[color:var(--navy)]">Wrong turn</button>
+          <button onClick={() => go('arrival')} className="glass-dim rounded-full px-2.5 py-1 press transition-smooth text-[color:var(--navy)]">Arrive</button>
+          <button onClick={() => set({ accessibility: !state.accessibility })} className="glass-dim rounded-full px-2.5 py-1 press transition-smooth text-[color:var(--navy)]">A11y</button>
+        </div>
+      </div>
+
+      {/* DEVIATION OVERLAY */}
+      {deviation &&
+      <div className="absolute inset-0 z-30 fade-in flex items-center justify-center px-6" style={{ background: 'rgba(232,106,92,0.22)', backdropFilter: 'blur(8px)' }}>
+          <GlassCard className="p-6 text-center w-full" strong radius="[32px]">
+            <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto coral-glow" style={{ background: 'linear-gradient(180deg,#F59287,#E86A5C)', color: '#fff' }}>
+              <Icon name="alert" size={28} />
+            </div>
+            <div className="text-[22px] font-semibold tight text-[color:var(--navy)] mt-4">Wrong direction</div>
+            <div className="text-[13px] text-[color:var(--navy)]/70 mt-1.5">Recalculating your route…</div>
+            <div className="mt-5 flex justify-center">
+              <svg width="56" height="56" viewBox="0 0 56 56">
+                <circle cx="28" cy="28" r="22" fill="none" stroke="#1E3A5F" strokeOpacity="0.12" strokeWidth="4" />
+                <circle cx="28" cy="28" r="22" fill="none" stroke="#7BC4D9" strokeWidth="4" strokeLinecap="round"
+              strokeDasharray="138" strokeDashoffset="138" transform="rotate(-90 28 28)"
+              style={{ animation: 'draw-ring 2s linear forwards' }} />
+              </svg>
+            </div>
+          </GlassCard>
+        </div>
+      }
+
+      {/* FAB raised on AR */}
+      <div className="absolute right-4 z-20" style={{ bottom: 180 }}>
+        <AssistantFab onClick={openAssistant} positioned />
+      </div>
+    </div>);
+
+};
+
+const TextNav = ({ state, set, go, openAssistant }) => {
+  const steps = state.accessibility ? [
+  { icon: 'arrow-up', t: 'Turn left at entrance to reach elevator (8 m).' },
+  { icon: 'elevator', t: 'Take elevator to floor 2.' },
+  { icon: 'arrow-up', t: 'Exit elevator, turn right into corridor.' },
+  { icon: 'door', t: 'Continue straight. Room 21 W on your right.' }] :
+  [
+  { icon: 'arrow-up', t: 'Leave the corridor entrance, walk straight 12 m.' },
+  { icon: 'door', t: 'Pass Room 17 W on your left.' },
+  { icon: 'bookmark', t: 'Continue past the notice board.' },
+  { icon: 'door', t: 'Room 21 W on your right. Blue door sign.' }];
+
+  const cur = state.currentStep;
+  const advance = () => {
+    if (cur >= steps.length - 1) go('arrival');else
+    set({ currentStep: cur + 1 });
+  };
+
+  return (
+    <div className="warm-bg absolute inset-0 fade-in flex flex-col">
+      <div className="pt-14 px-5 flex items-center justify-between relative z-10">
+        <button onClick={() => go('destination')} className="glass rounded-full w-10 h-10 flex items-center justify-center press transition-smooth">
+          <Icon name="chevron-left" size={20} />
+        </button>
+        <div className="text-[11px] trk-wide uppercase text-[color:var(--navy)]/60">Text directions</div>
+        <button onClick={() => go('ar')} className="glass rounded-full w-10 h-10 flex items-center justify-center press transition-smooth">
+          <Icon name="switch" size={18} />
+        </button>
+      </div>
+
+      <div className="relative z-10 px-5 mt-3">
+        <GlassCard className="p-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="text-[10px] trk-wide uppercase text-[color:var(--navy)]/55">From</div>
+              <div className="text-[13px] font-semibold text-[color:var(--navy)] tight">Entrance B · 2F</div>
+            </div>
+            <Icon name="chevron-right" size={18} className="text-[color:var(--navy)]/40" />
+            <div>
+              <div className="text-[10px] trk-wide uppercase text-[color:var(--navy)]/55 text-right">To</div>
+              <div className="text-[13px] font-semibold text-[color:var(--navy)] tight text-right">Room 21 W</div>
+            </div>
+          </div>
+        </GlassCard>
+      </div>
+
+      {/* Steps */}
+      <div className="relative z-10 px-5 mt-4 flex-1 overflow-y-auto no-scrollbar space-y-2.5 pb-2">
+        {steps.map((s, i) => {
+          const isCur = i === cur;
+          const isPast = i < cur;
+          return (
+            <div key={i} className={`transition-smooth ${isPast ? 'opacity-40' : ''}`}>
+              <GlassCard className={`p-3.5 flex items-center gap-3 ${isCur ? 'ring-2 ring-[color:var(--cyan)]/50' : ''}`}
+              style={isCur ? { boxShadow: '0 0 28px rgba(123,196,217,0.45), inset 0 1px 0 rgba(255,255,255,0.55)' } : {}}>
+                <div className={`w-9 h-9 rounded-full flex items-center justify-center text-[13px] font-bold tight ${isCur ? 'cyan-glow' : 'glass-dim text-[color:var(--navy)]'}`}>
+                  {i + 1}
+                </div>
+                <div className="flex-1 flex items-center gap-2">
+                  <Icon name={s.icon} size={16} className="text-[color:var(--navy)]/70 shrink-0" />
+                  <div className="text-[13px] text-[color:var(--navy)] leading-[1.4]">{s.t}</div>
+                </div>
+              </GlassCard>
+            </div>);
+
+        })}
+      </div>
+
+      {/* Floor plan */}
+      <div className="relative z-10 px-5 mt-2">
+        <GlassCard className="p-3">
+          <div className="text-[10px] trk-wide uppercase text-[color:var(--navy)]/55 mb-1 px-1">Floor plan · 2F West</div>
+          <MiniFloorPlan accessibility={state.accessibility} stepIndex={cur} />
+        </GlassCard>
+      </div>
+
+      <div className="relative z-10 px-5 pb-8 pt-3">
+        <GlassButton variant="cyan" onClick={advance} iconRight="check" className="w-full py-4 text-[14px] font-semibold">
+          {cur >= steps.length - 1 ? "I've arrived" : "I've reached the next landmark"}
+        </GlassButton>
+      </div>
+
+      <AssistantFab onClick={openAssistant} />
+    </div>);
+
+};
+
+const Arrival = ({ state, go, openAssistant }) => {
+  const pieces = useMemo(() => Array.from({ length: 26 }).map((_, i) => ({
+    left: Math.random() * 100,
+    color: Math.random() > 0.55 ? '#7BC4D9' : '#F5B946',
+    delay: Math.random() * 2.5,
+    dur: 3 + Math.random() * 2,
+    size: 6 + Math.random() * 6
+  })), []);
+  return (
+    <div className="warm-bg absolute inset-0 fade-in flex flex-col overflow-hidden">
+      {/* confetti */}
+      <div className="absolute inset-0 pointer-events-none z-[5]">
+        {pieces.map((p, i) =>
+        <span key={i} className="confetti-piece" style={{
+          left: `${p.left}%`,
+          background: p.color,
+          width: p.size, height: p.size,
+          animationDelay: `${p.delay}s`,
+          animationDuration: `${p.dur}s`,
+          opacity: 0.85
+        }} />
+        )}
+      </div>
+
+      <div className="relative z-10 flex-1 flex flex-col items-center justify-center px-6">
+        <div className="w-[92px] h-[92px] rounded-full glass-strong flex items-center justify-center" style={{ boxShadow: '0 0 40px rgba(123,196,217,0.55), inset 0 1px 0 rgba(255,255,255,0.6)' }}>
+          <div className="w-[68px] h-[68px] rounded-full cyan-glow flex items-center justify-center">
+            <Icon name="check" size={36} stroke={2.4} />
+          </div>
+        </div>
+        <div className="text-[28px] font-semibold tight text-[color:var(--navy)] mt-5 text-center">You've arrived</div>
+        <div className="text-[15px] text-[color:var(--navy)]/75 mt-1">Room 21 W — 2nd floor west wing</div>
+
+        <GlassCard className="mt-6 p-3 flex items-center gap-3 w-full max-w-[320px]">
+          <div className="w-14 h-14 rounded-xl overflow-hidden shrink-0">
+            <DoorArt number="21 W" />
+          </div>
+          <div className="flex-1">
+            <div className="text-[12px] font-semibold text-[color:var(--navy)]">Matches your surroundings</div>
+            <div className="text-[11px] text-[color:var(--navy)]/60">Blue door · number plate 21 W</div>
+          </div>
+          <div className="w-7 h-7 rounded-full cyan-glow flex items-center justify-center">
+            <Icon name="check" size={14} stroke={2.5} />
+          </div>
+        </GlassCard>
+
+        <div className="grid grid-cols-3 gap-2 w-full max-w-[320px] mt-5">
+          {[
+          { i: 'bookmark', l: 'Save' },
+          { i: 'alert', l: 'Report' },
+          { i: 'message', l: 'Feedback' }].
+          map((a, i) =>
+          <button key={i} className="glass rounded-2xl p-3 flex flex-col items-center gap-1.5 press transition-smooth">
+              <Icon name={a.i} size={18} className="text-[color:var(--navy)]" />
+              <span className="text-[11px] font-medium text-[color:var(--navy)]">{a.l}</span>
+            </button>
+          )}
+        </div>
+      </div>
+
+      <div className="relative z-10 px-5 pb-8 space-y-2">
+        <GlassButton variant="cyan" onClick={() => go('landing')} className="w-full py-3.5 text-[14px] font-semibold">
+          Navigate somewhere else
+        </GlassButton>
+        <GlassButton onClick={() => go('splash')} className="w-full py-3 text-[13px]">Close</GlassButton>
+      </div>
+
+      <AssistantFab onClick={openAssistant} />
+    </div>);
+
+};
+
+// ---------- Assistant FAB + Sheet ----------
+const AssistantFab = ({ onClick, positioned = false }) =>
+<button onClick={onClick} className={`${positioned ? '' : 'absolute bottom-8 right-4 z-30'} w-14 h-14 rounded-full cyan-glow flex items-center justify-center press transition-smooth`}
+style={{ boxShadow: '0 14px 30px -8px rgba(123,196,217,0.7), 0 0 0 1px rgba(255,255,255,0.45) inset' }}>
+    <span className="absolute inset-0 rounded-full pulse-cyan opacity-70" style={{ background: 'radial-gradient(circle, rgba(168,227,245,0.55), transparent 70%)' }} />
+    <Icon name="sparkle" size={22} className="relative z-10 text-[color:var(--navy)]" />
+  </button>;
+
+
+const getMockResponse = (msg) => {
+  const s = msg.toLowerCase();
+  if (/simplif|semplif/.test(s)) return "Sure — keep walking straight. Room 21 W is just past the notice board, on your right.";
+  if (/access|wheelchair|accessib|sedia/.test(s)) return "I can route you via the elevator. Tap the accessibility chip on the landing screen and I'll avoid stairs.";
+  if (/how long|quanto|eta|tempo/.test(s)) return "About 90 seconds at your current pace. You're halfway there.";
+  if (/bathroom|bagno|library|cafe|toilet|biblioteca/.test(s)) return "That's outside the demo area — this prototype covers only the west corridor on floor 2 of Building B.";
+  if (/elevator|ascensore/.test(s)) return "The elevator is on your left, about 8 meters ahead. Look for the amber highlight in AR mode.";
+  if (/where/.test(s)) return "You're in the west corridor on floor 2 of Building B. Destination is Room 21 W, on your right past the notice board.";
+  return "I can help with navigation inside this corridor. Try asking 'simplify', 'how long', or 'where's the elevator'.";
+};
+
+const TypingIndicator = () =>
+<div className="flex items-center gap-1 px-4 py-3 rounded-3xl rounded-bl-md glass-strong w-fit">
+    {[0, 1, 2].map((i) =>
+  <span key={i} className="w-1.5 h-1.5 rounded-full bg-[color:var(--navy)]/60 typing-dot" style={{ animationDelay: `${i * 0.18}s` }} />
+  )}
+  </div>;
+
+
+const AssistantSheet = ({ state, set, currentScreen }) => {
+  const [input, setInput] = useState('');
+  const [streaming, setStreaming] = useState('');
+  const scrollRef = useRef(null);
+
+  const suggestions = {
+    landing: ["How do I get to 21 W?", "Where's the elevator?", "Accessible route"],
+    ar: ["Simplify", "What do I see?", "How much longer?"],
+    text: ["Simplify", "Switch to AR", "I'm confused"],
+    arrival: ["How do I go back?", "Thanks!"]
+  }[currentScreen] || ["Help"];
+
+  useEffect(() => {
+    if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+  }, [state.messages, streaming, state.isTyping]);
+
+  const send = (text) => {
+    if (!text.trim()) return;
+    const userMsg = { role: 'user', content: text };
+    const resp = getMockResponse(text);
+    set({ messages: [...state.messages, userMsg], isTyping: true });
+    setInput('');
+    setTimeout(() => {
+      set({ isTyping: false });
+      // stream reveal
+      let i = 0;
+      setStreaming('');
+      const id = setInterval(() => {
+        i++;
+        setStreaming(resp.slice(0, i));
+        if (i >= resp.length) {
+          clearInterval(id);
+          setTimeout(() => {
+            set({ messages: [...state.messages, userMsg, { role: 'assistant', content: resp }] });
+            setStreaming('');
+          }, 100);
+        }
+      }, Math.max(10, 800 / resp.length));
+    }, 1200);
+  };
+
+  return (
+    <div className="absolute inset-0 z-40" onClick={() => set({ assistantOpen: false })}>
+      <div className="absolute inset-0" style={{ background: 'rgba(0,0,0,0.3)' }} />
+      <div className="absolute left-0 right-0 bottom-0 slide-up" style={{ height: '70%' }} onClick={(e) => e.stopPropagation()}>
+        <div className="glass-strong h-full flex flex-col" style={{ borderTopLeftRadius: 32, borderTopRightRadius: 32, borderBottom: 'none', background: 'rgba(255,255,255,0.62)' }}>
+          {/* drag handle */}
+          <div className="pt-2.5 flex justify-center">
+            <div className="w-9 h-1 rounded-full bg-[color:var(--navy)]/25" />
+          </div>
+          {/* header */}
+          <div className="flex items-center justify-between px-5 pt-3 pb-2">
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-full glass-dim flex items-center justify-center">
+                <Icon name="sparkle" size={15} className="text-[color:var(--navy)]" />
+              </div>
+              <div>
+                <div className="text-[16px] font-semibold tight text-[color:var(--navy)]">Assistant</div>
+                <div className="text-[10px] text-[color:var(--navy)]/55">On-corridor help · Path2Class</div>
+              </div>
+            </div>
+            <button onClick={() => set({ assistantOpen: false })} className="glass rounded-full w-9 h-9 flex items-center justify-center press">
+              <Icon name="x" size={16} />
+            </button>
+          </div>
+
+          {/* messages */}
+          <div ref={scrollRef} className="flex-1 overflow-y-auto no-scrollbar px-4 py-2 space-y-3">
+            {state.messages.map((m, i) => m.role === 'user' ?
+            <div key={i} className="flex justify-end fade-in">
+                <div className="max-w-[80%] px-4 py-2.5 rounded-3xl rounded-br-md text-[14px] text-[color:var(--navy)] leading-[1.45]"
+              style={{ background: 'linear-gradient(135deg, rgba(123,196,217,0.42), rgba(95,177,201,0.34))', backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.35)' }}>
+                  {m.content}
+                </div>
+              </div> :
+
+            <div key={i} className="flex items-end gap-2 fade-in">
+                <div className="w-7 h-7 rounded-full glass-dim flex items-center justify-center shrink-0 mb-1">
+                  <Icon name="sparkle" size={12} className="text-[color:var(--navy)]" />
+                </div>
+                <div className="max-w-[85%] px-4 py-2.5 rounded-3xl rounded-bl-md text-[14px] text-[color:var(--navy)] leading-[1.45] glass-strong"
+              style={{ background: 'rgba(255,255,255,0.62)' }}>
+                  {m.content}
+                </div>
+              </div>
+            )}
+            {state.isTyping &&
+            <div className="flex items-end gap-2 fade-in">
+                <div className="w-7 h-7 rounded-full glass-dim flex items-center justify-center shrink-0 mb-1">
+                  <Icon name="sparkle" size={12} className="text-[color:var(--navy)]" />
+                </div>
+                <TypingIndicator />
+              </div>
+            }
+            {streaming &&
+            <div className="flex items-end gap-2 fade-in">
+                <div className="w-7 h-7 rounded-full glass-dim flex items-center justify-center shrink-0 mb-1">
+                  <Icon name="sparkle" size={12} className="text-[color:var(--navy)]" />
+                </div>
+                <div className="max-w-[85%] px-4 py-2.5 rounded-3xl rounded-bl-md text-[14px] text-[color:var(--navy)] leading-[1.45] glass-strong"
+              style={{ background: 'rgba(255,255,255,0.62)' }}>
+                  {streaming}<span className="opacity-50">▋</span>
+                </div>
+              </div>
+            }
+          </div>
+
+          {/* suggestions */}
+          <div className="px-4 pt-1 pb-2 flex gap-2 overflow-x-auto no-scrollbar">
+            {suggestions.map((s, i) =>
+            <button key={i} onClick={() => send(s)} className="glass rounded-full px-3 py-1.5 whitespace-nowrap text-[12px] font-medium text-[color:var(--navy)] press transition-smooth shrink-0">
+                {s}
+              </button>
+            )}
+          </div>
+
+          {/* composer */}
+          <div className="px-4 pb-5 pt-1">
+            <div className="flex items-center gap-2">
+              <div className="flex-1 glass rounded-full px-4 py-2.5">
+                <input
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  onKeyDown={(e) => {if (e.key === 'Enter') send(input);}}
+                  placeholder="Ask anything..."
+                  className="w-full bg-transparent outline-none text-[14px] text-[color:var(--navy)] placeholder:text-[color:var(--navy)]/45" />
+                
+              </div>
+              <button onClick={() => send(input)}
+              className={`w-11 h-11 rounded-full flex items-center justify-center press transition-smooth ${input.trim() ? 'cyan-glow' : 'glass-dim text-[color:var(--navy)]/40'}`}>
+                <Icon name="send" size={16} stroke={2.2} />
+              </button>
+            </div>
+            <div className="text-[10px] text-[color:var(--navy)]/40 text-center mt-1.5">AI can make mistakes · responses are simulated</div>
+          </div>
+        </div>
+      </div>
+    </div>);
+
+};
+
+// ---------- App ----------
+const SCREENS = [
+{ k: 'splash', l: 'Splash' },
+{ k: 'landing', l: 'Landing' },
+{ k: 'destination', l: 'Destination' },
+{ k: 'permission', l: 'Camera' },
+{ k: 'ar', l: 'AR Nav' },
+{ k: 'text', l: 'Text Nav' },
+{ k: 'arrival', l: 'Arrival' }];
+
+
+function App() {
+  const [state, setState] = useState({
+    screen: 'splash',
+    language: 'it',
+    accessibility: false,
+    currentStep: 0,
+    arrowDirection: 'straight',
+    assistantOpen: false,
+    messages: [
+    { role: 'assistant', content: "Hi! I can help you navigate, simplify instructions, or answer questions about this corridor." }],
+
+    isTyping: false
+  });
+
+  const set = (patch) => setState((s) => ({ ...s, ...patch }));
+  const go = (screen) => set({ screen, currentStep: screen === 'text' ? 0 : state.currentStep });
+  const openAssistant = () => set({ assistantOpen: true });
+
+  const screen = state.screen;
+
+  return (
+    <div className="w-full h-full ambient-stage flex items-center justify-center p-8 gap-8">
+      {/* Screen navigator (outside phone) */}
+      <div className="flex flex-col gap-2 w-[168px]" data-screen-label="Navigator">
+        <div className="text-[10px] trk-wide uppercase text-white/50 pl-2 mb-1">Screens</div>
+        {SCREENS.map((s, i) =>
+        <button key={s.k} onClick={() => go(s.k)}
+        className={`text-left px-3 py-2 rounded-xl text-[12px] transition-smooth press flex items-center gap-2 ${screen === s.k ? 'bg-white/10 text-white border border-white/15' : 'text-white/55 border border-white/5 hover:bg-white/5'}`}>
+            <span className="w-5 text-[10px] text-white/40 tabular-nums">{String(i + 1).padStart(2, '0')}</span>
+            <span className="font-medium">{s.l}</span>
+          </button>
+        )}
+        <div className="mt-4 pt-4 border-t border-white/10">
+          <div className="text-[10px] trk-wide uppercase text-white/40 pl-2 mb-2">State</div>
+          <button onClick={() => set({ accessibility: !state.accessibility })}
+          className={`w-full text-left px-3 py-2 rounded-xl text-[11px] transition-smooth flex items-center gap-2 ${state.accessibility ? 'bg-amber-400/10 text-amber-200 border border-amber-400/20' : 'text-white/55 border border-white/5'}`}>
+            <Icon name="wheelchair" size={13} /> Accessibility {state.accessibility ? 'ON' : 'OFF'}
+          </button>
+          <button onClick={() => set({ language: { it: 'en', en: 'pt', pt: 'it' }[state.language] })}
+          className="w-full text-left px-3 py-2 rounded-xl text-[11px] text-white/55 border border-white/5 flex items-center gap-2 mt-2">
+            <Icon name="globe" size={13} /> Lang · {state.language.toUpperCase()}
+          </button>
+        </div>
+      </div>
+
+      {/* Phone */}
+      <div className="phone-frame" data-screen-label={`${String(SCREENS.findIndex((s) => s.k === screen) + 1).padStart(2, '0')} ${SCREENS.find((s) => s.k === screen)?.l || ''}`}>
+        <div className="phone-screen">
+          <div className="dynamic-island" />
+          {screen === 'splash' && <Splash go={go} />}
+          {screen === 'landing' && <Landing state={state} set={set} go={go} openAssistant={openAssistant} />}
+          {screen === 'destination' && <Destination state={state} go={go} />}
+          {screen === 'permission' && <Permission go={go} />}
+          {screen === 'ar' && <ARNav state={state} set={set} go={go} openAssistant={openAssistant} />}
+          {screen === 'text' && <TextNav state={state} set={set} go={go} openAssistant={openAssistant} />}
+          {screen === 'arrival' && <Arrival state={state} go={go} openAssistant={openAssistant} />}
+          {state.assistantOpen && <AssistantSheet state={state} set={set} currentScreen={screen} />}
+          <div className="home-indicator" />
+        </div>
+      </div>
+
+      {/* Info panel */}
+      <div className="w-[200px] text-white/60 text-[11px] leading-[1.5]">
+        <div className="text-[10px] trk-wide uppercase text-white/40 mb-2">Path2Class</div>
+        <div className="text-white/85 text-[13px] font-semibold tight mb-1">Liquid Glass prototype</div>
+        <div>Building B — 2F West · Destination Room 21 W</div>
+        <div className="mt-4 pt-4 border-t border-white/10 space-y-1.5">
+          <div><span className="text-white/40">Tap</span> the floating sparkle to open the AI assistant.</div>
+          <div><span className="text-white/40">On AR</span>, use Demo controls bottom-left to test flows.</div>
+          <div><span className="text-white/40">Accessibility</span> reroutes via elevator and changes AR highlights to amber.</div>
+        </div>
+      </div>
+    </div>);
+
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
