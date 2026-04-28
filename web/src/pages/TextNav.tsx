@@ -45,7 +45,7 @@ export default function TextNav() {
   };
 
   return (
-    <div className="warm-bg absolute inset-0 fade-in flex flex-col">
+    <div className="warm-bg relative h-[100dvh] fade-in flex flex-col">
       <div className="pt-14 px-5 flex items-center justify-between relative z-10">
         <button
           onClick={() => navigate('/destination')}

@@ -12,7 +12,7 @@ export default function Splash() {
   const { t } = useTranslation();
 
   return (
-    <div className="warm-bg absolute inset-0 flex flex-col items-center justify-between py-24 fade-in">
+    <div className="warm-bg relative min-h-[100dvh] flex flex-col items-center justify-between py-24 fade-in">
       <div className="relative z-10 flex flex-col items-center text-center px-8">
         <div className="text-[32px] font-bold tight text-[color:var(--navy)]">Path2Class</div>
         <div className="text-[13px] text-[color:var(--navy)]/70 mt-1.5 trk-wide uppercase">

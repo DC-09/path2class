@@ -64,7 +64,7 @@ export default function ArNav() {
   );
 
   return (
-    <div className="absolute inset-0 overflow-hidden bg-black">
+    <div className="fixed inset-0 overflow-hidden bg-black">
       <CameraView ref={cameraRef} onError={handleCameraError} />
 
       <AROverlay

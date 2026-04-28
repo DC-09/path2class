@@ -26,11 +26,14 @@ export function AssistantFab({ positioned = false }: AssistantFabProps) {
       aria-label={t('assistant.open_aria')}
       className={clsx(
         'w-14 h-14 rounded-full cyan-glow flex items-center justify-center press transition-smooth',
-        !positioned && 'absolute bottom-8 right-4 z-30',
+        !positioned && 'fixed right-4 z-30',
       )}
       style={{
         boxShadow:
           '0 14px 30px -8px rgba(123,196,217,0.7), 0 0 0 1px rgba(255,255,255,0.45) inset',
+        ...(positioned
+          ? null
+          : { bottom: 'calc(2rem + env(safe-area-inset-bottom))' }),
       }}
     >
       <span

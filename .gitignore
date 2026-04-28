@@ -43,3 +43,7 @@ Thumbs.db
 
 # Docker
 docker-compose.override.yml
+
+# Supabase CLI binary (downloaded locally, not part of repo)
+supabase.exe
+supabase/.temp/

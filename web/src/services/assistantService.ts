@@ -1,6 +1,6 @@
 /**
  * assistantService — talks to the Supabase Edge Function that proxies
- * Anthropic's Messages API with SSE streaming.
+ * Groq's OpenAI-compatible Chat Completions API with SSE streaming.
  *
  * Endpoint is configured via `VITE_ASSISTANT_ENDPOINT`. In local dev the
  * caller gets `MissingEndpointError` so the UI can show a friendly message.
@@ -77,7 +77,7 @@ export async function streamAssistant(opts: StreamOptions): Promise<string> {
     if (done) break;
     buffer += decoder.decode(value, { stream: true });
 
-    // Anthropic SSE frames are separated by a blank line.
+    // OpenAI-compatible SSE frames are separated by a blank line.
     let splitIdx: number;
     while ((splitIdx = buffer.indexOf('\n\n')) !== -1) {
       const frame = buffer.slice(0, splitIdx);
@@ -93,11 +93,9 @@ export async function streamAssistant(opts: StreamOptions): Promise<string> {
 }
 
 /**
- * Each SSE frame looks like:
- *   event: content_block_delta
- *   data: {"type":"content_block_delta","delta":{"type":"text_delta","text":"Hi"}}
- * We only care about text deltas — everything else (message_start, usage,
- * message_stop) is ignored.
+ * Each Groq/OpenAI-compatible SSE frame looks like:
+ *   data: {"choices":[{"delta":{"content":"Hi"}}]}
+ * Stream terminates with a `data: [DONE]` sentinel which we ignore.
  */
 function extractDeltaText(frame: string): string | null {
   const dataLine = frame
@@ -108,13 +106,9 @@ function extractDeltaText(frame: string): string | null {
   if (!payload || payload === '[DONE]') return null;
   try {
     const parsed = JSON.parse(payload) as {
-      type?: string;
-      delta?: { type?: string; text?: string };
+      choices?: Array<{ delta?: { content?: string } }>;
     };
-    if (parsed.type === 'content_block_delta' && parsed.delta?.type === 'text_delta') {
-      return parsed.delta.text ?? null;
-    }
-    return null;
+    return parsed.choices?.[0]?.delta?.content ?? null;
   } catch {
     return null;
   }

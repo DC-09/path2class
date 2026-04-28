@@ -21,8 +21,9 @@
 html,
 body,
 #root {
-  height: 100%;
   margin: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
 }
 
 html {
@@ -34,13 +35,14 @@ html {
 body {
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   color: var(--navy);
-  background: #0d0e11;
-  overflow: hidden;
+  background: radial-gradient(ellipse at top, #f4f3ef 0%, #e8e1d0 55%, #ddd6c4 100%);
+  overflow-x: hidden;
 }
 
 #root {
-  height: 100%;
   width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
 }
 
 /* ----- Warm campus background (same on every screen) ----- */
@@ -60,13 +62,14 @@ body {
 
 /* ----- Liquid Glass surfaces ----- */
 .glass {
-  background: rgba(255, 255, 255, 0.32);
+  background: rgba(255, 255, 255, 0.4);
   backdrop-filter: blur(24px) saturate(150%);
   -webkit-backdrop-filter: blur(24px) saturate(150%);
-  border: 1px solid rgba(255, 255, 255, 0.28);
+  border: 1px solid rgba(255, 255, 255, 0.18);
   box-shadow:
-    0 16px 40px -12px rgba(30, 58, 95, 0.25),
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.45);
+    0 14px 44px -14px rgba(30, 58, 95, 0.09),
+    0 3px 10px -3px rgba(30, 58, 95, 0.04),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.5);
   position: relative;
 }
 .glass::before {
@@ -82,19 +85,20 @@ body {
 }
 
 .glass-strong {
-  background: rgba(255, 255, 255, 0.55);
+  background: rgba(255, 255, 255, 0.58);
   backdrop-filter: blur(36px) saturate(160%);
   -webkit-backdrop-filter: blur(36px) saturate(160%);
-  border: 1px solid rgba(255, 255, 255, 0.32);
+  border: 1px solid rgba(255, 255, 255, 0.22);
   box-shadow:
-    0 30px 60px -20px rgba(30, 58, 95, 0.35),
+    0 22px 64px -20px rgba(30, 58, 95, 0.14),
+    0 4px 16px -4px rgba(30, 58, 95, 0.06),
     inset 0 1px 0 0 rgba(255, 255, 255, 0.55);
 }
 .glass-dim {
-  background: rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(18px) saturate(140%);
   -webkit-backdrop-filter: blur(18px) saturate(140%);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 /* ----- Accent fills & glows ----- */

@@ -16,7 +16,7 @@ prototype is **presentation only**; the real app is full-screen.
 - **react-i18next** — IT / EN / PT (IT primary)
 - **Lucide React** — available; custom inline SVG used where 1:1 match matters
 - **@tensorflow/tfjs** — listed for the real YOLO plugin point (not installed yet — see below)
-- **Supabase Edge Functions** — `chat-assistant` streams Anthropic responses
+- **Supabase Edge Functions** — `chat-assistant` streams Groq (Llama 3.3 70B) responses
 
 This is a plain web app, not a PWA — no manifest, no service worker, no "add to home screen". Open it in a mobile browser and use it like any other website.
 
@@ -141,7 +141,7 @@ No page / component changes should be required.
 
 ## Supabase deployment
 
-The assistant is **real, not mocked**. A Supabase Edge Function proxies streaming calls to Anthropic's Messages API and injects a strict, corridor-scoped system prompt.
+The assistant is **real, not mocked**. A Supabase Edge Function proxies streaming calls to Groq's OpenAI-compatible Chat Completions API and injects a strict, corridor-scoped system prompt.
 
 ### One-time setup
 
@@ -151,8 +151,10 @@ npm install -g supabase
 supabase init                   # creates supabase/ config if absent
 supabase login
 supabase link --project-ref <YOUR-PROJECT-REF>
-supabase secrets set ANTHROPIC_API_KEY=sk-ant-…
+supabase secrets set GROQ_API_KEY=gsk_…
 ```
+
+Get a key at https://console.groq.com (free tier is plenty for development).
 
 ### Deploy
 
@@ -177,8 +179,8 @@ cp .env.example .env.local
 
 - Accepts `POST { message, context, history }`.
 - Builds the system prompt from the context (location, destination, mode, accessibility, language, current step, recent detections).
-- Calls `claude-sonnet-4-6` with `max_tokens: 400`, `stream: true`.
-- Proxies the upstream SSE body verbatim — the frontend parses `content_block_delta` frames and appends tokens to the visible chat bubble as they arrive.
+- Calls `llama-3.3-70b-versatile` on Groq with `max_tokens: 400`, `stream: true`.
+- Proxies the upstream SSE body verbatim — the frontend parses OpenAI-format `choices[0].delta.content` frames and appends tokens to the visible chat bubble as they arrive.
 - CORS is locked to `localhost:5173` and `*.vercel.app`. Update
   `ALLOWED_ORIGIN_SUFFIXES` / `ALLOWED_ORIGINS` in the function when deploying to another host.
 

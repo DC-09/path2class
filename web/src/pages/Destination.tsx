@@ -15,7 +15,7 @@ export default function Destination() {
     : corridor.destination.etaMinutes.standard;
 
   return (
-    <div className="warm-bg absolute inset-0 fade-in flex flex-col">
+    <div className="warm-bg relative min-h-[100dvh] fade-in flex flex-col pb-8">
       <div className="pt-14 px-5 flex items-center justify-between relative z-10">
         <button
           onClick={() => navigate('/landing')}

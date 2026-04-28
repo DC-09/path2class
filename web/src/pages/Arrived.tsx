@@ -49,7 +49,7 @@ export default function Arrived() {
   ];
 
   return (
-    <div className="warm-bg absolute inset-0 fade-in flex flex-col overflow-hidden">
+    <div className="warm-bg relative min-h-[100dvh] fade-in flex flex-col overflow-hidden">
       <div aria-hidden className="absolute inset-0 pointer-events-none z-[5]">
         {pieces.map((p, i) => (
           <span

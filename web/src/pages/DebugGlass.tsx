@@ -13,7 +13,7 @@ import {
  */
 export default function DebugGlass() {
   return (
-    <div className="warm-bg absolute inset-0 overflow-auto no-scrollbar">
+    <div className="warm-bg relative min-h-[100dvh]">
       <div className="relative z-10 max-w-[540px] mx-auto px-5 py-14 space-y-6">
         <header>
           <div className="text-[10px] trk-wide uppercase text-navy/60">Path2Class · Step 2</div>

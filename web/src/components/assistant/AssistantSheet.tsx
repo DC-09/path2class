@@ -142,7 +142,7 @@ export function AssistantSheet() {
   if (!open) return null;
 
   return (
-    <div className="absolute inset-0 z-40" onClick={close}>
+    <div className="fixed inset-0 z-40" onClick={close}>
       <div
         aria-hidden
         className="absolute inset-0"

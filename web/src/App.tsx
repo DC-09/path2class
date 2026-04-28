@@ -25,7 +25,7 @@ function App() {
   }, [i18n, language]);
 
   return (
-    <div className="relative w-full h-full overflow-hidden">
+    <div className="relative w-full">
       <Routes>
         <Route path="/" element={<Splash />} />
         <Route path="/landing" element={<Landing />} />

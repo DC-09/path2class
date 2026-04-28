@@ -1,37 +1,94 @@
 /**
- * Stylised geometric QR glyph for the Splash card.
- * Not a scannable QR — decorative only.
- * 1:1 port from PROTOTYPE_REFERENCE.html.
+ * Decorative QR code glyph for the Splash card.
+ * Not scannable — visual only.
  */
 export function QRArt() {
+  const dark = '#1E3A5F';
+  const accent = '#7BC4D9';
+  const finderColor = '#3B7DD8';
+
+  // 21x21 grid — finder pattern zones are rendered separately as shapes
+  // 0 = empty, 1 = dark module, 2 = skip (finder zone handled below)
+  const grid = [
+    [2,2,2,2,2,2,2,0,1,0,1,0,1,0,2,2,2,2,2,2,2],
+    [2,2,2,2,2,2,2,0,0,1,0,1,0,0,2,2,2,2,2,2,2],
+    [2,2,2,2,2,2,2,0,1,0,1,0,1,0,2,2,2,2,2,2,2],
+    [2,2,2,2,2,2,2,0,0,1,1,0,0,0,2,2,2,2,2,2,2],
+    [2,2,2,2,2,2,2,0,1,1,0,1,1,0,2,2,2,2,2,2,2],
+    [2,2,2,2,2,2,2,0,0,0,1,0,0,0,2,2,2,2,2,2,2],
+    [2,2,2,2,2,2,2,0,1,0,1,0,1,0,2,2,2,2,2,2,2],
+    [0,0,0,0,0,0,0,0,1,1,0,1,0,0,0,0,0,0,0,0,0],
+    [1,0,1,1,0,1,1,1,0,0,1,0,1,1,1,0,1,1,0,1,0],
+    [0,1,0,0,1,0,0,0,1,0,0,1,0,0,0,1,0,0,1,0,1],
+    [1,1,0,1,1,0,1,1,0,1,1,0,1,1,0,1,1,0,1,1,0],
+    [0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1],
+    [1,0,1,1,0,1,1,0,0,1,1,0,0,1,1,0,1,0,0,1,1],
+    [0,0,0,0,0,0,0,0,1,0,1,0,1,1,0,0,0,1,0,0,1],
+    [2,2,2,2,2,2,2,0,0,1,0,0,1,0,1,0,1,1,0,1,0],
+    [2,2,2,2,2,2,2,0,1,0,1,1,0,1,0,1,0,0,1,0,1],
+    [2,2,2,2,2,2,2,0,0,0,0,1,1,0,1,1,0,1,1,0,0],
+    [2,2,2,2,2,2,2,0,1,1,0,0,1,0,0,0,1,0,0,1,1],
+    [2,2,2,2,2,2,2,0,0,1,1,1,0,1,1,0,0,1,0,1,0],
+    [2,2,2,2,2,2,2,0,1,0,0,0,1,0,0,1,1,0,1,0,1],
+    [2,2,2,2,2,2,2,0,0,1,1,0,0,1,0,0,1,1,0,1,1],
+  ];
+
+  const cell = 9;
+  const gap = 1.2;
+  const total = 21 * cell;
+
+  // Finder pattern: outer rounded square + white ring + inner square
+  function Finder({ col, row }: { col: number; row: number }) {
+    const x = col * cell;
+    const y = row * cell;
+    const outer = 7 * cell;
+    const outerR = 10;
+    const innerSize = 3 * cell;
+    const innerX = x + 2 * cell;
+    const innerY = y + 2 * cell;
+    const innerR = 5;
+    return (
+      <g>
+        {/* Outer filled rounded square */}
+        <rect x={x} y={y} width={outer} height={outer} rx={outerR} fill={finderColor} />
+        {/* White inset */}
+        <rect x={x + cell} y={y + cell} width={5 * cell} height={5 * cell} rx={6} fill="#F4F3EF" />
+        {/* Inner solid square */}
+        <rect x={innerX} y={innerY} width={innerSize} height={innerSize} rx={innerR} fill={finderColor} />
+      </g>
+    );
+  }
+
   return (
-    <svg viewBox="0 0 120 120" className="w-[180px] h-[180px]" aria-hidden="true" role="presentation">
-      <defs>
-        <linearGradient id="qg" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="#1E3A5F" />
-          <stop offset="1" stopColor="#4B6B8F" />
-        </linearGradient>
-      </defs>
-      {[
-        [8, 8],
-        [84, 8],
-        [8, 84],
-      ].map(([x, y], i) => (
-        <g key={i}>
-          <rect x={x} y={y} width="28" height="28" rx="6" fill="url(#qg)" />
-          <rect x={x + 6} y={y + 6} width="16" height="16" rx="3" fill="#F4F3EF" />
-          <rect x={x + 10} y={y + 10} width="8" height="8" rx="1.5" fill="#1E3A5F" />
-        </g>
-      ))}
-      {Array.from({ length: 40 }).map((_, i) => {
-        const cx = 40 + (i % 5) * 8;
-        const cy = 44 + Math.floor(i / 5) * 8;
-        const on = [1, 3, 5, 7, 9, 12, 15, 17, 20, 22, 24, 27, 30, 33, 35, 38].includes(i);
-        return on ? <rect key={i} x={cx} y={cy} width="6" height="6" rx="1.5" fill="#1E3A5F" /> : null;
-      })}
-      <rect x="44" y="84" width="10" height="10" rx="2" fill="#7BC4D9" />
-      <rect x="60" y="88" width="6" height="6" rx="1.5" fill="#1E3A5F" />
-      <rect x="72" y="84" width="10" height="10" rx="2" fill="#1E3A5F" />
+    <svg
+      viewBox={`0 0 ${total} ${total}`}
+      className="w-[200px] h-[200px]"
+      aria-hidden="true"
+      role="presentation"
+    >
+      {/* Data modules */}
+      {grid.map((row, ri) =>
+        row.map((val, ci) => {
+          if (val !== 1) return null;
+          const x = ci * cell + gap / 2;
+          const y = ri * cell + gap / 2;
+          const w = cell - gap;
+          const isAccent = ri === 10 && ci === 10;
+          return (
+            <rect
+              key={`${ri}-${ci}`}
+              x={x} y={y} width={w} height={w}
+              rx={2}
+              fill={isAccent ? accent : dark}
+            />
+          );
+        })
+      )}
+
+      {/* Finder patterns drawn on top as clean shapes */}
+      <Finder col={0} row={0} />
+      <Finder col={14} row={0} />
+      <Finder col={0} row={14} />
     </svg>
   );
 }

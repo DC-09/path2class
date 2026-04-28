@@ -1,24 +1,26 @@
 /**
  * Supabase Edge Function — chat-assistant
  *
- * Streams a response from the Anthropic Messages API back to the browser.
- * Deployed to Supabase; the only secret it needs is ANTHROPIC_API_KEY.
+ * Streams a response from Groq's OpenAI-compatible Chat Completions API
+ * back to the browser. Deployed to Supabase; the only secret it needs is
+ * GROQ_API_KEY.
  *
- *   supabase secrets set ANTHROPIC_API_KEY=sk-ant-…
+ *   supabase secrets set GROQ_API_KEY=gsk_…
  *   supabase functions deploy chat-assistant
  *
  * Request shape (POST JSON):
  *   { message: string, context: AssistantContext, history: ChatMessage[] }
  *
- * Response: text/event-stream proxying Anthropic's SSE stream verbatim.
+ * Response: text/event-stream proxying Groq's SSE stream verbatim.
  */
 
 // deno-lint-ignore-file no-explicit-any
 // @ts-ignore — Deno global is provided by the Supabase Edge runtime.
 declare const Deno: { env: { get(k: string): string | undefined }; serve: (h: (r: Request) => Response | Promise<Response>) => void };
 
-const MODEL = 'claude-sonnet-4-6';
+const MODEL = 'llama-3.3-70b-versatile';
 const MAX_TOKENS = 400;
+const GROQ_ENDPOINT = 'https://api.groq.com/openai/v1/chat/completions';
 
 const ALLOWED_ORIGIN_SUFFIXES = ['.vercel.app'];
 const ALLOWED_ORIGINS = ['http://localhost:5173', 'http://127.0.0.1:5173'];
@@ -79,17 +81,18 @@ KNOWN MAP (complete — nothing else exists in this demo)
 - Entrance (QR checkpoint) → Elevator on left → Stairs on right (avoid if accessibility ON) → Room 17 W left → Notice board → Room 21 W right → Emergency exit.
 
 JOB
-1. Answer in 1-2 sentences, max 3. Never verbose.
-2. Respond in ${ctx.language}; switch if the user switches.
+1. Answer in 2-3 sentences. Be helpful and friendly, not robotic.
+2. Respond in ${ctx.language}; switch naturally if the user switches language.
 3. When asked to simplify, rephrase the current instruction referencing visible landmarks.
-4. Be warm but brief when the user is rushed or anxious.
+4. If the user seems lost or anxious, reassure them briefly before giving directions.
 5. If the user describes a mobility need and accessibility is OFF, suggest toggling it.
 6. NEVER invent rooms, distances, or facilities.
-7. If asked about anything outside the corridor, say: "That's outside the current demo area. This prototype covers only the west corridor on floor 2 of Building B." (Translate into the user's language.)
+7. If asked something outside navigation (e.g. the time, general questions), answer briefly and naturally if you can, then bring the focus back to helping them navigate. Only deflect if the question is truly unrelated to anything you can help with.
 8. For medical, emotional or safety emergencies, redirect to human help.
+9. You can make small talk — if the user greets you, greet back. If they thank you, acknowledge it warmly.
 
 STYLE
-Calm concierge, not chatbot. No emoji. No "Great question!" openings. Short native-quality sentences.`;
+Friendly campus guide, not a strict chatbot. Warm but concise. No emoji. No "Great question!" openings. Speak like a helpful person, not a system.`;
 }
 
 function jsonError(status: number, message: string, origin: string | null): Response {
@@ -109,9 +112,9 @@ Deno.serve(async (req) => {
     return jsonError(405, 'Method not allowed', origin);
   }
 
-  const apiKey = Deno.env.get('ANTHROPIC_API_KEY');
+  const apiKey = Deno.env.get('GROQ_API_KEY');
   if (!apiKey) {
-    return jsonError(500, 'ANTHROPIC_API_KEY is not configured on the server', origin);
+    return jsonError(500, 'GROQ_API_KEY is not configured on the server', origin);
   }
 
   let body: RequestBody;
@@ -128,19 +131,18 @@ Deno.serve(async (req) => {
   const history = Array.isArray(body.history) ? body.history.slice(-20) : [];
   const systemPrompt = buildSystemPrompt(body.context);
 
-  const upstream = await fetch('https://api.anthropic.com/v1/messages', {
+  const upstream = await fetch(GROQ_ENDPOINT, {
     method: 'POST',
     headers: {
       'content-type': 'application/json',
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01',
+      authorization: `Bearer ${apiKey}`,
     },
     body: JSON.stringify({
       model: MODEL,
       max_tokens: MAX_TOKENS,
       stream: true,
-      system: systemPrompt,
       messages: [
+        { role: 'system', content: systemPrompt },
         ...history.map((m) => ({ role: m.role, content: m.content })),
         { role: 'user', content: body.message },
       ],
@@ -151,7 +153,7 @@ Deno.serve(async (req) => {
     const detail = await upstream.text().catch(() => '');
     return jsonError(
       upstream.status || 502,
-      `Anthropic upstream error: ${detail.slice(0, 500)}`,
+      `Groq upstream error: ${detail.slice(0, 500)}`,
       origin,
     );
   }

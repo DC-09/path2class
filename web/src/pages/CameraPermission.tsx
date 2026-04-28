@@ -12,7 +12,7 @@ export default function CameraPermission() {
   const { t } = useTranslation();
 
   return (
-    <div className="warm-bg absolute inset-0 fade-in flex items-center justify-center px-6">
+    <div className="warm-bg relative min-h-[100dvh] fade-in flex items-center justify-center px-6 py-8">
       <div className="relative z-10 w-full">
         <GlassCard className="p-6" strong radius="4xl">
           <div className="w-16 h-16 rounded-2xl cyan-glow flex items-center justify-center mx-auto">

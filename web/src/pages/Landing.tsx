@@ -36,7 +36,7 @@ export default function Landing() {
 
   if (invalidLoc) {
     return (
-      <div className="warm-bg absolute inset-0 flex items-center justify-center px-6 fade-in">
+      <div className="warm-bg relative min-h-[100dvh] flex items-center justify-center px-6 py-8 fade-in">
         <GlassCard className="p-6 w-full max-w-[360px] text-center" strong radius="4xl">
           <div
             className="w-14 h-14 rounded-2xl coral-glow flex items-center justify-center mx-auto"
@@ -68,7 +68,7 @@ export default function Landing() {
   ];
 
   return (
-    <div className="warm-bg absolute inset-0 fade-in overflow-hidden">
+    <div className="warm-bg relative min-h-[100dvh] fade-in pb-28">
       {/* Status header */}
       <div className="relative z-10 px-5 pt-14 pb-4">
         <GlassCard className="p-4">
