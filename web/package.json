@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@tensorflow/tfjs": "^4.22.0",
+    "@tensorflow/tfjs-backend-cpu": "^4.22.0",
     "clsx": "^2.1.1",
     "i18next": "^26.0.7",
     "lucide-react": "^1.8.0",
