@@ -20,7 +20,7 @@ GitHub: `https://github.com/DC-09/path2class.git`
 - Zustand (session + assistant stores)
 - react-i18next (IT primary, EN, PT)
 - lucide-react (available; custom inline SVG used for prototype-exact match)
-- @tensorflow/tfjs (planned for real YOLO; not yet installed)
+- @tensorflow/tfjs (installed — CPU backend, used for real YOLO inference)
 
 **LLM service** — `supabase/functions/chat-assistant/`
 - Deno Supabase Edge Function
@@ -46,7 +46,7 @@ GitHub: `https://github.com/DC-09/path2class.git`
 │   web/ (Vite/React PWA-style)    │  ← Current frontend
 │  ─ pages/ (7 routes)              │
 │  ─ services/                      │
-│     ─ detectionService.ts (MOCK)  │  ← TODO: swap for real YOLO via TFJS
+│     ─ detectionService.ts (REAL)  │  ← YOLOv8n TFJS, CPU backend, NMS
 │     ─ assistantService.ts (SSE)   │  ─┐
 │     ─ storageService.ts           │   │
 │  ─ stores/ (Zustand)              │   │
@@ -91,7 +91,13 @@ Progetto/
 │   ├── tailwind.config.js      # Custom palette + radii (rounded-4xl: 32px)
 │   ├── index.html              # Root HTML, no PWA manifest (plain web app by design)
 │   ├── public/
-│   │   └── logo.svg            # Used as favicon too
+│   │   ├── logo.svg            # Used as favicon too
+│   │   └── models/
+│   │       └── yolov8n_web_model/  # TFJS graph model (320px, 9 classes)
+│   │           ├── model.json      # Model topology
+│   │           ├── group1-shard1of3.bin
+│   │           ├── group1-shard2of3.bin
+│   │           └── group1-shard3of3.bin
 │   └── src/
 │       ├── main.tsx            # ReactDOM bootstrap + i18n init
 │       ├── App.tsx             # Routes + i18n sync + AssistantSheet mount
@@ -118,8 +124,8 @@ Progetto/
 │       │                               # ChatMessage, TypingIndicator,
 │       │                               # SuggestionChips, ChatComposer
 │       ├── services/
-│       │   ├── detectionService.ts     # MOCK YOLO — public API frozen,
-│       │   │                           # TFJS scaffold in comments
+│       │   ├── detectionService.ts     # REAL YOLOv8n via TF.js CPU backend
+│       │   │                           # NMS post-processing, ~3 FPS throttle
 │       │   ├── assistantService.ts     # SSE client (fetch + ReadableStream),
 │       │   │                           # MissingEndpointError class
 │       │   ├── assistantContext.ts     # Builds AssistantContext payload
@@ -223,10 +229,12 @@ Progetto/
 - Suggestion chips per active route
 - Edge function with strict CORS (localhost:5173 + *.vercel.app), system-prompt construction, full corridor map embedded in prompt
 
-**Detection (mocked)**
+**Detection (real)**
 - `detectionService` with stable public API: `subscribe(listener)`, `start()`, `stop()`, `DetectionFrame`, `Detection`, `BBox` (normalized 0..1)
-- Scripted 4-frame sequence with bbox jitter
-- Full TFJS swap-in scaffold in comments at the bottom of the file
+- YOLOv8n model trained on campus images (Roboflow dataset, version 3, 9 classes, imgsz=320)
+- Exported as TFJS Graph Model, served from `web/public/models/yolov8n_web_model/`
+- TF.js CPU backend (avoids WebGL context conflict with camera), ~3 FPS throttle
+- Full NMS post-processing and YOLOv8 output decoding implemented in TypeScript
 
 ### 🟡 Partial
 
@@ -252,10 +260,8 @@ Progetto/
 
 ### ❌ Missing
 
-- **Real YOLO weights** — no trained model checkpoint anywhere
-- **TFJS conversion** of any model (`export_model.py` targets ONNX, not TFJS Graph)
 - **Real-world QR codes** — no generated/printed assets, no encoding utility for `?loc=<key>` URLs
-- **Production deploy** — no Vercel/hosting target configured
+- **Production deploy** — code is on GitHub (commit `052c612`) but Vercel auto-deploy didn't trigger; needs `npx vercel --prod` from `web/` or webhook fix by dc-09
 - **Tests** — zero unit/integration tests in any module
 - **Service worker / installable PWA** — explicitly removed by the user; "plain web app" was a hard requirement
 
@@ -271,7 +277,7 @@ Progetto/
 6. **Untracked `ios/` folder** — appears in `git status` as `?? ios/`. SwiftUI mockup not committed; user should decide whether to commit, gitignore, or delete.
 7. **Old `frontend/` has uncommitted modifications** — `git status` shows `M frontend/{index.html, css/style.css, js/app.js}` and `M backend/app/main.py`. These predate the Vite rewrite. Either revert/discard or migrate any salvageable changes before deleting.
 8. **`vite.config.ts:server.allowedHosts: true`** is set permissively for ngrok testing. Acceptable for dev but worth noting in deployment docs.
-9. **Detection mock script is hardcoded to 4 frames** — looping. The real YOLO swap will need to also remove the `SCRIPT` constant.
+9. **Vercel auto-deploy not firing** — the GitHub webhook didn't trigger a new deployment on push `052c612`. dc-09 should check Vercel project → Settings → Git → verify the branch and webhook configuration.
 
 ---
 
@@ -297,14 +303,11 @@ Three options, in increasing effort:
 - **(c) Hybrid** — backend serves only `/api/detect`; assistant stays on Supabase. Keeps each component on its best platform.
 Pick one before doing #3 below.
 
-### 3. Train YOLO
-- Collect ≥ 200 labeled images of the target corridor (Building B 2nd floor west wing) — multiple lighting, angles, distances
-- Annotate with the 9 classes from `yolo/config/campus_dataset.yaml`
-- Run `python yolo/scripts/train.py` (verify args inside)
-- For client-side AR: convert to TFJS Graph format (note: `export_model.py` exports ONNX; will need a separate TFJS conversion step using `tensorflowjs_converter`)
+### 3. Test YOLO in the Real Corridor
+The model is trained (Roboflow dataset, version 3) and integrated. Test on-site at Building B, 2nd floor, west wing. If accuracy is insufficient, collect more images and re-train with `python yolo/scripts/train.py`, then re-export with `model.export(format='tfjs', imgsz=320)` and replace the files under `web/public/models/yolov8n_web_model/`.
 
-### 4. Wire Real Detection
-If client-side: install `@tensorflow/tfjs`, place TFJS Graph model files under `web/public/models/yolov8n_web_model/`, replace MOCK section of `detectionService.ts` with the scaffold (already in comments at line ~150+), keep the public API intact. Class index → name mapping must use `DetectionClass` order verbatim.
+### 4. Deploy to Vercel
+Run `npx vercel --prod` from `web/`. Alternatively, have dc-09 check the Vercel project's Git integration settings — the auto-deploy webhook didn't fire on the `052c612` push.
 
 ### 5. Generate Physical QR Codes
 Each QR encodes `https://<deploy-url>/landing?loc=<locationKey>`. For the MVP, only `entrance_b_corridor_2w` is recognized; `Landing.tsx:30` checks against `corridor.locationKey` and shows an error card for unknown values. Extend `corridor.json` (or move to a multi-location data file) when adding more.
@@ -314,8 +317,8 @@ Currently the UI hardcodes a single destination (Room 21 W). To extend:
 - Either migrate `web/src/data/corridor.json` to a multi-node graph similar to `backend/app/data/campus_graph.json`
 - Or wire the FastAPI backend's `/api/navigation/destinations` and `/api/navigation/route` endpoints
 
-### 7. Deploy to Vercel
-Web app is static and Vite-built — `vercel --prod` from `web/` should work zero-config. Update edge function CORS allowlist if domain isn't `*.vercel.app`.
+### 7. User Testing
+On real campus hardware. Verify HTTPS works, camera permission flow on iOS Safari (which has its own quirks with `getUserMedia`), and SSE doesn't break behind university Wi-Fi.
 
 ### 8. User Testing
 On real campus hardware. Verify HTTPS works, camera permission flow on iOS Safari (which has its own quirks with `getUserMedia`), and SSE doesn't break behind university Wi-Fi.
@@ -408,8 +411,10 @@ Will run in mock mode for both YOLO and LLM unless `.env` provides keys + a `.pt
 ## Recent Git History
 
 ```
+052c612  Integrate real YOLOv8 TFJS model replacing mock detection service
+345e042  Rebuild UI, activate Groq assistant, deploy to Vercel, clean up legacy code
 f1162c0  Rebuild frontend as Vite + React + TypeScript web app
 090112b  Initial commit: Path2Class AR campus navigation system
 ```
 
-The Vite/React rewrite (commit `f1162c0`) is the current frontend; everything in `frontend/` predates it and is deprecated. As of this writing there are uncommitted modifications in `web/` (iOS Safari `100dvh` viewport refactor + softened glass shadows), plus uncommitted edits in `frontend/` and `backend/app/main.py` that should be reviewed before any new commit.
+The YOLO integration (commit `052c612`) replaced the mock `detectionService` with real TF.js inference. The model was trained on Roboflow (project `niccols-workspace-y3vkd/path2class`, version 3) and exported as a TFJS Graph Model at 320px.

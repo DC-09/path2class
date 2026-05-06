@@ -109,15 +109,14 @@ Esiste anche un **prototipo iOS in SwiftUI** — è una bozza grafica della stes
 
 - L'intera interfaccia visiva su mobile e desktop
 - La navigazione tra schermate
-- La fotocamera live in modalità AR (con tunneling HTTPS via ngrok)
-- Il riconoscimento oggetti **simulato** (sequenza scriptata che imita YOLO finché non c'è un modello vero)
+- La fotocamera live in modalità AR (con tunneling HTTPS via ngrok o Vercel)
+- Il riconoscimento oggetti **reale** con il modello YOLOv8n allenato sul corridoio target (CPU backend TF.js, ~3 FPS, NMS post-processing)
 - La navigazione testuale con step list e mini-piantina
 - Scelta lingua, percorso accessibile, destinazioni recenti salvate localmente
 - Tutto il codice dell'assistente AI fino al punto di chiamata della funzione Supabase
 
 ## Cosa NON funziona ancora
 
-- **Il modello YOLO reale**: il dataset di immagini del campus è vuoto, non c'è ancora un modello allenato. L'app usa una sequenza finta di rilevamenti per il momento.
 - **L'assistente AI in produzione**: il codice c'è ma serve la chiave API Groq e il deploy della funzione su Supabase. Senza, l'utente vede un messaggio "non configurato".
 - **Il backend Python non è collegato alla web app**: il vecchio frontend HTML lo usava, il nuovo no. Per ora è "isolato" — utile come riferimento ma non parte del flusso.
 - **Niente QR code fisici reali**: l'app simula la scansione tramite un pulsante. La generazione e stampa dei QR è un passo successivo.
@@ -126,16 +125,16 @@ Esiste anche un **prototipo iOS in SwiftUI** — è una bozza grafica della stes
 ## Prossimi passi (in ordine di priorità)
 
 1. **Attivare l'assistente AI**: ottenere una chiave API Groq (gratis su https://console.groq.com), fare il deploy della funzione Supabase, configurare l'endpoint nel file `.env.local`
-2. **Allenare il modello YOLO**: raccogliere foto reali del corridoio target, etichettarle con le 9 classi previste (cartelli, frecce, porte, ascensori, scale, rampe, QR, landmark), allenare con gli script già pronti in `yolo/scripts/`
-3. **Integrare YOLO nella web app**: sostituire il servizio simulato con il modello reale convertito in formato TensorFlow.js — lo scaffold è già pronto, è una sostituzione di poche righe
-4. **Generare e stampare i QR code fisici**: ogni QR codifica un URL del tipo `/landing?loc=<codice-posizione>`
-5. **Estendere la mappa oltre il singolo corridoio**: collegare il grafo completo del backend (più edifici e piani) alla nuova interfaccia
-6. **Deploy in produzione**: pubblicare la web app su Vercel (gratis, già pronto per il build)
-7. **Test su utenti reali** in campus
+2. **Testare il riconoscimento YOLO nel corridoio reale**: il modello è integrato e funzionante in locale — verificare le detection sul campo (Edificio B, 2° piano, ala ovest) e ri-allenare se necessario con più immagini
+3. **Generare e stampare i QR code fisici**: ogni QR codifica un URL del tipo `/landing?loc=<codice-posizione>`
+4. **Estendere la mappa oltre il singolo corridoio**: collegare il grafo completo del backend (più edifici e piani) alla nuova interfaccia
+5. **Deploy in produzione su Vercel**: il codice è già su GitHub (commit `052c612`) — serve triggerare il build su Vercel (il webhook automatico non si è attivato; dc-09 deve configurarlo o usare `npx vercel --prod` da `web/`)
+6. **Test su utenti reali** in campus
 
 ## Problemi noti
 
 - **I nomi delle destinazioni recenti non si traducono dopo il salvataggio**: se salvi "Aula 21 W" in italiano e poi cambi lingua, resta in italiano. Soluzione facile per il futuro — salvare l'ID e tradurre al momento.
 - **iOS richiede un gesto utente per il sensore di orientamento**: oggi non lo usiamo (la freccia AR è guidata dallo store dell'app), ma se in futuro vogliamo orientare la freccia con la bussola va aggiunto un permesso esplicito.
 - **Il vecchio frontend (`/frontend`) e l'iOS proof-of-concept (`/ios`) sono codice abbandonato**: vanno rimossi o archiviati per non creare confusione nel team.
-- **La fotocamera richiede HTTPS**: per testare su telefono serve ngrok o un deploy. È documentato nel README.
+- **La fotocamera richiede HTTPS**: per testare su telefono serve ngrok o un deploy Vercel. È documentato nel README.
+- **Vercel non si aggiorna automaticamente**: il webhook GitHub di Vercel non ha triggerato al push `052c612`. dc-09 deve verificare le impostazioni di auto-deploy nel progetto Vercel o usare la CLI.
