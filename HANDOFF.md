@@ -231,7 +231,8 @@ Progetto/
 
 **Detection (real)**
 - `detectionService` with stable public API: `subscribe(listener)`, `start()`, `stop()`, `DetectionFrame`, `Detection`, `BBox` (normalized 0..1)
-- YOLOv8n model trained on campus images (Roboflow dataset, version 3, 9 classes, imgsz=320)
+- YOLOv8n model trained on campus images (Roboflow dataset `niccols-workspace-y3vkd/path2class`, version 3, imgsz=320)
+- **7 classes** (from `metadata.yaml`): `path2class` (0), `bin` (1), `door` (2), `elevator` (3), `painting` (4), `signal` (5), `vent` (6)
 - Exported as TFJS Graph Model, served from `web/public/models/yolov8n_web_model/`
 - TF.js CPU backend (avoids WebGL context conflict with camera), ~3 FPS throttle
 - Full NMS post-processing and YOLOv8 output decoding implemented in TypeScript

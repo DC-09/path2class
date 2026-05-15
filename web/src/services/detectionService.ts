@@ -1,15 +1,13 @@
 import * as tf from '@tensorflow/tfjs';
 
 export type DetectionClass =
-  | 'sign_room_number'
-  | 'sign_building_name'
-  | 'direction_arrow'
-  | 'entrance_door'
-  | 'elevator_door'
-  | 'staircase'
-  | 'ramp'
-  | 'path2class_qr'
-  | 'campus_landmark';
+  | 'path2class'
+  | 'bin'
+  | 'door'
+  | 'elevator'
+  | 'painting'
+  | 'signal'
+  | 'vent';
 
 /** Bounding box in normalised video-frame coordinates (0..1). */
 export interface BBox {
@@ -43,27 +41,23 @@ const CONF_THRESHOLD = 0.35;
 const IOU_THRESHOLD = 0.45;
 
 const CLASS_NAMES: DetectionClass[] = [
-  'sign_room_number',
-  'sign_building_name',
-  'direction_arrow',
-  'entrance_door',
-  'elevator_door',
-  'staircase',
-  'ramp',
-  'path2class_qr',
-  'campus_landmark',
+  'path2class',
+  'bin',
+  'door',
+  'elevator',
+  'painting',
+  'signal',
+  'vent',
 ];
 
 const CLASS_LABELS: Record<DetectionClass, string> = {
-  sign_room_number: 'Room Sign',
-  sign_building_name: 'Building Sign',
-  direction_arrow: 'Arrow',
-  entrance_door: 'Door',
-  elevator_door: 'Elevator',
-  staircase: 'Stairs',
-  ramp: 'Ramp',
-  path2class_qr: 'QR Code',
-  campus_landmark: 'Landmark',
+  path2class: 'QR Path2Class',
+  bin: 'Cestino',
+  door: 'Porta',
+  elevator: 'Ascensore',
+  painting: 'Quadro',
+  signal: 'Segnale',
+  vent: 'Bocchetta',
 };
 
 /* ------------------------------------------------------------------ */

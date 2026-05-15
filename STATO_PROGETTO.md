@@ -110,7 +110,7 @@ Esiste anche un **prototipo iOS in SwiftUI** — è una bozza grafica della stes
 - L'intera interfaccia visiva su mobile e desktop
 - La navigazione tra schermate
 - La fotocamera live in modalità AR (con tunneling HTTPS via ngrok o Vercel)
-- Il riconoscimento oggetti **reale** con il modello YOLOv8n allenato sul corridoio target (CPU backend TF.js, ~3 FPS, NMS post-processing)
+- Il riconoscimento oggetti **reale** con il modello YOLOv8n allenato sul corridoio target (CPU backend TF.js, ~3 FPS, NMS post-processing) — 7 classi: `path2class`, `bin`, `door`, `elevator`, `painting`, `signal`, `vent`
 - La navigazione testuale con step list e mini-piantina
 - Scelta lingua, percorso accessibile, destinazioni recenti salvate localmente
 - Tutto il codice dell'assistente AI fino al punto di chiamata della funzione Supabase

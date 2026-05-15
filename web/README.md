@@ -15,7 +15,7 @@ prototype is **presentation only**; the real app is full-screen.
 - **Zustand** — session store + assistant store
 - **react-i18next** — IT / EN / PT (IT primary)
 - **Lucide React** — available; custom inline SVG used where 1:1 match matters
-- **@tensorflow/tfjs** — listed for the real YOLO plugin point (not installed yet — see below)
+- **@tensorflow/tfjs** — installed, CPU backend, real YOLOv8n inference active
 - **Supabase Edge Functions** — `chat-assistant` streams Groq (Llama 3.3 70B) responses
 
 This is a plain web app, not a PWA — no manifest, no service worker, no "add to home screen". Open it in a mobile browser and use it like any other website.
@@ -39,7 +39,7 @@ web/
 │   │   └── assistant/      # AssistantFab, AssistantSheet, ChatMessage,
 │   │                       # TypingIndicator, SuggestionChips, ChatComposer
 │   ├── services/
-│   │   ├── detectionService.ts   # MOCK — YOLO TODO boundary
+│   │   ├── detectionService.ts   # REAL YOLOv8n via TF.js, 7 classes, CPU backend
 │   │   ├── assistantService.ts   # SSE client → Supabase edge fn
 │   │   ├── assistantContext.ts   # Builds system-prompt payload
 │   │   └── storageService.ts     # Typed localStorage wrapper (p2c.*)
@@ -114,30 +114,25 @@ The **AI Assistant** overlays every screen except Splash / Destination / Permiss
 
 `p2c.lang`, `p2c.a11y`, `p2c.recent` — namespaced keys through [storageService.ts](src/services/storageService.ts). Safe no-ops in private mode. Language auto-detects from `navigator.language` on first visit.
 
-## Swapping the YOLO mock for the real model
+## Modello YOLO integrato
 
-The detection service is intentionally **mocked** — the Deep Learning team
-owns the real implementation. The public API is a stable contract:
+Il modello reale è già attivo. La detection service carica da `public/models/yolov8n_web_model/` al primo avvio della schermata AR.
 
-```ts
-detectionService.subscribe(listener): () => void
-detectionService.start(): void
-detectionService.stop(): void
-// DetectionFrame, Detection, BBox (normalised 0..1)
-```
+**Classi riconosciute** (ordine dal `metadata.yaml`, devono corrispondere a `CLASS_NAMES` in `detectionService.ts`):
 
-The screen code (`ArNav`, `AROverlay`) consumes frames through this API and
-will continue working unchanged once the real model is plugged in.
+| Indice | Classe | Label |
+|--------|--------|-------|
+| 0 | `path2class` | QR Path2Class |
+| 1 | `bin` | Cestino |
+| 2 | `door` | Porta |
+| 3 | `elevator` | Ascensore |
+| 4 | `painting` | Quadro |
+| 5 | `signal` | Segnale |
+| 6 | `vent` | Bocchetta |
 
-To replace the mock:
+Per ri-allenare il modello: aggiorna il dataset su Roboflow, ri-esporta con `model.export(format='tfjs', imgsz=320)` in Colab, sostituisci i file in `public/models/yolov8n_web_model/` e aggiorna `CLASS_NAMES` e `DetectionClass` in `detectionService.ts` se le classi cambiano.
 
-1. Export a YOLOv8 model to TFJS Graph format at 640×640.
-2. Place the model files under `public/models/yolov8n_web_model/` (e.g. `model.json`, weight shards). **Do not commit the shards** — fetch them at build time from a model registry.
-3. Install `@tensorflow/tfjs`: `npm install @tensorflow/tfjs`
-4. Replace the MOCK section of [src/services/detectionService.ts](src/services/detectionService.ts) with the commented scaffold already present in that file (TFJS loading, RAF loop, NMS, class-name mapping).
-5. The 9 canonical classes are already enumerated in `DetectionClass`; keep them in this order when mapping model indices.
-
-No page / component changes should be required.
+La API pubblica del servizio rimane stabile (`subscribe`, `start`, `stop`, `DetectionFrame`, `Detection`, `BBox` normalizzato 0..1).
 
 ## Supabase deployment
 
