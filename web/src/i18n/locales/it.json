@@ -120,6 +120,36 @@
   },
   "assistant": {
     "open_aria": "Apri assistente",
-    "welcome": "Ciao! Posso aiutarti a orientarti, semplificare le indicazioni o rispondere a domande su questo corridoio."
+    "welcome": "Ciao! Posso aiutarti a orientarti, semplificare le indicazioni o rispondere a domande su questo corridoio.",
+    "guided": {
+      "start_chip": "Guidami all'Aula 124",
+      "intro": "Ottimo! Ti guido passo passo. Rispondi Sì o No a ogni domanda — o spiega a parole cosa vedi.",
+      "yes": "Sì",
+      "no": "No",
+      "didnt_understand": "Non ho capito. Tocca un bottone o rispondi con sì o no.",
+      "arrived": "🎉 Sei arrivato! Benvenuto in Aula 124.",
+      "steps": {
+        "1": {
+          "message": "Inquadra il QR code all'ingresso. Davanti a te dovrebbero esserci gli ascensori, con un cestino sulla sinistra e un quadro sulla destra. Li vedi?",
+          "help": "Guarda attorno a te. Cerca gli ascensori e il cestino vicino all'ingresso del corridoio, poi rispondi."
+        },
+        "2": {
+          "message": "Perfetto. Ora gira a destra: dovresti avere una porta davanti a te. La vedi?",
+          "help": "Assicurati di esserti girato a destra. Poi guarda dritto: c'è una porta da attraversare."
+        },
+        "3": {
+          "message": "Attraversa la porta e prosegui dritto. Adesso vedi delle porte sulla sinistra e un cartello (segnale) sulla destra?",
+          "help": "Continua dritto ancora qualche metro. Dovresti notare un cartello a destra e delle porte a sinistra."
+        },
+        "4": {
+          "message": "Gira a destra al cartello. Ora dovresti vedere il cartello sulla destra e una bocchetta di ventilazione sulla sinistra. È così?",
+          "help": "Verifica di esserti girato a destra. La bocchetta di ventilazione è sulla parete a sinistra."
+        },
+        "5": {
+          "message": "Prosegui dritto fino in fondo. Vedi una porta sulla destra? Quella è l'Aula 124.",
+          "help": "Continua dritto ancora un po'. L'Aula 124 è alla fine del corridoio, sulla destra."
+        }
+      }
+    }
   }
 }

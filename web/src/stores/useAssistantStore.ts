@@ -12,6 +12,12 @@ interface AssistantState {
   messages: ChatMessage[];
   isTyping: boolean;
   streaming: string;
+  /**
+   * 1-based step index when the guided navigation flow is active.
+   * null means free-form chat (or no flow started). When the user reaches
+   * the arrived state we set it back to null to leave guided mode.
+   */
+  guidedStep: number | null;
 
   openSheet: () => void;
   closeSheet: () => void;
@@ -19,6 +25,7 @@ interface AssistantState {
   appendMessage: (message: ChatMessage) => void;
   setIsTyping: (value: boolean) => void;
   setStreaming: (value: string) => void;
+  setGuidedStep: (step: number | null) => void;
   reset: () => void;
 }
 
@@ -27,6 +34,7 @@ export const useAssistantStore = create<AssistantState>((set) => ({
   messages: [],
   isTyping: false,
   streaming: '',
+  guidedStep: null,
 
   openSheet: () => set({ open: true }),
   closeSheet: () => set({ open: false }),
@@ -34,6 +42,7 @@ export const useAssistantStore = create<AssistantState>((set) => ({
   appendMessage: (message) => set((s) => ({ messages: [...s.messages, message] })),
   setIsTyping: (isTyping) => set({ isTyping }),
   setStreaming: (streaming) => set({ streaming }),
+  setGuidedStep: (guidedStep) => set({ guidedStep }),
   reset: () =>
-    set({ open: false, messages: [], isTyping: false, streaming: '' }),
+    set({ open: false, messages: [], isTyping: false, streaming: '', guidedStep: null }),
 }));

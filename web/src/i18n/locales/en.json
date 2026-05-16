@@ -120,6 +120,36 @@
   },
   "assistant": {
     "open_aria": "Open assistant",
-    "welcome": "Hi! I can help you navigate, simplify instructions, or answer questions about this corridor."
+    "welcome": "Hi! I can help you navigate, simplify instructions, or answer questions about this corridor.",
+    "guided": {
+      "start_chip": "Guide me to Room 124",
+      "intro": "Great — I'll guide you step by step. Answer Yes or No to each question, or describe what you see in your own words.",
+      "yes": "Yes",
+      "no": "No",
+      "didnt_understand": "I didn't catch that. Tap a button or reply with yes or no.",
+      "arrived": "🎉 You've arrived! Welcome to Room 124.",
+      "steps": {
+        "1": {
+          "message": "Scan the QR code at the entrance. In front of you there should be the elevators, with a bin on your left and a painting on your right. Do you see them?",
+          "help": "Look around. Find the elevators and the bin near the corridor entrance, then answer."
+        },
+        "2": {
+          "message": "Great. Now turn right — there should be a door in front of you. Can you see it?",
+          "help": "Make sure you turned right. Then look ahead: there's a door to walk through."
+        },
+        "3": {
+          "message": "Walk through the door and continue straight. Do you see doors on your left and a sign on your right?",
+          "help": "Keep going straight a few more steps. You should see a sign on the right and doors on the left."
+        },
+        "4": {
+          "message": "Turn right at the sign. You should now see the sign on your right and a ventilation grille on your left. Is that right?",
+          "help": "Make sure you turned right. The ventilation grille is on the left wall."
+        },
+        "5": {
+          "message": "Continue straight to the end. Do you see a door on your right? That's Room 124.",
+          "help": "Keep walking straight a bit more. Room 124 is at the end of the corridor, on your right."
+        }
+      }
+    }
   }
 }

@@ -120,6 +120,36 @@
   },
   "assistant": {
     "open_aria": "Abrir assistente",
-    "welcome": "Olá! Posso ajudar você a se orientar, simplificar instruções ou responder perguntas sobre este corredor."
+    "welcome": "Olá! Posso ajudar você a se orientar, simplificar instruções ou responder perguntas sobre este corredor.",
+    "guided": {
+      "start_chip": "Me guie até a Sala 124",
+      "intro": "Ótimo — vou guiar você passo a passo. Responda Sim ou Não a cada pergunta, ou descreva com suas palavras o que está vendo.",
+      "yes": "Sim",
+      "no": "Não",
+      "didnt_understand": "Não entendi. Toque em um botão ou responda com sim ou não.",
+      "arrived": "🎉 Você chegou! Bem-vindo à Sala 124.",
+      "steps": {
+        "1": {
+          "message": "Escaneie o QR code na entrada. À sua frente deve haver os elevadores, com uma lixeira à esquerda e um quadro à direita. Está vendo?",
+          "help": "Olhe ao redor. Procure os elevadores e a lixeira perto da entrada do corredor, depois responda."
+        },
+        "2": {
+          "message": "Perfeito. Agora vire à direita — deve haver uma porta à sua frente. Está vendo?",
+          "help": "Certifique-se de ter virado à direita. Depois olhe para frente: há uma porta para atravessar."
+        },
+        "3": {
+          "message": "Atravesse a porta e continue em frente. Você vê portas à esquerda e uma placa à direita?",
+          "help": "Continue em frente mais alguns metros. Você deve ver uma placa à direita e portas à esquerda."
+        },
+        "4": {
+          "message": "Vire à direita na placa. Agora você deve ver a placa à direita e uma grelha de ventilação à esquerda. Está correto?",
+          "help": "Certifique-se de ter virado à direita. A grelha de ventilação está na parede da esquerda."
+        },
+        "5": {
+          "message": "Continue em frente até o fim. Você vê uma porta à direita? Essa é a Sala 124.",
+          "help": "Continue um pouco mais em frente. A Sala 124 fica no fim do corredor, à direita."
+        }
+      }
+    }
   }
 }

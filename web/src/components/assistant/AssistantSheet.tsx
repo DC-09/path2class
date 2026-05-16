@@ -13,10 +13,18 @@ import {
   streamAssistant,
 } from '../../services/assistantService';
 import { buildAssistantContext } from '../../services/assistantContext';
+import { GUIDED_TOTAL_STEPS, interpretYesNo } from '../../data/guidedNavigation';
+
+const GUIDED_START_TOKEN = '__guided_start__';
 
 /**
  * Slide-up bottom sheet with the streaming AI chat.
  * Mounted at root; its visibility is driven by `useAssistantStore.open`.
+ *
+ * Also hosts the deterministic "guided navigation" flow — a preset Q&A
+ * that walks the user from the QR checkpoint to Room 124 without needing
+ * the LLM. The flow lives entirely on the client; see
+ * `data/guidedNavigation.ts` and the i18n keys under `assistant.guided`.
  */
 export function AssistantSheet() {
   const { t, i18n } = useTranslation();
@@ -29,9 +37,11 @@ export function AssistantSheet() {
   const messages = useAssistantStore((s) => s.messages);
   const isTyping = useAssistantStore((s) => s.isTyping);
   const streaming = useAssistantStore((s) => s.streaming);
+  const guidedStep = useAssistantStore((s) => s.guidedStep);
   const appendMessage = useAssistantStore((s) => s.appendMessage);
   const setIsTyping = useAssistantStore((s) => s.setIsTyping);
   const setStreaming = useAssistantStore((s) => s.setStreaming);
+  const setGuidedStep = useAssistantStore((s) => s.setGuidedStep);
 
   const language = useSessionStore((s) => s.language);
   const accessibility = useSessionStore((s) => s.accessibility);
@@ -68,15 +78,75 @@ export function AssistantSheet() {
     return () => window.removeEventListener('keydown', onKey);
   }, [open, close]);
 
-  const suggestions = useMemo(
-    () => pickSuggestions(location.pathname),
-    [location.pathname],
+  const startGuided = useCallback(() => {
+    appendMessage({ role: 'user', content: t('assistant.guided.start_chip') });
+    appendMessage({ role: 'assistant', content: t('assistant.guided.intro') });
+    appendMessage({
+      role: 'assistant',
+      content: t('assistant.guided.steps.1.message'),
+    });
+    setGuidedStep(1);
+  }, [appendMessage, setGuidedStep, t]);
+
+  const advanceGuided = useCallback(
+    (answer: 'yes' | 'no') => {
+      if (guidedStep === null) return;
+      appendMessage({
+        role: 'user',
+        content: t(`assistant.guided.${answer}`),
+      });
+
+      if (answer === 'no') {
+        appendMessage({
+          role: 'assistant',
+          content: t(`assistant.guided.steps.${guidedStep}.help`),
+        });
+        return;
+      }
+
+      const next = guidedStep + 1;
+      if (next > GUIDED_TOTAL_STEPS) {
+        appendMessage({
+          role: 'assistant',
+          content: t('assistant.guided.arrived'),
+        });
+        setGuidedStep(null);
+        return;
+      }
+      appendMessage({
+        role: 'assistant',
+        content: t(`assistant.guided.steps.${next}.message`),
+      });
+      setGuidedStep(next);
+    },
+    [appendMessage, guidedStep, setGuidedStep, t],
   );
+
+  const suggestions = useMemo(() => {
+    if (guidedStep !== null) return [];
+    const startChip = t('assistant.guided.start_chip');
+    return [{ id: GUIDED_START_TOKEN, label: startChip }, ...pickSuggestions(location.pathname)];
+  }, [location.pathname, guidedStep, t]);
 
   const send = useCallback(
     async (text: string) => {
       const trimmed = text.trim();
       if (!trimmed || isTyping || streaming) return;
+
+      // Guided flow: short-circuit the LLM, interpret as Sì/No.
+      if (guidedStep !== null) {
+        const interpreted = interpretYesNo(trimmed);
+        if (interpreted) {
+          advanceGuided(interpreted);
+        } else {
+          appendMessage({ role: 'user', content: trimmed });
+          appendMessage({
+            role: 'assistant',
+            content: t('assistant.guided.didnt_understand'),
+          });
+        }
+        return;
+      }
 
       appendMessage({ role: 'user', content: trimmed });
       setIsTyping(true);
@@ -99,8 +169,6 @@ export function AssistantSheet() {
         await streamAssistant({
           message: trimmed,
           context,
-          // Exclude the just-added user message — the edge function gets it
-          // as `message`, and history should stop before that point.
           history: messages,
           signal: controller.signal,
           onToken: (token) => {
@@ -127,6 +195,8 @@ export function AssistantSheet() {
     [
       isTyping,
       streaming,
+      guidedStep,
+      advanceGuided,
       appendMessage,
       setIsTyping,
       setStreaming,
@@ -137,6 +207,17 @@ export function AssistantSheet() {
       messages,
       t,
     ],
+  );
+
+  const onChipPick = useCallback(
+    (chipId: string) => {
+      if (chipId === GUIDED_START_TOKEN) {
+        startGuided();
+        return;
+      }
+      send(chipId);
+    },
+    [startGuided, send],
   );
 
   if (!open) return null;
@@ -181,7 +262,9 @@ export function AssistantSheet() {
                   {assistantTitle(i18n.language)}
                 </div>
                 <div className="text-[10px] text-[color:var(--navy)]/55">
-                  On-corridor help · Path2Class
+                  {guidedStep !== null
+                    ? `${guidedStepLabel(i18n.language)} ${guidedStep}/${GUIDED_TOTAL_STEPS}`
+                    : 'On-corridor help · Path2Class'}
                 </div>
               </div>
             </div>
@@ -216,7 +299,31 @@ export function AssistantSheet() {
             )}
           </div>
 
-          <SuggestionChips suggestions={suggestions} onPick={send} />
+          {/* Quick-reply row: Sì/No when in guided mode, suggestions otherwise. */}
+          {guidedStep !== null ? (
+            <div className="px-4 pt-1 pb-2 flex gap-2 overflow-x-auto no-scrollbar">
+              <button
+                onClick={() => advanceGuided('yes')}
+                className="glass rounded-full px-4 py-1.5 text-[12px] font-semibold text-[color:var(--navy)] press transition-smooth shrink-0 cyan-glow"
+              >
+                {t('assistant.guided.yes')}
+              </button>
+              <button
+                onClick={() => advanceGuided('no')}
+                className="glass rounded-full px-4 py-1.5 text-[12px] font-semibold text-[color:var(--navy)] press transition-smooth shrink-0"
+              >
+                {t('assistant.guided.no')}
+              </button>
+            </div>
+          ) : (
+            <SuggestionChips
+              suggestions={suggestions.map((s) => s.label)}
+              onPick={(label) => {
+                const match = suggestions.find((s) => s.label === label);
+                onChipPick(match?.id ?? label);
+              }}
+            />
+          )}
 
           <div className="px-4 pb-5 pt-1">
             <ChatComposer
@@ -236,20 +343,35 @@ export function AssistantSheet() {
 
 /* ---------- helpers (kept local; no need to expose) ---------- */
 
-function pickSuggestions(pathname: string): string[] {
+function pickSuggestions(pathname: string): { id: string; label: string }[] {
   if (pathname.startsWith('/navigate/ar')) {
-    return ['Simplify', 'What do I see?', 'How much longer?'];
+    return [
+      { id: 'Simplify', label: 'Simplify' },
+      { id: 'What do I see?', label: 'What do I see?' },
+      { id: 'How much longer?', label: 'How much longer?' },
+    ];
   }
   if (pathname.startsWith('/navigate/text')) {
-    return ['Simplify', 'Switch to AR', "I'm confused"];
+    return [
+      { id: 'Simplify', label: 'Simplify' },
+      { id: 'Switch to AR', label: 'Switch to AR' },
+      { id: "I'm confused", label: "I'm confused" },
+    ];
   }
   if (pathname.startsWith('/arrived')) {
-    return ['How do I go back?', 'Thanks!'];
+    return [
+      { id: 'How do I go back?', label: 'How do I go back?' },
+      { id: 'Thanks!', label: 'Thanks!' },
+    ];
   }
   if (pathname.startsWith('/landing')) {
-    return ['How do I get to 124?', "Where's the elevator?", 'Accessible route'];
+    return [
+      { id: 'How do I get to 124?', label: 'How do I get to 124?' },
+      { id: "Where's the elevator?", label: "Where's the elevator?" },
+      { id: 'Accessible route', label: 'Accessible route' },
+    ];
   }
-  return ['Help'];
+  return [{ id: 'Help', label: 'Help' }];
 }
 
 function composerPlaceholder(lang: string): string {
@@ -264,17 +386,19 @@ function assistantTitle(lang: string): string {
   return 'Assistant';
 }
 
+function guidedStepLabel(lang: string): string {
+  if (lang.startsWith('it')) return 'Passo guidato';
+  if (lang.startsWith('pt')) return 'Passo guiado';
+  return 'Guided step';
+}
+
 function errorMessage(err: unknown, lang: string): string {
   if (err instanceof MissingEndpointError) {
-    if (lang.startsWith('it'))
-      return "L'assistente non è configurato (manca VITE_ASSISTANT_ENDPOINT). Vedi il README.";
-    if (lang.startsWith('pt'))
-      return 'O assistente não está configurado (falta VITE_ASSISTANT_ENDPOINT). Veja o README.';
-    return 'The assistant is not configured (VITE_ASSISTANT_ENDPOINT missing). See the README.';
+    if (lang === 'it') return "Assistente non configurato. Imposta VITE_ASSISTANT_ENDPOINT in .env.local.";
+    if (lang === 'pt') return 'Assistente não configurado. Defina VITE_ASSISTANT_ENDPOINT em .env.local.';
+    return 'Assistant not configured. Set VITE_ASSISTANT_ENDPOINT in .env.local.';
   }
-  if (lang.startsWith('it'))
-    return 'Qualcosa è andato storto contattando l\'assistente. Riprova tra poco.';
-  if (lang.startsWith('pt'))
-    return 'Algo deu errado ao contatar o assistente. Tente novamente em breve.';
-  return 'Something went wrong reaching the assistant. Please try again shortly.';
+  if (lang === 'it') return 'Errore di rete. Riprova tra poco.';
+  if (lang === 'pt') return 'Erro de rede. Tente novamente.';
+  return 'Network error. Please try again.';
 }
