@@ -114,6 +114,7 @@ Esiste anche un **prototipo iOS in SwiftUI** — è una bozza grafica della stes
 - La navigazione testuale con step list e mini-piantina
 - Scelta lingua, percorso accessibile, destinazioni recenti salvate localmente
 - Tutto il codice dell'assistente AI fino al punto di chiamata della funzione Supabase
+- **Chatbot guidato deterministico**: 5 domande preimpostate (Sì/No o testo libero) che accompagnano l'utente passo passo dall'ingresso del corridoio fino all'Aula 124, completamente client-side senza bisogno della chiave Groq. Si avvia tramite la chip "Guidami all'Aula 124" nel chatbot.
 
 ## Cosa NON funziona ancora
 

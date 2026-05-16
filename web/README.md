@@ -16,6 +16,7 @@ prototype is **presentation only**; the real app is full-screen.
 - **react-i18next** — IT / EN / PT (IT primary)
 - **Lucide React** — available; custom inline SVG used where 1:1 match matters
 - **@tensorflow/tfjs** — installed, CPU backend, real YOLOv8n inference active
+- **Guided navigation chatbot** — deterministic 5-step Q&A flow inside the assistant sheet, runs client-side without the LLM (works even when Groq isn't configured)
 - **Supabase Edge Functions** — `chat-assistant` streams Groq (Llama 3.3 70B) responses
 
 This is a plain web app, not a PWA — no manifest, no service worker, no "add to home screen". Open it in a mobile browser and use it like any other website.

@@ -229,6 +229,21 @@ Progetto/
 - Suggestion chips per active route
 - Edge function with strict CORS (localhost:5173 + *.vercel.app), system-prompt construction, full corridor map embedded in prompt
 
+**Guided Navigation Flow (web/)**
+- Deterministic 5-step Q&A state machine inside the assistant sheet —
+  no LLM call, no backend, runs entirely client-side
+- Activated via the "Guidami all'Aula 124" chip at the top of the
+  suggestion row (or matching label in EN/PT)
+- Each step renders the assistant's question describing the expected
+  surroundings (elevator+bin, door, signal, vent, classroom door)
+- User replies with Yes / No quick-reply buttons or free text;
+  `interpretYesNo()` keyword matcher handles natural-language replies
+- On Yes → next step. On No → repeats the same step with a localised
+  help message. At the terminal step the bot says "arrivato" and exits
+  guided mode, leaving the free-form chat available again
+- Data: `web/src/data/guidedNavigation.ts` (step config + interpreter)
+- Strings: `assistant.guided.*` in all three i18n locales
+
 **Detection (real)**
 - `detectionService` with stable public API: `subscribe(listener)`, `start()`, `stop()`, `DetectionFrame`, `Detection`, `BBox` (normalized 0..1)
 - YOLOv8n model trained on campus images (Roboflow dataset `niccols-workspace-y3vkd/path2class`, version 3, imgsz=320)
