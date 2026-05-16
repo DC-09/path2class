@@ -112,11 +112,11 @@ export default function ArNav() {
             </span>
           </div>
           <div className="flex items-center gap-1" aria-label={t('ar.progress_aria')}>
-            {STEPS.slice(0, -1).map((_, i) => (
+            {STEPS.filter((s) => s.kind === 'ar').map((s) => (
               <span
-                key={i}
+                key={s.id}
                 className={`w-1.5 h-1.5 rounded-full ${
-                  i <= currentStep ? 'bg-[color:var(--cyan)]' : 'bg-[color:var(--navy)]/20'
+                  s.id <= currentStep ? 'bg-[color:var(--cyan)]' : 'bg-[color:var(--navy)]/20'
                 }`}
               />
             ))}

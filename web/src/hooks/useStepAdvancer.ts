@@ -3,8 +3,9 @@ import { detectionService, type DetectionClass } from '../services/detectionServ
 
 export interface NavigationStep {
   id: number;
+  kind: 'qr' | 'ar' | 'arrived';
+  trigger: DetectionClass[];
   arrow: 'straight' | 'left' | 'right';
-  advanceOn: DetectionClass | null;
   minConfidence: number;
   minFrames: number;
 }
@@ -17,10 +18,10 @@ interface AdvancerOptions {
 }
 
 /**
- * Subscribes to detectionService and advances the navigation step when the
- * current step's trigger class is detected for `minFrames` consecutive
- * frames above `minConfidence`. The terminal step (advanceOn === null)
- * fires onArrived once.
+ * Subscribes to detectionService and advances to the NEXT step when any
+ * class in that step's `trigger` array appears for `minFrames` consecutive
+ * frames above `minConfidence`. Reaching a step with kind="arrived" fires
+ * onArrived once.
  */
 export function useStepAdvancer({
   steps,
@@ -46,7 +47,7 @@ export function useStepAdvancer({
       const step = steps[currentStep];
       if (!step) return;
 
-      if (step.advanceOn === null) {
+      if (step.kind === 'arrived') {
         if (!stateRef.current.arrivedFired) {
           stateRef.current.arrivedFired = true;
           onArrived();
@@ -54,13 +55,17 @@ export function useStepAdvancer({
         return;
       }
 
+      const next = steps[currentStep + 1];
+      if (!next || next.trigger.length === 0) return;
+
+      const triggerSet = new Set<DetectionClass>(next.trigger);
       const triggerVisible = frame.detections.some(
-        (d) => d.class === step.advanceOn && d.confidence >= step.minConfidence,
+        (d) => triggerSet.has(d.class) && d.confidence >= next.minConfidence,
       );
 
       if (triggerVisible) {
         stateRef.current.consecutive += 1;
-        if (stateRef.current.consecutive >= step.minFrames) {
+        if (stateRef.current.consecutive >= next.minFrames) {
           stateRef.current.consecutive = 0;
           onAdvance(currentStep + 1);
         }

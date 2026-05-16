@@ -1,5 +1,5 @@
 {
-  "version": 2,
+  "version": 3,
   "locationKey": "entrance_b_corridor_2w",
   "building": "B",
   "floor": 2,
@@ -11,38 +11,51 @@
   "steps": [
     {
       "id": 0,
-      "arrow": "right",
-      "advanceOn": "door",
-      "minConfidence": 0.55,
-      "minFrames": 4
+      "kind": "qr",
+      "trigger": [],
+      "arrow": "straight",
+      "minConfidence": 0,
+      "minFrames": 0
     },
     {
       "id": 1,
-      "arrow": "straight",
-      "advanceOn": "signal",
-      "minConfidence": 0.55,
-      "minFrames": 4
+      "kind": "ar",
+      "trigger": ["elevator", "bin"],
+      "arrow": "right",
+      "minConfidence": 0.5,
+      "minFrames": 3
     },
     {
       "id": 2,
-      "arrow": "right",
-      "advanceOn": "vent",
-      "minConfidence": 0.55,
-      "minFrames": 4
+      "kind": "ar",
+      "trigger": ["door"],
+      "arrow": "straight",
+      "minConfidence": 0.5,
+      "minFrames": 3
     },
     {
       "id": 3,
-      "arrow": "straight",
-      "advanceOn": "door",
-      "minConfidence": 0.55,
-      "minFrames": 4
+      "kind": "ar",
+      "trigger": ["signal"],
+      "arrow": "right",
+      "minConfidence": 0.5,
+      "minFrames": 3
     },
     {
       "id": 4,
+      "kind": "ar",
+      "trigger": ["vent"],
       "arrow": "straight",
-      "advanceOn": null,
-      "minConfidence": 0,
-      "minFrames": 0
+      "minConfidence": 0.5,
+      "minFrames": 3
+    },
+    {
+      "id": 5,
+      "kind": "arrived",
+      "trigger": ["door"],
+      "arrow": "straight",
+      "minConfidence": 0.5,
+      "minFrames": 3
     }
   ]
 }

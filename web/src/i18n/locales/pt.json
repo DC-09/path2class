@@ -67,11 +67,12 @@
     "instruction_accessible": "Vire à esquerda em direção ao elevador, 8 m",
     "next_line": "A seguir: Sala 17 W à sua esquerda",
     "steps": {
-      "0": "Vire à direita. Elevador à frente, lixeira à esquerda, quadro à direita.",
-      "1": "Siga em frente. Atravesse as portas à sua frente.",
-      "2": "Vire à direita na placa.",
-      "3": "Siga em frente. Sala 124 ao fundo, à sua direita.",
-      "4": "Você chegou!"
+      "0": "Aponte a câmera para o corredor para começar.",
+      "1": "Vire à direita. Elevador à frente, lixeira à esquerda, quadro à direita.",
+      "2": "Siga em frente. Atravesse as portas à sua frente.",
+      "3": "Vire à direita na placa.",
+      "4": "Siga em frente. Sala 124 ao fundo, à sua direita.",
+      "5": "Você chegou!"
     },
     "eta_label": "~90s",
     "demo": {
