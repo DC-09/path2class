@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 2,
   "locationKey": "entrance_b_corridor_2w",
   "building": "B",
   "floor": 2,
@@ -7,5 +7,42 @@
     "nodeId": "room_124",
     "etaMinutes": { "standard": 2, "accessible": 3 },
     "distanceMeters": 42
-  }
+  },
+  "steps": [
+    {
+      "id": 0,
+      "arrow": "right",
+      "advanceOn": "door",
+      "minConfidence": 0.55,
+      "minFrames": 4
+    },
+    {
+      "id": 1,
+      "arrow": "straight",
+      "advanceOn": "signal",
+      "minConfidence": 0.55,
+      "minFrames": 4
+    },
+    {
+      "id": 2,
+      "arrow": "right",
+      "advanceOn": "vent",
+      "minConfidence": 0.55,
+      "minFrames": 4
+    },
+    {
+      "id": 3,
+      "arrow": "straight",
+      "advanceOn": "door",
+      "minConfidence": 0.55,
+      "minFrames": 4
+    },
+    {
+      "id": 4,
+      "arrow": "straight",
+      "advanceOn": null,
+      "minConfidence": 0,
+      "minFrames": 0
+    }
+  ]
 }

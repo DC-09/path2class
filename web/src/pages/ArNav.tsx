@@ -12,12 +12,17 @@ import { AssistantFab } from '../components/assistant/AssistantFab';
 import { GlassCard, Icon } from '../components/glass';
 import { detectionService, type Detection } from '../services/detectionService';
 import { useSessionStore } from '../stores/useSessionStore';
+import { useStepAdvancer, type NavigationStep } from '../hooks/useStepAdvancer';
+import corridor from '../data/corridor.json';
 
 const DEVIATION_DURATION_MS = 2200;
+const STEPS = corridor.steps as NavigationStep[];
 
 /**
  * AR Navigation screen — real camera feed + AR overlay driven by the
- * detection service (MOCK for now; real YOLO plugs in behind the same API).
+ * detection service. The current step from corridor.json controls the
+ * arrow direction and instruction; useStepAdvancer auto-advances steps
+ * when YOLO sees the configured trigger class for N consecutive frames.
  */
 export default function ArNav() {
   const navigate = useNavigate();
@@ -26,11 +31,22 @@ export default function ArNav() {
 
   const accessibility = useSessionStore((s) => s.accessibility);
   const toggleAccessibility = useSessionStore((s) => s.toggleAccessibility);
-  const arrowDirection = useSessionStore((s) => s.arrowDirection);
+  const currentStep = useSessionStore((s) => s.currentStep);
+  const setCurrentStep = useSessionStore((s) => s.setCurrentStep);
   const setArrowDirection = useSessionStore((s) => s.setArrowDirection);
 
   const [detections, setDetections] = useState<readonly Detection[]>([]);
   const [deviation, setDeviation] = useState(false);
+
+  const step = STEPS[currentStep] ?? STEPS[STEPS.length - 1];
+
+  useEffect(() => {
+    setCurrentStep(0);
+  }, [setCurrentStep]);
+
+  useEffect(() => {
+    setArrowDirection(step.arrow);
+  }, [step.arrow, setArrowDirection]);
 
   useEffect(() => {
     const unsubscribe = detectionService.subscribe((frame) => {
@@ -44,15 +60,21 @@ export default function ArNav() {
     };
   }, []);
 
+  const handleArrived = useCallback(() => {
+    navigate('/arrived');
+  }, [navigate]);
+
+  useStepAdvancer({
+    steps: STEPS,
+    currentStep,
+    onAdvance: setCurrentStep,
+    onArrived: handleArrived,
+  });
+
   useEffect(() => {
     if (!deviation) return;
-    const timeoutId = window.setTimeout(() => {
-      setDeviation(false);
-      setArrowDirection(arrowDirection === 'left' ? 'straight' : 'left');
-    }, DEVIATION_DURATION_MS);
+    const timeoutId = window.setTimeout(() => setDeviation(false), DEVIATION_DURATION_MS);
     return () => window.clearTimeout(timeoutId);
-    // arrowDirection is read at scheduling time only.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [deviation]);
 
   const handleCameraError = useCallback(
@@ -63,12 +85,16 @@ export default function ArNav() {
     [navigate],
   );
 
+  const instruction = t(`ar.steps.${currentStep}`, {
+    defaultValue: t('ar.instruction_standard'),
+  });
+
   return (
     <div className="fixed inset-0 overflow-hidden bg-black">
       <CameraView ref={cameraRef} onError={handleCameraError} />
 
       <AROverlay
-        arrowDirection={arrowDirection}
+        arrowDirection={step.arrow}
         detections={detections}
         accessibility={accessibility}
       />
@@ -86,11 +112,11 @@ export default function ArNav() {
             </span>
           </div>
           <div className="flex items-center gap-1" aria-label={t('ar.progress_aria')}>
-            {[0, 1, 2, 3].map((i) => (
+            {STEPS.slice(0, -1).map((_, i) => (
               <span
                 key={i}
                 className={`w-1.5 h-1.5 rounded-full ${
-                  i < 2 ? 'bg-[color:var(--cyan)]' : 'bg-[color:var(--navy)]/20'
+                  i <= currentStep ? 'bg-[color:var(--cyan)]' : 'bg-[color:var(--navy)]/20'
                 }`}
               />
             ))}
@@ -119,11 +145,8 @@ export default function ArNav() {
       {/* Instruction banner */}
       <div className="absolute left-4 right-4 bottom-20 z-20">
         <InstructionBanner
-          icon={accessibility ? 'elevator' : 'arrow-up'}
-          instruction={
-            accessibility ? t('ar.instruction_accessible') : t('ar.instruction_standard')
-          }
-          nextLine={t('ar.next_line')}
+          icon="arrow-up"
+          instruction={instruction}
           etaLabel={t('ar.eta_label')}
         />
       </div>
@@ -139,6 +162,12 @@ export default function ArNav() {
             className="glass-dim rounded-full px-2.5 py-1 press transition-smooth text-[color:var(--navy)]"
           >
             {t('ar.demo.wrong_turn')}
+          </button>
+          <button
+            onClick={() => setCurrentStep(Math.min(currentStep + 1, STEPS.length - 1))}
+            className="glass-dim rounded-full px-2.5 py-1 press transition-smooth text-[color:var(--navy)]"
+          >
+            Next
           </button>
           <button
             onClick={() => navigate('/arrived')}

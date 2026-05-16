@@ -66,6 +66,13 @@
     "instruction_standard": "Continua dritto, 15 m",
     "instruction_accessible": "Svolta a sinistra verso l'ascensore, 8 m",
     "next_line": "Poi: Aula 17 W sulla tua sinistra",
+    "steps": {
+      "0": "Gira a destra. Ascensore davanti, cestino a sinistra, quadro a destra.",
+      "1": "Vai dritto. Attraversa le porte davanti a te.",
+      "2": "Gira a destra al cartello.",
+      "3": "Vai dritto. Aula 124 in fondo, sulla destra.",
+      "4": "Sei arrivato!"
+    },
     "eta_label": "~90s",
     "demo": {
       "label": "Demo",

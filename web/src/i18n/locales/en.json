@@ -66,6 +66,13 @@
     "instruction_standard": "Continue straight, 15 m",
     "instruction_accessible": "Turn left to the elevator, 8 m",
     "next_line": "Next: Room 17 W on your left",
+    "steps": {
+      "0": "Turn right. Elevator ahead, bin on your left, painting on your right.",
+      "1": "Go straight. Walk through the doors in front of you.",
+      "2": "Turn right at the sign.",
+      "3": "Go straight. Room 124 at the end on your right.",
+      "4": "You've arrived!"
+    },
     "eta_label": "~90s",
     "demo": {
       "label": "Demo",
