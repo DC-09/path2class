@@ -42,7 +42,7 @@ export function AROverlay({ arrowDirection, detections, accessibility }: AROverl
         <DetectionHighlight
           key={`${d.class}-${i}`}
           detection={d}
-          amber={accessibility && d.class === 'elevator_door'}
+          amber={accessibility && d.class === 'elevator'}
         />
       ))}
 
