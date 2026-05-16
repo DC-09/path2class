@@ -120,7 +120,7 @@ Esiste anche un **prototipo iOS in SwiftUI** — è una bozza grafica della stes
 - **L'assistente AI in produzione**: il codice c'è ma serve la chiave API Groq e il deploy della funzione su Supabase. Senza, l'utente vede un messaggio "non configurato".
 - **Il backend Python non è collegato alla web app**: il vecchio frontend HTML lo usava, il nuovo no. Per ora è "isolato" — utile come riferimento ma non parte del flusso.
 - **Niente QR code fisici reali**: l'app simula la scansione tramite un pulsante. La generazione e stampa dei QR è un passo successivo.
-- **Mappa limitata**: il sistema gestisce per ora solo un corridoio (Edificio B, 2° piano, ala ovest, Aula 21 W) — l'MVP della demo. Il backend ha un grafo più ampio ma non è collegato alla nuova UI.
+- **Mappa limitata**: il sistema gestisce per ora solo un corridoio (Edificio B, 2° piano, ala ovest, Aula 124) — l'MVP della demo. Il backend ha un grafo più ampio ma non è collegato alla nuova UI.
 
 ## Prossimi passi (in ordine di priorità)
 
@@ -133,7 +133,7 @@ Esiste anche un **prototipo iOS in SwiftUI** — è una bozza grafica della stes
 
 ## Problemi noti
 
-- **I nomi delle destinazioni recenti non si traducono dopo il salvataggio**: se salvi "Aula 21 W" in italiano e poi cambi lingua, resta in italiano. Soluzione facile per il futuro — salvare l'ID e tradurre al momento.
+- **I nomi delle destinazioni recenti non si traducono dopo il salvataggio**: se salvi "Aula 124" in italiano e poi cambi lingua, resta in italiano. Soluzione facile per il futuro — salvare l'ID e tradurre al momento.
 - **iOS richiede un gesto utente per il sensore di orientamento**: oggi non lo usiamo (la freccia AR è guidata dallo store dell'app), ma se in futuro vogliamo orientare la freccia con la bussola va aggiunto un permesso esplicito.
 - **Il vecchio frontend (`/frontend`) e l'iOS proof-of-concept (`/ios`) sono codice abbandonato**: vanno rimossi o archiviati per non creare confusione nel team.
 - **La fotocamera richiede HTTPS**: per testare su telefono serve ngrok o un deploy Vercel. È documentato nel README.

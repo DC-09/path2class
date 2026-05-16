@@ -78,7 +78,7 @@ Recent detections: ${recent}
 
 KNOWN MAP (complete — nothing else exists in this demo)
 - Corridor: Building B, 2nd floor, west wing.
-- Entrance (QR checkpoint) → Elevator on left → Stairs on right (avoid if accessibility ON) → Room 17 W left → Notice board → Room 21 W right → Emergency exit.
+- Entrance (QR checkpoint) → Elevator on left → Stairs on right (avoid if accessibility ON) → Room 17 W left → Notice board → Room 124 right → Emergency exit.
 
 JOB
 1. Answer in 2-3 sentences. Be helpful and friendly, not robotic.

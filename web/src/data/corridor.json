@@ -4,7 +4,7 @@
   "building": "B",
   "floor": 2,
   "destination": {
-    "nodeId": "room_21w",
+    "nodeId": "room_124",
     "etaMinutes": { "standard": 2, "accessible": 3 },
     "distanceMeters": 42
   }

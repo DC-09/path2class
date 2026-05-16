@@ -22,8 +22,8 @@
     "search_aria": "Search room or service",
     "change_language_aria": "Change language",
     "accessible_route": "Accessible route",
-    "room_21w": "21 W",
-    "room_21w_meta": "Classroom · 2nd floor west wing",
+    "room_124": "124",
+    "room_124_meta": "Classroom · 2nd floor west wing",
     "invalid_loc_title": "Unknown QR code",
     "invalid_loc_body": "We couldn't recognise {{loc}}. Please try scanning again.",
     "invalid_loc_back": "Back to start",
@@ -45,7 +45,7 @@
   "destination": {
     "eyebrow": "Destination",
     "accessible_chip": "Accessible route via elevator",
-    "title": "Room 21 W",
+    "title": "Room 124",
     "meta": "Classroom · 2nd floor · West wing",
     "eta_minutes": "~{{minutes}} min",
     "distance_meters": "{{m}} m",
@@ -89,20 +89,20 @@
       { "icon": "arrow-up", "text": "Leave the corridor entrance, walk straight 12 m." },
       { "icon": "door", "text": "Pass Room 17 W on your left." },
       { "icon": "bookmark", "text": "Continue past the notice board." },
-      { "icon": "door", "text": "Room 21 W on your right. Blue door sign." }
+      { "icon": "door", "text": "Room 124 on your right. Blue door sign." }
     ],
     "steps_accessible": [
       { "icon": "arrow-up", "text": "Turn left at entrance to reach elevator (8 m)." },
       { "icon": "elevator", "text": "Take elevator to floor 2." },
       { "icon": "arrow-up", "text": "Exit elevator, turn right into corridor." },
-      { "icon": "door", "text": "Continue straight. Room 21 W on your right." }
+      { "icon": "door", "text": "Continue straight. Room 124 on your right." }
     ]
   },
   "arrived": {
     "title": "You've arrived",
-    "subtitle": "Room 21 W — 2nd floor west wing",
+    "subtitle": "Room 124 — 2nd floor west wing",
     "matches_title": "Matches your surroundings",
-    "matches_body": "Blue door · number plate 21 W",
+    "matches_body": "Blue door · number plate 124",
     "actions": {
       "save": "Save",
       "report": "Report",

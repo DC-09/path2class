@@ -33,7 +33,7 @@ export default function Destination() {
       <div className="relative z-10 flex-1 px-5 pt-4 flex flex-col">
         <GlassCard className="overflow-hidden" radius="4xl" strong>
           <div className="h-[180px] overflow-hidden">
-            <DoorArt number="21 W" />
+            <DoorArt number="124" />
           </div>
           <div className="p-5">
             {accessibility && (

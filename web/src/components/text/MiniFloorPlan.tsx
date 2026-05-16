@@ -99,7 +99,7 @@ export function MiniFloorPlan({ accessibility, stepIndex }: MiniFloorPlanProps) 
       {[120, 240].map((x) => (
         <rect key={`b-${x}`} x={x} y="88" width="22" height="6" fill="#3a5575" opacity="0.7" />
       ))}
-      {/* 21W marker */}
+      {/* 124 marker */}
       <g>
         <rect x="268" y="88" width="24" height="6" fill="#7BC4D9" />
         <circle cx="280" cy="86" r="6" fill="#7BC4D9" />
@@ -112,7 +112,7 @@ export function MiniFloorPlan({ accessibility, stepIndex }: MiniFloorPlanProps) 
           fontWeight="700"
           fill="#F4F3EF"
         >
-          21W
+          124
         </text>
       </g>
       {/* route */}

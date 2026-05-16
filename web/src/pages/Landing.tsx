@@ -125,10 +125,10 @@ export default function Landing() {
               </div>
               <div className="flex-1">
                 <div className="text-[15px] font-semibold text-[color:var(--navy)] tight">
-                  {t('landing.room_21w')}
+                  {t('landing.room_124')}
                 </div>
                 <div className="text-[12px] text-[color:var(--navy)]/60">
-                  {t('landing.room_21w_meta')}
+                  {t('landing.room_124_meta')}
                 </div>
               </div>
               <Icon name="chevron-right" size={18} className="text-[color:var(--navy)]/50" />

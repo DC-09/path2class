@@ -22,8 +22,8 @@
     "search_aria": "Cerca aula o servizio",
     "change_language_aria": "Cambia lingua",
     "accessible_route": "Percorso accessibile",
-    "room_21w": "21 W",
-    "room_21w_meta": "Aula · 2° piano ala ovest",
+    "room_124": "124",
+    "room_124_meta": "Aula · 2° piano ala ovest",
     "invalid_loc_title": "QR code sconosciuto",
     "invalid_loc_body": "Non riconosciamo {{loc}}. Riprova la scansione.",
     "invalid_loc_back": "Torna all'inizio",
@@ -45,7 +45,7 @@
   "destination": {
     "eyebrow": "Destinazione",
     "accessible_chip": "Percorso accessibile via ascensore",
-    "title": "Aula 21 W",
+    "title": "Aula 124",
     "meta": "Aula · 2° piano · Ala Ovest",
     "eta_minutes": "~{{minutes}} min",
     "distance_meters": "{{m}} m",
@@ -89,20 +89,20 @@
       { "icon": "arrow-up", "text": "Esci dall'ingresso del corridoio, prosegui dritto per 12 m." },
       { "icon": "door", "text": "Passa l'Aula 17 W sulla sinistra." },
       { "icon": "bookmark", "text": "Prosegui oltre la bacheca." },
-      { "icon": "door", "text": "Aula 21 W sulla destra. Porta con placca blu." }
+      { "icon": "door", "text": "Aula 124 sulla destra. Porta con placca blu." }
     ],
     "steps_accessible": [
       { "icon": "arrow-up", "text": "Svolta a sinistra all'ingresso per raggiungere l'ascensore (8 m)." },
       { "icon": "elevator", "text": "Prendi l'ascensore fino al 2° piano." },
       { "icon": "arrow-up", "text": "Esci dall'ascensore, svolta a destra nel corridoio." },
-      { "icon": "door", "text": "Prosegui dritto. Aula 21 W sulla destra." }
+      { "icon": "door", "text": "Prosegui dritto. Aula 124 sulla destra." }
     ]
   },
   "arrived": {
     "title": "Sei arrivato",
-    "subtitle": "Aula 21 W — 2° piano ala ovest",
+    "subtitle": "Aula 124 — 2° piano ala ovest",
     "matches_title": "Corrisponde a ciò che vedi",
-    "matches_body": "Porta blu · placca 21 W",
+    "matches_body": "Porta blu · placca 124",
     "actions": {
       "save": "Salva",
       "report": "Segnala",

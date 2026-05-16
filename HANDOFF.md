@@ -7,7 +7,7 @@ Path2Class is a **QR-activated indoor wayfinding web app** for university campus
 - **Text navigation** (linear step list + mini floor plan)
 - **AI assistant** (streaming Claude responses, context-aware)
 
-The project is a **multi-course master's project** — Emerging Technologies (AR), Deep Learning (YOLO), Generative AI (LLM assistant). The current MVP scope is **a single corridor**: Building B, 2nd floor, west wing, destination Room 21 W.
+The project is a **multi-course master's project** — Emerging Technologies (AR), Deep Learning (YOLO), Generative AI (LLM assistant). The current MVP scope is **a single corridor**: Building B, 2nd floor, west wing, destination Room 124.
 
 GitHub: `https://github.com/DC-09/path2class.git`
 
@@ -314,7 +314,7 @@ Run `npx vercel --prod` from `web/`. Alternatively, have dc-09 check the Vercel 
 Each QR encodes `https://<deploy-url>/landing?loc=<locationKey>`. For the MVP, only `entrance_b_corridor_2w` is recognized; `Landing.tsx:30` checks against `corridor.locationKey` and shows an error card for unknown values. Extend `corridor.json` (or move to a multi-location data file) when adding more.
 
 ### 6. Expand Beyond the MVP Corridor
-Currently the UI hardcodes a single destination (Room 21 W). To extend:
+Currently the UI hardcodes a single destination (Room 124). To extend:
 - Either migrate `web/src/data/corridor.json` to a multi-node graph similar to `backend/app/data/campus_graph.json`
 - Or wire the FastAPI backend's `/api/navigation/destinations` and `/api/navigation/route` endpoints
 

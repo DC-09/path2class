@@ -6,7 +6,7 @@ export interface DoorArtProps {
  * Hero door illustration used on Destination and Arrival.
  * 1:1 port from PROTOTYPE_REFERENCE.html.
  */
-export function DoorArt({ number = '21 W' }: DoorArtProps) {
+export function DoorArt({ number = '124' }: DoorArtProps) {
   return (
     <svg viewBox="0 0 240 160" className="w-full h-full" aria-hidden="true" role="presentation">
       <defs>

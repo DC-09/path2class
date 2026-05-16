@@ -247,7 +247,7 @@ function pickSuggestions(pathname: string): string[] {
     return ['How do I go back?', 'Thanks!'];
   }
   if (pathname.startsWith('/landing')) {
-    return ['How do I get to 21 W?', "Where's the elevator?", 'Accessible route'];
+    return ['How do I get to 124?', "Where's the elevator?", 'Accessible route'];
   }
   return ['Help'];
 }

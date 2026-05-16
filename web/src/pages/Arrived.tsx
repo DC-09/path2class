@@ -89,7 +89,7 @@ export default function Arrived() {
 
         <GlassCard className="mt-6 p-3 flex items-center gap-3 w-full max-w-[320px]">
           <div className="w-14 h-14 rounded-xl overflow-hidden shrink-0">
-            <DoorArt number="21 W" />
+            <DoorArt number="124" />
           </div>
           <div className="flex-1">
             <div className="text-[12px] font-semibold text-[color:var(--navy)]">

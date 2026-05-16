@@ -22,8 +22,8 @@
     "search_aria": "Buscar sala ou serviço",
     "change_language_aria": "Alterar idioma",
     "accessible_route": "Rota acessível",
-    "room_21w": "21 W",
-    "room_21w_meta": "Sala de aula · 2º andar ala oeste",
+    "room_124": "124",
+    "room_124_meta": "Sala de aula · 2º andar ala oeste",
     "invalid_loc_title": "QR code desconhecido",
     "invalid_loc_body": "Não reconhecemos {{loc}}. Tente escanear novamente.",
     "invalid_loc_back": "Voltar ao início",
@@ -45,7 +45,7 @@
   "destination": {
     "eyebrow": "Destino",
     "accessible_chip": "Rota acessível via elevador",
-    "title": "Sala 21 W",
+    "title": "Sala 124",
     "meta": "Sala de aula · 2º andar · Ala Oeste",
     "eta_minutes": "~{{minutes}} min",
     "distance_meters": "{{m}} m",
@@ -89,20 +89,20 @@
       { "icon": "arrow-up", "text": "Saia da entrada do corredor, siga em frente por 12 m." },
       { "icon": "door", "text": "Passe pela Sala 17 W à sua esquerda." },
       { "icon": "bookmark", "text": "Siga adiante passando pelo mural de avisos." },
-      { "icon": "door", "text": "Sala 21 W à sua direita. Porta com placa azul." }
+      { "icon": "door", "text": "Sala 124 à sua direita. Porta com placa azul." }
     ],
     "steps_accessible": [
       { "icon": "arrow-up", "text": "Vire à esquerda na entrada para alcançar o elevador (8 m)." },
       { "icon": "elevator", "text": "Pegue o elevador até o 2º andar." },
       { "icon": "arrow-up", "text": "Saia do elevador, vire à direita no corredor." },
-      { "icon": "door", "text": "Siga em frente. Sala 21 W à sua direita." }
+      { "icon": "door", "text": "Siga em frente. Sala 124 à sua direita." }
     ]
   },
   "arrived": {
     "title": "Você chegou",
-    "subtitle": "Sala 21 W — 2º andar ala oeste",
+    "subtitle": "Sala 124 — 2º andar ala oeste",
     "matches_title": "Corresponde ao ambiente",
-    "matches_body": "Porta azul · placa 21 W",
+    "matches_body": "Porta azul · placa 124",
     "actions": {
       "save": "Salvar",
       "report": "Reportar",
