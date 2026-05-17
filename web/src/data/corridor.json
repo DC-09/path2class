@@ -1,7 +1,7 @@
 {
   "version": 3,
-  "locationKey": "entrance_corridor_2w",
-  "floor": 2,
+  "locationKey": "elevator_corridor_1f",
+  "floor": 1,
   "destination": {
     "nodeId": "room_124",
     "etaMinutes": { "standard": 2, "accessible": 3 },

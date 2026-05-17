@@ -121,12 +121,12 @@ Esiste anche un **prototipo iOS in SwiftUI** — è una bozza grafica della stes
 - **L'assistente AI in produzione**: il codice c'è ma serve la chiave API Groq e il deploy della funzione su Supabase. Senza, l'utente vede un messaggio "non configurato".
 - **Il backend Python non è collegato alla web app**: il vecchio frontend HTML lo usava, il nuovo no. Per ora è "isolato" — utile come riferimento ma non parte del flusso.
 - **Niente QR code fisici reali**: l'app simula la scansione tramite un pulsante. La generazione e stampa dei QR è un passo successivo.
-- **Mappa limitata**: il sistema gestisce per ora solo un corridoio (2° piano, ala ovest, Aula 124) — l'MVP della demo. Il backend ha un grafo più ampio ma non è collegato alla nuova UI.
+- **Mappa limitata**: il sistema gestisce per ora solo un corridoio (1° piano, dall'ascensore all'Aula 124) — l'MVP della demo. Il backend ha un grafo più ampio ma non è collegato alla nuova UI.
 
 ## Prossimi passi (in ordine di priorità)
 
 1. **Attivare l'assistente AI**: ottenere una chiave API Groq (gratis su https://console.groq.com), fare il deploy della funzione Supabase, configurare l'endpoint nel file `.env.local`
-2. **Testare il riconoscimento YOLO nel corridoio reale**: il modello è integrato e funzionante in locale — verificare le detection sul campo (2° piano, ala ovest) e ri-allenare se necessario con più immagini
+2. **Testare il riconoscimento YOLO nel corridoio reale**: il modello è integrato e funzionante in locale — verificare le detection sul campo (1° piano, dall'ascensore all'Aula 124) e ri-allenare se necessario con più immagini
 3. **Generare e stampare i QR code fisici**: ogni QR codifica un URL del tipo `/landing?loc=<codice-posizione>`
 4. **Estendere la mappa oltre il singolo corridoio**: collegare il grafo completo del backend (più edifici e piani) alla nuova interfaccia
 5. **Deploy in produzione su Vercel**: il codice è già su GitHub (commit `052c612`) — serve triggerare il build su Vercel (il webhook automatico non si è attivato; dc-09 deve configurarlo o usare `npx vercel --prod` da `web/`)

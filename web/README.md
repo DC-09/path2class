@@ -1,7 +1,7 @@
 # Path2Class — Web (PWA)
 
 QR-activated indoor wayfinding PWA with AR navigation. University MVP covering
-a single corridor (2nd floor, West wing, destination Room 124).
+a single corridor on the 1st floor, starting at the elevator, destination Room 124.
 
 Built from the **Liquid Glass** prototype produced in Claude Design. The visual
 output matches the prototype 1:1 — the phone frame that appears in the

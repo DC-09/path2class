@@ -7,7 +7,7 @@ Path2Class is a **QR-activated indoor wayfinding web app** for university campus
 - **Text navigation** (linear step list + mini floor plan)
 - **AI assistant** (streaming Claude responses, context-aware)
 
-The project is a **multi-course master's project** — Emerging Technologies (AR), Deep Learning (YOLO), Generative AI (LLM assistant). The current MVP scope is **a single corridor**: 2nd floor, west wing, destination Room 124.
+The project is a **multi-course master's project** — Emerging Technologies (AR), Deep Learning (YOLO), Generative AI (LLM assistant). The current MVP scope is **a single corridor**: starting at the elevator on the 1st floor, destination Room 124.
 
 GitHub: `https://github.com/DC-09/path2class.git`
 
@@ -320,7 +320,7 @@ Three options, in increasing effort:
 Pick one before doing #3 below.
 
 ### 3. Test YOLO in the Real Corridor
-The model is trained (Roboflow dataset, version 3) and integrated. Test on-site at the 2nd floor, west wing. If accuracy is insufficient, collect more images and re-train with `python yolo/scripts/train.py`, then re-export with `model.export(format='tfjs', imgsz=320)` and replace the files under `web/public/models/yolov8n_web_model/`.
+The model is trained (Roboflow dataset, version 3) and integrated. Test on-site at the 1st floor corridor (elevator → Room 124). If accuracy is insufficient, collect more images and re-train with `python yolo/scripts/train.py`, then re-export with `model.export(format='tfjs', imgsz=320)` and replace the files under `web/public/models/yolov8n_web_model/`.
 
 ### 4. Deploy to Vercel
 Run `npx vercel --prod` from `web/`. Alternatively, have dc-09 check the Vercel project's Git integration settings — the auto-deploy webhook didn't fire on the `052c612` push.

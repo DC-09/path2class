@@ -34,28 +34,28 @@
   },
   "landing": {
     "location_title": "Orient Green Campus — 1º Andar",
-    "location_sub": "Ala Oeste",
+    "location_sub": "Elevador",
     "search_placeholder": "Buscar sala ou serviço...",
     "search_aria": "Buscar sala ou serviço",
     "change_language_aria": "Alterar idioma",
     "accessible_route": "Rota acessível",
     "room_124": "124",
-    "room_124_meta": "Sala de aula · 2º andar ala oeste",
+    "room_124_meta": "Sala de aula · 1º andar",
     "invalid_loc_title": "QR code desconhecido",
     "invalid_loc_body": "Não reconhecemos {{loc}}. Tente escanear novamente.",
     "invalid_loc_back": "Voltar ao início",
     "nearby_items": {
       "notice_board": {
         "name": "Mural de avisos",
-        "meta": "Corredor oeste · 2ºA"
+        "meta": "Corredor · 1ºA"
       },
       "elevator": {
         "name": "Elevador",
-        "meta": "Corredor oeste · entrada"
+        "meta": "Corredor · elevador"
       },
       "emergency_exit": {
         "name": "Saída de emergência",
-        "meta": "Escada leste"
+        "meta": "Escada"
       }
     }
   },
@@ -63,7 +63,7 @@
     "eyebrow": "Destino",
     "accessible_chip": "Rota acessível via elevador",
     "title": "Sala 124",
-    "meta": "Sala de aula · 2º andar · Ala Oeste",
+    "meta": "Sala de aula · 1º andar",
     "eta_minutes": "~{{minutes}} min",
     "distance_meters": "{{m}} m",
     "cta_ar": "Iniciar navegação AR",
@@ -76,7 +76,7 @@
     "use_text": "Usar instruções em texto"
   },
   "ar": {
-    "area_label": "2ºA Oeste",
+    "area_label": "1ºA",
     "close_aria": "Fechar AR",
     "switch_aria": "Alternar para instruções em texto",
     "progress_aria": "Progresso da rota",
@@ -106,8 +106,8 @@
   },
   "text_nav": {
     "eyebrow": "Instruções em texto",
-    "from_location": "Entrada · 2ºA",
-    "floor_plan_title": "Planta · 2ºA Oeste",
+    "from_location": "Elevador · 1ºA",
+    "floor_plan_title": "Planta · 1ºA",
     "cta_next": "Cheguei ao próximo ponto",
     "cta_arrived": "Cheguei",
     "steps_standard": [
@@ -125,7 +125,7 @@
   },
   "arrived": {
     "title": "Você chegou",
-    "subtitle": "Sala 124 — 2º andar ala oeste",
+    "subtitle": "Sala 124 — 1º andar",
     "matches_title": "Corresponde ao ambiente",
     "matches_body": "Porta azul · placa 124",
     "actions": {

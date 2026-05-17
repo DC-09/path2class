@@ -12,7 +12,7 @@ import QRCode from 'qrcode';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, '..');
 
-const URL = 'https://path2class.vercel.app/?loc=entrance_corridor_2w';
+const URL = 'https://path2class.vercel.app/?loc=elevator_corridor_1f';
 const OUTPUT = path.join(root, 'docs', 'qr-elevator.svg');
 const LOGO_PATH = path.join(root, 'web', 'public', 'logo.png');
 

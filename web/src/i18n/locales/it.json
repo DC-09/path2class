@@ -34,28 +34,28 @@
   },
   "landing": {
     "location_title": "Orient Green Campus — 1° Piano",
-    "location_sub": "Ala Ovest",
+    "location_sub": "Ascensore",
     "search_placeholder": "Cerca aula o servizio...",
     "search_aria": "Cerca aula o servizio",
     "change_language_aria": "Cambia lingua",
     "accessible_route": "Percorso accessibile",
     "room_124": "124",
-    "room_124_meta": "Aula · 2° piano ala ovest",
+    "room_124_meta": "Aula · 1° piano",
     "invalid_loc_title": "QR code sconosciuto",
     "invalid_loc_body": "Non riconosciamo {{loc}}. Riprova la scansione.",
     "invalid_loc_back": "Torna all'inizio",
     "nearby_items": {
       "notice_board": {
         "name": "Bacheca",
-        "meta": "Corridoio ovest · 2°P"
+        "meta": "Corridoio · 1°P"
       },
       "elevator": {
         "name": "Ascensore",
-        "meta": "Corridoio ovest · ingresso"
+        "meta": "Corridoio · ascensore"
       },
       "emergency_exit": {
         "name": "Uscita di emergenza",
-        "meta": "Scala est"
+        "meta": "Scale"
       }
     }
   },
@@ -63,7 +63,7 @@
     "eyebrow": "Destinazione",
     "accessible_chip": "Percorso accessibile via ascensore",
     "title": "Aula 124",
-    "meta": "Aula · 2° piano · Ala Ovest",
+    "meta": "Aula · 1° piano",
     "eta_minutes": "~{{minutes}} min",
     "distance_meters": "{{m}} m",
     "cta_ar": "Avvia navigazione AR",
@@ -76,7 +76,7 @@
     "use_text": "Usa invece indicazioni testuali"
   },
   "ar": {
-    "area_label": "2°P Ovest",
+    "area_label": "1°P",
     "close_aria": "Chiudi AR",
     "switch_aria": "Passa a indicazioni testuali",
     "progress_aria": "Avanzamento percorso",
@@ -106,8 +106,8 @@
   },
   "text_nav": {
     "eyebrow": "Indicazioni testuali",
-    "from_location": "Ingresso · 2°P",
-    "floor_plan_title": "Planimetria · 2°P Ovest",
+    "from_location": "Ascensore · 1°P",
+    "floor_plan_title": "Planimetria · 1°P",
     "cta_next": "Ho raggiunto il prossimo riferimento",
     "cta_arrived": "Sono arrivato",
     "steps_standard": [
@@ -125,7 +125,7 @@
   },
   "arrived": {
     "title": "Sei arrivato",
-    "subtitle": "Aula 124 — 2° piano ala ovest",
+    "subtitle": "Aula 124 — 1° piano",
     "matches_title": "Corrisponde a ciò che vedi",
     "matches_body": "Porta blu · placca 124",
     "actions": {

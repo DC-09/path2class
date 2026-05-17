@@ -77,8 +77,10 @@ Step: ${ctx.currentStep ?? '—'} of ${ctx.totalSteps ?? '—'}
 Recent detections: ${recent}
 
 KNOWN MAP (complete — nothing else exists in this demo)
-- Corridor: 2nd floor, west wing.
-- Entrance (QR checkpoint) → Elevator on left → Stairs on right (avoid if accessibility ON) → Room 17 W left → Notice board → Room 124 right → Emergency exit.
+- The user is on the 1st floor.
+- The QR checkpoint is right in front of the elevator on the 1st floor.
+- The destination is Room 124, reachable by walking along the corridor from the elevator.
+- Do not invent stairs, side rooms, or other landmarks — only the elevator (start) and Room 124 (end) are confirmed.
 
 JOB
 1. Answer in 2-3 sentences. Be helpful and friendly, not robotic.

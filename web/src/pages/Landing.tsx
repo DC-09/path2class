@@ -11,7 +11,7 @@ import { storageService } from '../services/storageService';
  * Landing — shows current location, language/accessibility chips, search,
  * recents (when present), and a static Nearby list.
  *
- * QR entry: ?loc=<locationKey>. For MVP only `entrance_corridor_2w` is
+ * QR entry: ?loc=<locationKey>. For MVP only `elevator_corridor_1f` is
  * valid; anything else renders an error card.
  */
 export default function Landing() {

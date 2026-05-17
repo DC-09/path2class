@@ -34,28 +34,28 @@
   },
   "landing": {
     "location_title": "Orient Green Campus — 1st Floor",
-    "location_sub": "West Wing",
+    "location_sub": "Elevator",
     "search_placeholder": "Search room or service...",
     "search_aria": "Search room or service",
     "change_language_aria": "Change language",
     "accessible_route": "Accessible route",
     "room_124": "124",
-    "room_124_meta": "Classroom · 2nd floor west wing",
+    "room_124_meta": "Classroom · 1st floor",
     "invalid_loc_title": "Unknown QR code",
     "invalid_loc_body": "We couldn't recognise {{loc}}. Please try scanning again.",
     "invalid_loc_back": "Back to start",
     "nearby_items": {
       "notice_board": {
         "name": "Notice board",
-        "meta": "West corridor · 2F"
+        "meta": "Corridor · 1F"
       },
       "elevator": {
         "name": "Elevator",
-        "meta": "West corridor · entrance"
+        "meta": "Corridor · elevator"
       },
       "emergency_exit": {
         "name": "Emergency exit",
-        "meta": "East stairwell"
+        "meta": "Stairwell"
       }
     }
   },
@@ -63,7 +63,7 @@
     "eyebrow": "Destination",
     "accessible_chip": "Accessible route via elevator",
     "title": "Room 124",
-    "meta": "Classroom · 2nd floor · West wing",
+    "meta": "Classroom · 1st floor",
     "eta_minutes": "~{{minutes}} min",
     "distance_meters": "{{m}} m",
     "cta_ar": "Start AR navigation",
@@ -76,7 +76,7 @@
     "use_text": "Use text directions instead"
   },
   "ar": {
-    "area_label": "2F West",
+    "area_label": "1F",
     "close_aria": "Close AR",
     "switch_aria": "Switch to text directions",
     "progress_aria": "Route progress",
@@ -106,8 +106,8 @@
   },
   "text_nav": {
     "eyebrow": "Text directions",
-    "from_location": "Entrance · 2F",
-    "floor_plan_title": "Floor plan · 2F West",
+    "from_location": "Elevator · 1F",
+    "floor_plan_title": "Floor plan · 1F",
     "cta_next": "I've reached the next landmark",
     "cta_arrived": "I've arrived",
     "steps_standard": [
@@ -125,7 +125,7 @@
   },
   "arrived": {
     "title": "You've arrived",
-    "subtitle": "Room 124 — 2nd floor west wing",
+    "subtitle": "Room 124 — 1st floor",
     "matches_title": "Matches your surroundings",
     "matches_body": "Blue door · number plate 124",
     "actions": {

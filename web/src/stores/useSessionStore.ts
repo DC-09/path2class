@@ -34,7 +34,7 @@ function initialLanguage(): Language {
 const defaults = {
   currentStep: 0,
   arrowDirection: 'straight' as ArrowDirection,
-  locationKey: 'entrance_corridor_2w',
+  locationKey: 'elevator_corridor_1f',
 };
 
 export const useSessionStore = create<SessionState>((set, get) => ({
