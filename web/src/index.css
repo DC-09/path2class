@@ -31,7 +31,7 @@ html {
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
   /* Show warm beige in the mobile overscroll / rubber-band area instead of white */
-  background-color: #e8e1d0;
+  background-color: #ddd6c4;
 }
 
 body {
