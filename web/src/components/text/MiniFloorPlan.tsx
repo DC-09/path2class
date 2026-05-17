@@ -15,15 +15,18 @@ export interface MiniFloorPlanProps {
 export function MiniFloorPlan({ stepIndex }: MiniFloorPlanProps) {
   const { t } = useTranslation();
 
+  // 8 positions, one per corridor.json step. Spaced so the user dot moves
+  // noticeably between consecutive steps. Step 0 sits clearly past the
+  // INIZIO marker so the start label is never obscured by the dot.
   const nodes: Array<[number, number]> = [
-    [40, 50], // 0 — INIZIO (elevator + QR)
-    [95, 50], // 1 — painting
-    [155, 50], // 2 — fire-alarm door
-    [195, 50], // 3 — past door
-    [240, 50], // 4 — bathroom sign
-    [295, 50], // 5 — large sign (turn point)
-    [320, 85], // 6 — past the right turn
-    [320, 115], // 7 — at Room 124
+    [78, 50], // 0 — just past INIZIO (elevator / QR)
+    [135, 50], // 1 — painting
+    [185, 50], // 2 — fire-alarm door
+    [230, 50], // 3 — past door
+    [275, 50], // 4 — bathroom sign
+    [305, 50], // 5 — large sign (turn point)
+    [320, 95], // 6 — past the right turn
+    [320, 122], // 7 — at Room 124
   ];
   const pathD = nodes
     .map((n, i) => (i === 0 ? `M${n[0]} ${n[1]}` : `L${n[0]} ${n[1]}`))
@@ -55,22 +58,8 @@ export function MiniFloorPlan({ stepIndex }: MiniFloorPlanProps) {
         strokeOpacity="0.2"
       />
       {/* Hide the seam where the two corridor rects meet */}
-      <line
-        x1="301"
-        y1="31"
-        x2="339"
-        y2="31"
-        stroke="#F4F3EF"
-        strokeWidth="2"
-      />
-      <line
-        x1="301"
-        y1="69"
-        x2="339"
-        y2="69"
-        stroke="#F4F3EF"
-        strokeWidth="2"
-      />
+      <line x1="301" y1="31" x2="339" y2="31" stroke="#F4F3EF" strokeWidth="2" />
+      <line x1="301" y1="69" x2="339" y2="69" stroke="#F4F3EF" strokeWidth="2" />
 
       {/* INIZIO marker (start) */}
       <rect x="22" y="32" width="34" height="36" rx="2" fill="#E8DFC9" opacity="0.55" />
@@ -95,15 +84,16 @@ export function MiniFloorPlan({ stepIndex }: MiniFloorPlanProps) {
         <rect key={`b-${x}`} x={x} y="68" width="22" height="6" fill="#3a5575" opacity="0.6" />
       ))}
 
-      {/* Two doors on the right side of the vertical arm (where Room 124 sits) */}
-      <rect x="340" y="82" width="6" height="18" fill="#3a5575" opacity="0.6" />
+      {/* Two doors on the LEFT wall of the vertical arm (user's right when
+          walking down — the actual side where Room 124 sits). */}
+      <rect x="294" y="82" width="6" height="18" fill="#3a5575" opacity="0.6" />
 
-      {/* Room 124 marker */}
+      {/* Room 124 marker (the second of the two doors, on the same wall) */}
       <g>
-        <rect x="340" y="106" width="6" height="18" fill="#7BC4D9" />
-        <circle cx="349" cy="115" r="7" fill="#7BC4D9" />
+        <rect x="294" y="106" width="6" height="18" fill="#7BC4D9" />
+        <circle cx="285" cy="115" r="7" fill="#7BC4D9" />
         <text
-          x="349"
+          x="285"
           y="118"
           textAnchor="middle"
           fontSize="6"
