@@ -13,7 +13,24 @@
   "splash": {
     "tagline": "PERDERSI? MAI PIÙ.",
     "simulate_qr": "Simula scansione QR",
-    "campus_name": "ORIENT GREEN CAMPUS"
+    "campus_name": "ORIENT GREEN CAMPUS",
+    "hero_title": "Mai più persi in un corridoio.",
+    "hero_subtitle": "trasforma il tuo telefono in una guida verso qualsiasi aula, laboratorio o ufficio del campus.",
+    "get_started": "Inizia",
+    "steps": {
+      "search": {
+        "title": "Cerca",
+        "body": "Scrivi il numero di un'aula, di un laboratorio o un servizio. Anche una parola chiave va bene."
+      },
+      "follow": {
+        "title": "Segui",
+        "body": "Frecce luminose si sovrappongono al corridoio attraverso la fotocamera."
+      },
+      "arrive": {
+        "title": "Arriva",
+        "body": "Ti avvisiamo quando raggiungi la porta giusta. Niente più svolte sbagliate."
+      }
+    }
   },
   "landing": {
     "location_title": "Orient Green Campus — 1° Piano",

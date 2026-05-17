@@ -13,7 +13,24 @@
   "splash": {
     "tagline": "LOST? NOT ANYMORE",
     "simulate_qr": "Simulate QR scan",
-    "campus_name": "ORIENTE GREEN CAMPUS"
+    "campus_name": "ORIENTE GREEN CAMPUS",
+    "hero_title": "Never wander a corridor again.",
+    "hero_subtitle": "turns your phone into a guide to any classroom, lab or office on campus.",
+    "get_started": "Get started",
+    "steps": {
+      "search": {
+        "title": "Search",
+        "body": "Type any room number, lab or service. Even a keyword works."
+      },
+      "follow": {
+        "title": "Follow",
+        "body": "Glowing arrows overlay onto the corridor through your camera."
+      },
+      "arrive": {
+        "title": "Arrive",
+        "body": "We let you know when you reach the right door, so no more wrong turns."
+      }
+    }
   },
   "landing": {
     "location_title": "Orient Green Campus — 1st Floor",

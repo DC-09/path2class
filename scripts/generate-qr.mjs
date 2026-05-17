@@ -12,7 +12,7 @@ import QRCode from 'qrcode';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, '..');
 
-const URL = 'https://path2class.vercel.app/landing?loc=entrance_corridor_2w';
+const URL = 'https://path2class.vercel.app/?loc=entrance_corridor_2w';
 const OUTPUT = path.join(root, 'docs', 'qr-elevator.svg');
 const LOGO_PATH = path.join(root, 'web', 'public', 'logo.png');
 
@@ -35,7 +35,7 @@ const size = parseFloat(viewBoxMatch[1]);
 
 // Logo occupies ~22% of the QR width, centred. White rounded rect behind it
 // so the underlying QR modules don't bleed through.
-const logoSize = size * 0.22;
+const logoSize = size * 0.20;
 const padSize = logoSize * 1.15;
 const cx = size / 2;
 const cy = size / 2;
