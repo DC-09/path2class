@@ -1,5 +1,5 @@
 {
-  "version": 3,
+  "version": 4,
   "locationKey": "elevator_corridor_1f",
   "floor": 1,
   "destination": {
@@ -12,22 +12,24 @@
       "id": 0,
       "kind": "qr",
       "trigger": [],
-      "arrow": "straight",
+      "arrow": "right",
       "minConfidence": 0,
-      "minFrames": 0
+      "minFrames": 0,
+      "wrongTrigger": ["bin"],
+      "wrongMinFrames": 3
     },
     {
       "id": 1,
       "kind": "ar",
-      "trigger": ["elevator", "bin"],
-      "arrow": "right",
+      "trigger": ["painting"],
+      "arrow": "straight",
       "minConfidence": 0.5,
       "minFrames": 3
     },
     {
       "id": 2,
       "kind": "ar",
-      "trigger": ["door"],
+      "trigger": ["signal"],
       "arrow": "straight",
       "minConfidence": 0.5,
       "minFrames": 3
@@ -35,21 +37,38 @@
     {
       "id": 3,
       "kind": "ar",
-      "trigger": ["signal"],
-      "arrow": "right",
+      "trigger": ["door"],
+      "arrow": "straight",
       "minConfidence": 0.5,
       "minFrames": 3
     },
     {
       "id": 4,
       "kind": "ar",
-      "trigger": ["vent"],
+      "trigger": ["signal"],
       "arrow": "straight",
       "minConfidence": 0.5,
       "minFrames": 3
     },
     {
       "id": 5,
+      "kind": "ar",
+      "trigger": ["signal"],
+      "arrow": "right",
+      "minConfidence": 0.5,
+      "minFrames": 3,
+      "wrongTimeoutMs": 10000
+    },
+    {
+      "id": 6,
+      "kind": "ar",
+      "trigger": ["signal"],
+      "arrow": "straight",
+      "minConfidence": 0.5,
+      "minFrames": 3
+    },
+    {
+      "id": 7,
       "kind": "arrived",
       "trigger": ["door"],
       "arrow": "straight",

@@ -77,18 +77,6 @@
     "close_aria": "Fechar AR",
     "switch_aria": "Alternar para instruções em texto",
     "progress_aria": "Progresso da rota",
-    "instruction_standard": "Siga em frente, 15 m",
-    "instruction_accessible": "Vire à esquerda em direção ao elevador, 8 m",
-    "next_line": "A seguir: Sala 17 W à sua esquerda",
-    "steps": {
-      "0": "Aponte a câmera para o corredor para começar.",
-      "1": "Vire à direita. Elevador à frente, lixeira à esquerda, quadro à direita.",
-      "2": "Siga em frente. Atravesse as portas à sua frente.",
-      "3": "Vire à direita na placa.",
-      "4": "Siga em frente. Sala 124 ao fundo, à sua direita.",
-      "5": "Você chegou!"
-    },
-    "eta_label": "~90s",
     "demo": {
       "label": "Demo",
       "wrong_turn": "Curva errada",
@@ -108,16 +96,16 @@
     "cta_next": "Cheguei ao próximo ponto",
     "cta_arrived": "Cheguei",
     "steps_standard": [
-      { "icon": "arrow-up", "text": "Saia da entrada do corredor, siga em frente por 12 m." },
-      { "icon": "door", "text": "Passe pela Sala 17 W à sua esquerda." },
-      { "icon": "bookmark", "text": "Siga adiante passando pelo mural de avisos." },
-      { "icon": "door", "text": "Sala 124 à sua direita. Porta com placa azul." }
+      { "icon": "arrow-up", "text": "Saia do elevador e procure o quadro à sua direita (evite o lixo)." },
+      { "icon": "door", "text": "Vá até a porta com o sinal vermelho de incêndio e atravesse-a." },
+      { "icon": "arrow-up", "text": "Depois da porta, siga em frente até um cartaz grande à esquerda. Vire à direita 1 m depois." },
+      { "icon": "door", "text": "Siga em frente: a 124 é uma das duas portas à sua direita." }
     ],
     "steps_accessible": [
-      { "icon": "arrow-up", "text": "Vire à esquerda na entrada para alcançar o elevador (8 m)." },
-      { "icon": "elevator", "text": "Pegue o elevador até o 2º andar." },
-      { "icon": "arrow-up", "text": "Saia do elevador, vire à direita no corredor." },
-      { "icon": "door", "text": "Siga em frente. Sala 124 à sua direita." }
+      { "icon": "arrow-up", "text": "Saia do elevador e procure o quadro à sua direita (evite o lixo)." },
+      { "icon": "door", "text": "Vá até a porta com o sinal vermelho de incêndio e atravesse-a." },
+      { "icon": "arrow-up", "text": "Depois da porta, siga em frente até um cartaz grande à esquerda. Vire à direita 1 m depois." },
+      { "icon": "door", "text": "Siga em frente: a 124 é uma das duas portas à sua direita." }
     ]
   },
   "arrived": {

@@ -77,18 +77,6 @@
     "close_aria": "Close AR",
     "switch_aria": "Switch to text directions",
     "progress_aria": "Route progress",
-    "instruction_standard": "Continue straight, 15 m",
-    "instruction_accessible": "Turn left to the elevator, 8 m",
-    "next_line": "Next: Room 17 W on your left",
-    "steps": {
-      "0": "Point the camera at the corridor to begin.",
-      "1": "Turn right. Elevator ahead, bin on your left, painting on your right.",
-      "2": "Go straight. Walk through the doors in front of you.",
-      "3": "Turn right at the sign.",
-      "4": "Go straight. Room 124 at the end on your right.",
-      "5": "You've arrived!"
-    },
-    "eta_label": "~90s",
     "demo": {
       "label": "Demo",
       "wrong_turn": "Wrong turn",
@@ -108,16 +96,16 @@
     "cta_next": "I've reached the next landmark",
     "cta_arrived": "I've arrived",
     "steps_standard": [
-      { "icon": "arrow-up", "text": "Leave the corridor entrance, walk straight 12 m." },
-      { "icon": "door", "text": "Pass Room 17 W on your left." },
-      { "icon": "bookmark", "text": "Continue past the notice board." },
-      { "icon": "door", "text": "Room 124 on your right. Blue door sign." }
+      { "icon": "arrow-up", "text": "Exit the elevator and look for the painting on your right (avoid the bin)." },
+      { "icon": "door", "text": "Walk toward the door with the red fire-alarm sign and pass through it." },
+      { "icon": "arrow-up", "text": "After the door, continue straight until a large sign on the left. Turn right 1 m past it." },
+      { "icon": "door", "text": "Continue straight: Room 124 is one of the two doors on your right." }
     ],
     "steps_accessible": [
-      { "icon": "arrow-up", "text": "Turn left at entrance to reach elevator (8 m)." },
-      { "icon": "elevator", "text": "Take elevator to floor 2." },
-      { "icon": "arrow-up", "text": "Exit elevator, turn right into corridor." },
-      { "icon": "door", "text": "Continue straight. Room 124 on your right." }
+      { "icon": "arrow-up", "text": "Exit the elevator and look for the painting on your right (avoid the bin)." },
+      { "icon": "door", "text": "Walk toward the door with the red fire-alarm sign and pass through it." },
+      { "icon": "arrow-up", "text": "After the door, continue straight until a large sign on the left. Turn right 1 m past it." },
+      { "icon": "door", "text": "Continue straight: Room 124 is one of the two doors on your right." }
     ]
   },
   "arrived": {

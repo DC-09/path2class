@@ -5,7 +5,6 @@ import {
   AROverlay,
   CameraView,
   DeviationAlert,
-  InstructionBanner,
   type CameraViewHandle,
 } from '../components/ar';
 import { AssistantFab } from '../components/assistant/AssistantFab';
@@ -64,11 +63,16 @@ export default function ArNav() {
     navigate('/arrived');
   }, [navigate]);
 
+  const handleDeviation = useCallback(() => {
+    setDeviation(true);
+  }, []);
+
   useStepAdvancer({
     steps: STEPS,
     currentStep,
     onAdvance: setCurrentStep,
     onArrived: handleArrived,
+    onDeviation: handleDeviation,
   });
 
   useEffect(() => {
@@ -84,10 +88,6 @@ export default function ArNav() {
     },
     [navigate],
   );
-
-  const instruction = t(`ar.steps.${currentStep}`, {
-    defaultValue: t('ar.instruction_standard'),
-  });
 
   return (
     <div className="fixed inset-0 overflow-hidden bg-black">
@@ -140,15 +140,6 @@ export default function ArNav() {
         >
           <Icon name="switch" size={18} />
         </button>
-      </div>
-
-      {/* Instruction banner */}
-      <div className="absolute left-4 right-4 bottom-20 z-20">
-        <InstructionBanner
-          icon="arrow-up"
-          instruction={instruction}
-          etaLabel={t('ar.eta_label')}
-        />
       </div>
 
       {/* Demo controls pill */}

@@ -77,18 +77,6 @@
     "close_aria": "Chiudi AR",
     "switch_aria": "Passa a indicazioni testuali",
     "progress_aria": "Avanzamento percorso",
-    "instruction_standard": "Continua dritto, 15 m",
-    "instruction_accessible": "Svolta a sinistra verso l'ascensore, 8 m",
-    "next_line": "Poi: Aula 17 W sulla tua sinistra",
-    "steps": {
-      "0": "Inquadra il corridoio per iniziare la navigazione.",
-      "1": "Gira a destra. Ascensore davanti, cestino a sinistra, quadro a destra.",
-      "2": "Vai dritto. Attraversa le porte davanti a te.",
-      "3": "Gira a destra al cartello.",
-      "4": "Vai dritto. Aula 124 in fondo, sulla destra.",
-      "5": "Sei arrivato!"
-    },
-    "eta_label": "~90s",
     "demo": {
       "label": "Demo",
       "wrong_turn": "Svolta sbagliata",
@@ -108,16 +96,16 @@
     "cta_next": "Ho raggiunto il prossimo riferimento",
     "cta_arrived": "Sono arrivato",
     "steps_standard": [
-      { "icon": "arrow-up", "text": "Esci dall'ingresso del corridoio, prosegui dritto per 12 m." },
-      { "icon": "door", "text": "Passa l'Aula 17 W sulla sinistra." },
-      { "icon": "bookmark", "text": "Prosegui oltre la bacheca." },
-      { "icon": "door", "text": "Aula 124 sulla destra. Porta con placca blu." }
+      { "icon": "arrow-up", "text": "Esci dall'ascensore e cerca il quadro alla tua destra (evita il cestino)." },
+      { "icon": "door", "text": "Vai verso la porta con il segnale rosso dell'antincendio e varcala." },
+      { "icon": "arrow-up", "text": "Dopo la porta, continua dritto fino a un segnale grande sulla sinistra. Gira a destra 1 m oltre." },
+      { "icon": "door", "text": "Continua dritto: la 124 è una delle due porte sulla destra." }
     ],
     "steps_accessible": [
-      { "icon": "arrow-up", "text": "Svolta a sinistra all'ingresso per raggiungere l'ascensore (8 m)." },
-      { "icon": "elevator", "text": "Prendi l'ascensore fino al 2° piano." },
-      { "icon": "arrow-up", "text": "Esci dall'ascensore, svolta a destra nel corridoio." },
-      { "icon": "door", "text": "Prosegui dritto. Aula 124 sulla destra." }
+      { "icon": "arrow-up", "text": "Esci dall'ascensore e cerca il quadro alla tua destra (evita il cestino)." },
+      { "icon": "door", "text": "Vai verso la porta con il segnale rosso dell'antincendio e varcala." },
+      { "icon": "arrow-up", "text": "Dopo la porta, continua dritto fino a un segnale grande sulla sinistra. Gira a destra 1 m oltre." },
+      { "icon": "door", "text": "Continua dritto: la 124 è una delle due porte sulla destra." }
     ]
   },
   "arrived": {
