@@ -93,6 +93,7 @@
     "eyebrow": "Text directions",
     "from_location": "Elevator · 1F",
     "floor_plan_title": "Floor plan · 1F",
+    "floor_plan_start": "Start",
     "cta_next": "I've reached the next landmark",
     "cta_arrived": "I've arrived",
     "steps_standard": [

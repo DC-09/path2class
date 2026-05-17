@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next';
+
 export interface MiniFloorPlanProps {
   accessibility: boolean;
   stepIndex: number;
@@ -5,27 +7,24 @@ export interface MiniFloorPlanProps {
 
 /**
  * Top-down schematic of the corridor with the active route and the user dot.
- * 1:1 port from PROTOTYPE_REFERENCE.html. Accessibility ON routes via the
- * elevator and marks the stairs as unavailable.
+ * L-shape: a long horizontal stretch starting at the QR/elevator, then a
+ * perpendicular branch on the right ending at Room 124.
+ *
+ * The 8 step positions map to the 8 entries in `corridor.json` steps.
  */
-export function MiniFloorPlan({ accessibility, stepIndex }: MiniFloorPlanProps) {
-  const nodes: Array<[number, number]> = accessibility
-    ? [
-        [40, 60],
-        [70, 60],
-        [70, 35],
-        [150, 35],
-        [260, 35],
-        [340, 35],
-        [340, 60],
-      ]
-    : [
-        [40, 60],
-        [150, 60],
-        [240, 60],
-        [310, 60],
-        [340, 60],
-      ];
+export function MiniFloorPlan({ stepIndex }: MiniFloorPlanProps) {
+  const { t } = useTranslation();
+
+  const nodes: Array<[number, number]> = [
+    [40, 50], // 0 — INIZIO (elevator + QR)
+    [95, 50], // 1 — painting
+    [155, 50], // 2 — fire-alarm door
+    [195, 50], // 3 — past door
+    [240, 50], // 4 — bathroom sign
+    [295, 50], // 5 — large sign (turn point)
+    [320, 85], // 6 — past the right turn
+    [320, 115], // 7 — at Room 124
+  ];
   const pathD = nodes
     .map((n, i) => (i === 0 ? `M${n[0]} ${n[1]}` : `L${n[0]} ${n[1]}`))
     .join(' ');
@@ -33,79 +32,79 @@ export function MiniFloorPlan({ accessibility, stepIndex }: MiniFloorPlanProps) 
   const dot = nodes[dotIndex];
 
   return (
-    <svg viewBox="0 0 380 120" className="w-full h-[120px]" aria-label="Floor plan with route">
-      {/* corridor box */}
+    <svg viewBox="0 0 380 140" className="w-full h-[140px]" aria-label="Floor plan with route">
+      {/* L-shaped corridor — two overlapping rectangles */}
       <rect
         x="20"
         y="30"
-        width="340"
-        height="60"
-        rx="4"
+        width="320"
+        height="40"
+        rx="3"
         fill="#F4F3EF"
         stroke="#1E3A5F"
         strokeOpacity="0.2"
       />
-      {/* elevator */}
       <rect
-        x="22"
-        y="32"
-        width="34"
-        height="28"
-        fill={accessibility ? '#F5B946' : '#E8DFC9'}
-        opacity={accessibility ? 0.35 : 0.5}
+        x="300"
+        y="30"
+        width="40"
+        height="100"
+        rx="3"
+        fill="#F4F3EF"
+        stroke="#1E3A5F"
+        strokeOpacity="0.2"
       />
+      {/* Hide the seam where the two corridor rects meet */}
+      <line
+        x1="301"
+        y1="31"
+        x2="339"
+        y2="31"
+        stroke="#F4F3EF"
+        strokeWidth="2"
+      />
+      <line
+        x1="301"
+        y1="69"
+        x2="339"
+        y2="69"
+        stroke="#F4F3EF"
+        strokeWidth="2"
+      />
+
+      {/* INIZIO marker (start) */}
+      <rect x="22" y="32" width="34" height="36" rx="2" fill="#E8DFC9" opacity="0.55" />
       <text
         x="39"
-        y="50"
+        y="54"
         textAnchor="middle"
         fontSize="7"
         fontFamily="Inter"
-        fontWeight="600"
+        fontWeight="700"
         fill="#1E3A5F"
       >
-        ELV
+        {t('text_nav.floor_plan_start').toUpperCase()}
       </text>
-      {/* stairs */}
-      <rect
-        x="324"
-        y="32"
-        width="34"
-        height="28"
-        fill="#E8DFC9"
-        opacity={accessibility ? 0.25 : 0.5}
-      />
-      <text
-        x="341"
-        y="50"
-        textAnchor="middle"
-        fontSize="7"
-        fontFamily="Inter"
-        fontWeight="600"
-        fill="#1E3A5F"
-        opacity={accessibility ? 0.4 : 1}
-      >
-        STR
-      </text>
-      {accessibility && (
-        <g>
-          <circle cx="341" cy="46" r="10" fill="none" stroke="#E86A5C" strokeWidth="1.5" />
-          <line x1="334" y1="39" x2="348" y2="53" stroke="#E86A5C" strokeWidth="1.5" />
-        </g>
-      )}
-      {/* door notches top */}
-      {[90, 150, 210, 270].map((x) => (
-        <rect key={`t-${x}`} x={x} y="26" width="22" height="6" fill="#3a5575" opacity="0.7" />
+
+      {/* Generic door notches along the horizontal stretch (top side) */}
+      {[120, 180, 250].map((x) => (
+        <rect key={`t-${x}`} x={x} y="26" width="22" height="6" fill="#3a5575" opacity="0.6" />
       ))}
-      {[120, 240].map((x) => (
-        <rect key={`b-${x}`} x={x} y="88" width="22" height="6" fill="#3a5575" opacity="0.7" />
+      {/* Generic door notches along the horizontal stretch (bottom side) */}
+      {[150, 220].map((x) => (
+        <rect key={`b-${x}`} x={x} y="68" width="22" height="6" fill="#3a5575" opacity="0.6" />
       ))}
-      {/* 124 marker */}
+
+      {/* Two doors on the right side of the vertical arm (where Room 124 sits) */}
+      <rect x="340" y="82" width="6" height="18" fill="#3a5575" opacity="0.6" />
+
+      {/* Room 124 marker */}
       <g>
-        <rect x="268" y="88" width="24" height="6" fill="#7BC4D9" />
-        <circle cx="280" cy="86" r="6" fill="#7BC4D9" />
+        <rect x="340" y="106" width="6" height="18" fill="#7BC4D9" />
+        <circle cx="349" cy="115" r="7" fill="#7BC4D9" />
         <text
-          x="280"
-          y="89"
+          x="349"
+          y="118"
           textAnchor="middle"
           fontSize="6"
           fontFamily="Inter"
@@ -115,7 +114,8 @@ export function MiniFloorPlan({ accessibility, stepIndex }: MiniFloorPlanProps) 
           124
         </text>
       </g>
-      {/* route */}
+
+      {/* Route — dashed cyan line tracing the L */}
       <path
         d={pathD}
         fill="none"
@@ -123,8 +123,10 @@ export function MiniFloorPlan({ accessibility, stepIndex }: MiniFloorPlanProps) 
         strokeWidth="2.5"
         strokeDasharray="5 3"
         strokeLinecap="round"
+        strokeLinejoin="round"
       />
-      {/* user dot */}
+
+      {/* User dot */}
       <circle cx={dot[0]} cy={dot[1]} r="7" fill="#7BC4D9" opacity="0.3">
         <animate attributeName="r" values="7;11;7" dur="1.4s" repeatCount="indefinite" />
         <animate
