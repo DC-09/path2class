@@ -1,11 +1,13 @@
-# Path2Class — Web (PWA)
+# Path2Class — Web
 
-QR-activated indoor wayfinding PWA with AR navigation. University MVP covering
-a single corridor on the 1st floor, starting at the elevator, destination Room 124.
+QR-activated indoor wayfinding web app with AR navigation. University MVP covering
+a single corridor on the 1st floor: scan the QR in front of the elevators, the app
+guides you to Room 124. Live at [path2class.vercel.app](https://path2class.vercel.app).
 
-Built from the **Liquid Glass** prototype produced in Claude Design. The visual
-output matches the prototype 1:1 — the phone frame that appears in the
-prototype is **presentation only**; the real app is full-screen.
+Built in the **Liquid Glass** visual language. The Splash screen follows a
+dedicated design handoff (logo + hero copy + 3 step cards + "Get started" CTA);
+everything else descends from `PROTOTYPE_REFERENCE.html` with the same translucent
+surfaces, warm sand background, and cyan accents.
 
 ## Stack
 
@@ -34,9 +36,9 @@ web/
 │   │                       # ArNav, TextNav, Arrived, DebugGlass
 │   ├── components/
 │   │   ├── glass/          # GlassCard, GlassButton, GlassChip, GlassIconButton, Icon
-│   │   ├── art/            # QRArt, DoorArt
-│   │   ├── ar/             # CameraView, AROverlay, InstructionBanner, DeviationAlert
-│   │   ├── text/           # StepList, MiniFloorPlan
+│   │   ├── art/            # DoorArt
+│   │   ├── ar/             # CameraView, AROverlay (Liquid Glass arrow), DeviationAlert
+│   │   ├── text/           # StepList, MiniFloorPlan (L-shape)
 │   │   └── assistant/      # AssistantFab, AssistantSheet, ChatMessage,
 │   │                       # TypingIndicator, SuggestionChips, ChatComposer
 │   ├── services/
@@ -44,9 +46,12 @@ web/
 │   │   ├── assistantService.ts   # SSE client → Supabase edge fn
 │   │   ├── assistantContext.ts   # Builds system-prompt payload
 │   │   └── storageService.ts     # Typed localStorage wrapper (p2c.*)
+│   ├── hooks/useStepAdvancer.ts  # YOLO-driven step advancement + deviation
 │   ├── stores/             # useSessionStore, useAssistantStore
 │   ├── i18n/               # init + locales/{it,en,pt}.json
-│   └── data/corridor.json  # MVP corridor map + IDs
+│   └── data/
+│       ├── corridor.json   # 8-step machine, wrongTrigger on step 0, wrongTimeoutMs on step 5
+│       └── guidedNavigation.ts  # deterministic Yes/No guided dialogue
 ├── tailwind.config.js
 ├── vite.config.ts
 └── .env.example            # VITE_ASSISTANT_ENDPOINT template
@@ -100,20 +105,30 @@ Splash → Landing → Destination → CameraPermission → ArNav → Arrived
                    Recents (localStorage)         TextNav ↗
 ```
 
-- **Splash** `/` — Simulate QR scan → Landing.
-- **Landing** `/landing` — location card, language (IT/EN/PT cycle), accessibility toggle (amber glow), search → autocomplete, Recents (last 5), Nearby. Accepts `?loc=<key>` QR deeplinks; unknown codes render an error card. Entry point from the QR encoder.
-- **Destination** `/destination` — hero door art, accessibility chip, ETA + distance, AR / text CTAs.
+- **Splash** `/` — welcome screen seen after scanning the QR. Logo (float-y animation), hero copy with brand inline (`path2class`), 3 step cards (Search · Follow · Arrive), "Get started" CTA. Forwards `?loc=` to `/landing`.
+- **Landing** `/landing` — location card, language (IT/EN/PT cycle), accessibility toggle, search → autocomplete, Recents, Nearby. Accepts `?loc=<key>` QR deeplinks; unknown codes render an error card.
+- **Destination** `/destination` — door art, accessibility chip, ETA + distance, AR / text CTAs.
 - **CameraPermission** `/permission` — pre-flight explainer.
-- **AR Navigation** `/navigate/ar` — live camera feed + pulsing cyan arrow + bbox highlights from `detectionService` + instruction banner + Demo pill (Wrong turn / Arrive / A11y). Camera errors redirect to `/navigate/text`.
-- **Text Navigation** `/navigate/text` — linear step list + mini floor plan (elevator highlighted amber when accessibility is on; stairs crossed out).
+- **AR Navigation** `/navigate/ar` — live camera feed + Liquid Glass cyan arrow (rotates ±35° for turns) + bbox highlights from `detectionService` + Demo pill (Wrong turn / Next / Arrive / A11y). No on-screen instruction banner: only the arrow + bbox + deviation alert. Camera errors redirect to `/navigate/text`.
+- **Text Navigation** `/navigate/text` — 4 simple steps + L-shaped mini floor plan (INIZIO marker, perpendicular branch ending at Room 124).
 - **Arrived** `/arrived` — confetti + match-confirmation card. Pushes the destination to `p2c.recent`.
-- **Debug** `/debug/glass` — renders every glass variant in isolation for design review. Not linked from the main flow.
+- **Debug** `/debug/glass` — renders every glass variant in isolation. Not linked from the main flow.
 
 The **AI Assistant** overlays every screen except Splash / Destination / Permission. Suggestion chips are scoped to the active route.
 
 ## State & persistence
 
 `p2c.lang`, `p2c.a11y`, `p2c.recent` — namespaced keys through [storageService.ts](src/services/storageService.ts). Safe no-ops in private mode. Language auto-detects from `navigator.language` on first visit.
+
+## Navigation step machine
+
+The route from elevator to Room 124 is an 8-step machine in [src/data/corridor.json](src/data/corridor.json). Each step has a YOLO `trigger` class — when seen for `minFrames` consecutive frames above `minConfidence`, `useStepAdvancer` advances to the next step. The current step's `arrow` field rotates the AR overlay (`right` / `left` = ±35°, `straight` = 0°).
+
+Two deviation alerts are wired:
+- **Step 0 `wrongTrigger: ["bin"]`** — at the elevator, seeing a bin means the user is facing the wrong way.
+- **Step 5 `wrongTimeoutMs: 10000`** — at the large sign, if no `signal` advances the step within 10 s, the user probably went straight into the wall instead of turning right.
+
+The text-mode equivalent is intentionally simplified to 4 high-level steps; landmarks live in `text_nav.steps_standard` (and `_accessible`) across the 3 locales.
 
 ## Modello YOLO integrato
 
@@ -155,8 +170,10 @@ Get a key at https://console.groq.com (free tier is plenty for development).
 ### Deploy
 
 ```sh
-supabase functions deploy chat-assistant
+supabase functions deploy chat-assistant --no-verify-jwt
 ```
+
+`--no-verify-jwt` makes the function publicly callable without a Supabase Auth token, which is what we want for the unauthenticated web app.
 
 This uploads [../supabase/functions/chat-assistant/index.ts](../supabase/functions/chat-assistant/index.ts). The function URL will be:
 
