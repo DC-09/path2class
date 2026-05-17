@@ -25,7 +25,7 @@ This is a plain web app, not a PWA — no manifest, no service worker, no "add t
 
 ```
 web/
-├── public/                 # logo.svg (also used as favicon)
+├── public/                 # favicon.svg, logo.png (QR center), logo-splash.png
 ├── src/
 │   ├── App.tsx             # router + i18n sync + chat-sheet mount
 │   ├── main.tsx            # Vite bootstrap
