@@ -1,7 +1,6 @@
 {
   "version": 3,
-  "locationKey": "entrance_b_corridor_2w",
-  "building": "B",
+  "locationKey": "entrance_corridor_2w",
   "floor": 2,
   "destination": {
     "nodeId": "room_124",

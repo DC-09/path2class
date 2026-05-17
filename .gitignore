@@ -47,3 +47,8 @@ docker-compose.override.yml
 # Supabase CLI binary (downloaded locally, not part of repo)
 supabase.exe
 supabase/.temp/
+
+# Root-level npm artifacts (used only by scripts/, no permanent deps)
+node_modules/
+package.json
+package-lock.json

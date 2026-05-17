@@ -59,7 +59,7 @@
     "use_text": "Use text directions instead"
   },
   "ar": {
-    "area_label": "Building B · 2F West",
+    "area_label": "2F West",
     "close_aria": "Close AR",
     "switch_aria": "Switch to text directions",
     "progress_aria": "Route progress",
@@ -89,7 +89,7 @@
   },
   "text_nav": {
     "eyebrow": "Text directions",
-    "from_location": "Entrance B · 2F",
+    "from_location": "Entrance · 2F",
     "floor_plan_title": "Floor plan · 2F West",
     "cta_next": "I've reached the next landmark",
     "cta_arrived": "I've arrived",

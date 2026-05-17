@@ -59,7 +59,7 @@
     "use_text": "Usa invece indicazioni testuali"
   },
   "ar": {
-    "area_label": "Edificio B · 2°P Ovest",
+    "area_label": "2°P Ovest",
     "close_aria": "Chiudi AR",
     "switch_aria": "Passa a indicazioni testuali",
     "progress_aria": "Avanzamento percorso",
@@ -89,7 +89,7 @@
   },
   "text_nav": {
     "eyebrow": "Indicazioni testuali",
-    "from_location": "Ingresso B · 2°P",
+    "from_location": "Ingresso · 2°P",
     "floor_plan_title": "Planimetria · 2°P Ovest",
     "cta_next": "Ho raggiunto il prossimo riferimento",
     "cta_arrived": "Sono arrivato",
