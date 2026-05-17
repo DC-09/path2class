@@ -30,8 +30,9 @@ html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
-  /* Show warm beige in the mobile overscroll / rubber-band area instead of white */
-  background-color: #e8e1d0;
+  /* Match the body's warm gradient so the mobile overscroll / rubber-band
+     area blends in instead of showing a flat beige rectangle */
+  background: radial-gradient(ellipse at top, #f4f3ef 0%, #e8e1d0 55%, #ddd6c4 100%);
 }
 
 body {
