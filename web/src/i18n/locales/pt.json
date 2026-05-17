@@ -17,7 +17,7 @@
     "steps": {
       "search": {
         "title": "Procurar",
-        "body": "Escreva o número de uma sala, laboratório ou serviço. Mesmo uma palavra-chave funciona."
+        "body": "Escreva o número de uma sala, laboratório ou serviço."
       },
       "follow": {
         "title": "Seguir",
@@ -25,7 +25,7 @@
       },
       "arrive": {
         "title": "Chegar",
-        "body": "Avisamos quando chega à porta certa. Sem mais voltas erradas."
+        "body": "Avisamos quando chega à porta certa."
       }
     }
   },
@@ -112,7 +112,6 @@
     "title": "Você chegou",
     "subtitle": "Sala 124 — 1º andar",
     "matches_title": "Corresponde ao ambiente",
-    "matches_body": "Porta azul · placa 124",
     "actions": {
       "save": "Salvar",
       "report": "Reportar",

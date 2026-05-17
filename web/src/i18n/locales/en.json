@@ -17,7 +17,7 @@
     "steps": {
       "search": {
         "title": "Search",
-        "body": "Type any room number, lab or service. Even a keyword works."
+        "body": "Type any room number, lab or service."
       },
       "follow": {
         "title": "Follow",
@@ -25,7 +25,7 @@
       },
       "arrive": {
         "title": "Arrive",
-        "body": "We let you know when you reach the right door, so no more wrong turns."
+        "body": "We let you know when you reach the right door."
       }
     }
   },
@@ -112,7 +112,6 @@
     "title": "You've arrived",
     "subtitle": "Room 124 — 1st floor",
     "matches_title": "Matches your surroundings",
-    "matches_body": "Blue door · number plate 124",
     "actions": {
       "save": "Save",
       "report": "Report",

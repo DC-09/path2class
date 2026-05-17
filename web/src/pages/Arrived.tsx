@@ -95,9 +95,6 @@ export default function Arrived() {
             <div className="text-[12px] font-semibold text-[color:var(--navy)]">
               {t('arrived.matches_title')}
             </div>
-            <div className="text-[11px] text-[color:var(--navy)]/60">
-              {t('arrived.matches_body')}
-            </div>
           </div>
           <div className="w-7 h-7 rounded-full cyan-glow flex items-center justify-center">
             <Icon name="check" size={14} stroke={2.5} />

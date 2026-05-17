@@ -17,7 +17,7 @@
     "steps": {
       "search": {
         "title": "Cerca",
-        "body": "Scrivi il numero di un'aula, di un laboratorio o un servizio. Anche una parola chiave va bene."
+        "body": "Scrivi il numero di un'aula, di un laboratorio o un servizio."
       },
       "follow": {
         "title": "Segui",
@@ -25,7 +25,7 @@
       },
       "arrive": {
         "title": "Arriva",
-        "body": "Ti avvisiamo quando raggiungi la porta giusta. Niente più svolte sbagliate."
+        "body": "Ti avvisiamo quando raggiungi la porta giusta."
       }
     }
   },
@@ -112,7 +112,6 @@
     "title": "Sei arrivato",
     "subtitle": "Aula 124 — 1° piano",
     "matches_title": "Corrisponde a ciò che vedi",
-    "matches_body": "Porta blu · placca 124",
     "actions": {
       "save": "Salva",
       "report": "Segnala",
