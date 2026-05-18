@@ -73,7 +73,7 @@ export function AROverlay({ arrowDirection, detections, accessibility }: AROverl
           because each owns its own `transform`. */}
       <div
         aria-hidden
-        className="absolute left-1/2 top-[58%] z-10 pointer-events-none"
+        className="absolute left-1/2 top-[72%] z-10 pointer-events-none"
         style={{ transform: 'translate(-50%,-50%)' }}
       >
         <div
