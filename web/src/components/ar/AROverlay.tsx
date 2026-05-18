@@ -48,13 +48,23 @@ export function AROverlay({ arrowDirection, detections, accessibility }: AROverl
 
       {/* AR arrow — center-lower, rotates with `arrowDirection`.
           Liquid Glass style: blurred cyan halo + frosted gradient body
-          with a thin specular highlight on the front face. */}
+          with a thin specular highlight on the front face.
+          Three layers: outer centers, middle rotates (smooth tween),
+          inner runs the pulse-cyan scale animation. They don't fight
+          because each owns its own `transform`. */}
       <div
         aria-hidden
-        className="absolute left-1/2 top-[58%] -translate-x-1/2 -translate-y-1/2 z-10 pointer-events-none pulse-cyan"
-        style={{ transform: `translate(-50%,-50%) rotate(${rotation}deg)` }}
+        className="absolute left-1/2 top-[58%] z-10 pointer-events-none"
+        style={{ transform: 'translate(-50%,-50%)' }}
       >
-        <svg width="130" height="150" viewBox="0 0 130 150">
+        <div
+          style={{
+            transform: `rotate(${rotation}deg)`,
+            transition: 'transform 400ms ease-out',
+          }}
+        >
+        <div className="pulse-cyan">
+        <svg width="130" height="150" viewBox="0 0 130 150" style={{ display: 'block' }}>
           <defs>
             {/* Frosted glass body — light cool top fading to project cyan */}
             <linearGradient id="ar-arrow-body" x1="0" y1="0" x2="0" y2="1">
@@ -111,6 +121,8 @@ export function AROverlay({ arrowDirection, detections, accessibility }: AROverl
           {/* Ground shadow */}
           <ellipse cx="65" cy="142" rx="36" ry="4.5" fill="#1E3A5F" opacity="0.22" />
         </svg>
+        </div>
+        </div>
       </div>
     </>
   );
