@@ -34,8 +34,7 @@
       "kind": "ar",
       "arrow": "straight",
       "trigger": [
-        { "class": "door", "position": "left" },
-        { "class": "door", "position": "center", "growing": true }
+        { "class": "door", "minCount": 2 }
       ],
       "minConfidence": 0.4,
       "minFrames": 3
