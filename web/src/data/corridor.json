@@ -70,7 +70,8 @@
       "kind": "arrived",
       "arrow": "straight",
       "trigger": [
-        { "class": "door", "minCount": 2, "position": "right", "closeTogether": true }
+        { "class": "door", "minCount": 2 },
+        { "class": "signal", "minCount": 1 }
       ],
       "minConfidence": 0.4,
       "minFrames": 3
