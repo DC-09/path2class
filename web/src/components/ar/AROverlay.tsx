@@ -33,7 +33,7 @@ const ARROW_ASSET: Record<ArrowDirection, string> = {
  * preserves the PNG's intrinsic aspect ratio, so vertical straight and
  * landscape curved arrows both sit centered in the same footprint.
  */
-const ARROW_BOX = 160;
+const ARROW_BOX = 220;
 
 /**
  * AR overlay layer — pulsing cyan arrow + per-detection highlight rectangles.
