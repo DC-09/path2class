@@ -42,8 +42,8 @@
     "invalid_loc_body": "Não reconhecemos {{loc}}. Tente escanear novamente.",
     "invalid_loc_back": "Voltar ao início",
     "nearby_items": {
-      "notice_board": {
-        "name": "Mural de avisos",
+      "international_office": {
+        "name": "International & Employability Office",
         "meta": "Corredor · 1ºA"
       },
       "elevator": {

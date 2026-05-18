@@ -42,8 +42,8 @@
     "invalid_loc_body": "We couldn't recognise {{loc}}. Please try scanning again.",
     "invalid_loc_back": "Back to start",
     "nearby_items": {
-      "notice_board": {
-        "name": "Notice board",
+      "international_office": {
+        "name": "International & Employability Office",
         "meta": "Corridor · 1F"
       },
       "elevator": {

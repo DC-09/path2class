@@ -42,8 +42,8 @@
     "invalid_loc_body": "Non riconosciamo {{loc}}. Riprova la scansione.",
     "invalid_loc_back": "Torna all'inizio",
     "nearby_items": {
-      "notice_board": {
-        "name": "Bacheca",
+      "international_office": {
+        "name": "International & Employability Office",
         "meta": "Corridoio · 1°P"
       },
       "elevator": {

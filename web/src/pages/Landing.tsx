@@ -62,7 +62,7 @@ export default function Landing() {
   }
 
   const nearby: Array<{ key: string; icon: IconName }> = [
-    { key: 'notice_board', icon: 'bookmark' },
+    { key: 'international_office', icon: 'globe' },
     { key: 'elevator', icon: 'elevator' },
     { key: 'emergency_exit', icon: 'flag' },
   ];
