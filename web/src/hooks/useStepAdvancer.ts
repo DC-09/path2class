@@ -74,6 +74,35 @@ function bboxCenter(b: BBox): { x: number; y: number } {
   return { x: b.x + b.w / 2, y: b.y + b.h / 2 };
 }
 
+/** Format a trigger condition array as a compact, human-readable string. */
+export function summarizeTrigger(trigger: TriggerCondition[]): string {
+  if (!trigger || trigger.length === 0) return '—';
+  return trigger
+    .map((c) => {
+      let s = c.class;
+      const n = c.minCount ?? 1;
+      if (n > 1) s += `×${n}`;
+      if (c.position) s += `@${c.position}`;
+      if (c.growing) s += '↑';
+      if (c.closeTogether) s += '∩';
+      return s;
+    })
+    .join(' + ');
+}
+
+/** Count how many detections of each class satisfy a class+position+conf filter. */
+export function countByClass(
+  detections: readonly Detection[],
+  minConfidence: number,
+): Record<string, number> {
+  const counts: Record<string, number> = {};
+  for (const d of detections) {
+    if (d.confidence < minConfidence) continue;
+    counts[d.class] = (counts[d.class] ?? 0) + 1;
+  }
+  return counts;
+}
+
 function bboxArea(b: BBox): number {
   return b.w * b.h;
 }

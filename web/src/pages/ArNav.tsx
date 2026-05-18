@@ -11,7 +11,12 @@ import { AssistantFab } from '../components/assistant/AssistantFab';
 import { GlassCard, Icon } from '../components/glass';
 import { detectionService, type Detection } from '../services/detectionService';
 import { useSessionStore } from '../stores/useSessionStore';
-import { useStepAdvancer, type NavigationStep } from '../hooks/useStepAdvancer';
+import {
+  useStepAdvancer,
+  summarizeTrigger,
+  countByClass,
+  type NavigationStep,
+} from '../hooks/useStepAdvancer';
 import corridor from '../data/corridor.json';
 
 const DEVIATION_DURATION_MS = 2200;
@@ -99,6 +104,14 @@ export default function ArNav() {
         accessibility={accessibility}
       />
 
+      {/* Debug overlay — step machine state visible on screen. */}
+      <DebugOverlay
+        currentStep={currentStep}
+        step={step}
+        nextStep={STEPS[currentStep + 1]}
+        detections={detections}
+      />
+
       {/* Top status bar */}
       <div className="absolute top-12 left-4 right-4 z-20">
         <GlassCard className="px-4 py-2.5 flex items-center justify-between">
@@ -179,6 +192,45 @@ export default function ArNav() {
 
       <div className="absolute right-4 z-20" style={{ bottom: 180 }}>
         <AssistantFab positioned />
+      </div>
+    </div>
+  );
+}
+
+interface DebugOverlayProps {
+  currentStep: number;
+  step: NavigationStep;
+  nextStep: NavigationStep | undefined;
+  detections: readonly Detection[];
+}
+
+function DebugOverlay({ currentStep, step, nextStep, detections }: DebugOverlayProps) {
+  const minConf = nextStep?.minConfidence ?? 0.3;
+  const counts = countByClass(detections, minConf);
+  const seen =
+    Object.entries(counts)
+      .map(([k, v]) => `${k}×${v}`)
+      .join(' ') || '—';
+  const needs = nextStep ? summarizeTrigger(nextStep.trigger) : '—';
+
+  return (
+    <div className="absolute top-[110px] left-4 right-4 z-20 pointer-events-none">
+      <div
+        className="rounded-2xl px-3 py-2 text-[10px] font-mono leading-tight text-[color:var(--navy)]"
+        style={{
+          background: 'rgba(244,243,239,0.85)',
+          backdropFilter: 'blur(8px)',
+          WebkitBackdropFilter: 'blur(8px)',
+          boxShadow: '0 0 0 1px rgba(30,58,95,0.1)',
+        }}
+      >
+        <div className="font-semibold">
+          STEP {currentStep} → {currentStep + 1} · arrow:{step.arrow} · kind:{step.kind}
+        </div>
+        <div>see: {seen}</div>
+        <div>
+          need: {needs} (conf≥{minConf}, frames≥{nextStep?.minFrames ?? 0})
+        </div>
       </div>
     </div>
   );
