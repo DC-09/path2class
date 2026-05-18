@@ -4,7 +4,7 @@
 
 Path2Class è una **web app universitaria di navigazione indoor** che aiuta studenti e visitatori a trovare aule, uffici e servizi all'interno del campus. L'idea di partenza è semplice: gli edifici universitari sono labirintici, le mappe stampate sono inutili a chi non sa già dove si trova, e Google Maps non funziona dentro un palazzo. Path2Class risolve il problema mettendo dei **QR code fisici** nei punti chiave dell'edificio (ascensori, ingressi, snodi): l'utente li inquadra col telefono, l'app capisce immediatamente dove si trova, gli chiede dove vuole andare e lo accompagna passo passo.
 
-L'esperienza ha tre componenti che lavorano insieme. La **realtà aumentata** sovrappone una freccia cyan al video della fotocamera, così l'utente vede dove andare guardando direttamente il corridoio davanti a sé. L'**intelligenza artificiale visiva (YOLO)** riconosce in tempo reale porte, segnali, ascensori, cestini, quadri, bocchette e cartelli, confermando che l'utente è sulla strada giusta. Un **assistente conversazionale (Llama 3.3 su Groq)** risponde a domande in linguaggio naturale ("Dove sono?", "Mi sono perso", "Cosa puoi fare?") in italiano, inglese o portoghese, ed è arricchito con una RAG che gli permette di guidare l'utente passo per passo, recuperarlo se sbaglia strada, rispondere a FAQ tecniche e parlare del progetto.
+L'esperienza ha tre componenti che lavorano insieme. La **realtà aumentata** sovrappone una freccia cyan al video della fotocamera, così l'utente vede dove andare guardando direttamente il corridoio davanti a sé. L'**intelligenza artificiale visiva (YOLO)** riconosce in tempo reale porte, segnali, ascensori, cestini, quadri, bocchette e cartelli — il riconoscimento avviene **invisibile in background** (i bbox non sono più mostrati a schermo) e guida lo stato di avanzamento. Un **assistente conversazionale (Llama 3.3 70B su Groq)** risponde a domande in linguaggio naturale ("Dove sono?", "Mi sono perso", "Cosa puoi fare?") in italiano, inglese o portoghese, ed è arricchito con una RAG che gli permette di guidare l'utente passo per passo, recuperarlo se sbaglia strada, rispondere a FAQ tecniche e parlare del progetto.
 
 L'app è online su **[path2class.vercel.app](https://path2class.vercel.app)**.
 
@@ -102,39 +102,43 @@ Vercel rideploya automaticamente ogni `git push` su `main`, quindi anche la vers
 
 ## Cosa è stato costruito finora
 
-L'**interfaccia utente è completa e online**. Tutte le schermate funzionano: schermata di benvenuto (Splash, ridisegnata su handoff dedicato con logo che galleggia + 3 step card + CTA "Get started"), Landing con ricerca destinazione, conferma destinazione con illustrazione della porta, richiesta permesso fotocamera, navigazione AR live con freccia liquid glass cyan, navigazione testuale con planimetria a L, schermata di arrivo. Tutta la grafica è in stile **Liquid Glass** — superfici traslucide, sfondo caldo color sabbia, accenti azzurri.
+L'**interfaccia utente è completa, online e ripulita per la produzione**. Tutte le schermate funzionano: schermata di benvenuto (Splash, ridisegnata su handoff dedicato con logo che galleggia + 3 step card + CTA "Get started"), Landing con ricerca destinazione, conferma destinazione con **foto reale** della porta dell'Aula 124, richiesta permesso fotocamera, navigazione AR live con freccia cyan PNG personalizzata, navigazione testuale con planimetria a L, schermata di arrivo. Tutta la grafica è in stile **Liquid Glass** — superfici traslucide, sfondo caldo color sabbia, accenti azzurri.
 
-L'app è **multilingua** (italiano, inglese, portoghese) con auto-rilevamento al primo avvio. Ricorda le ultime destinazioni cercate. Ha un toggle "percorso accessibile" che ad oggi mostra lo stesso percorso (partiamo già dall'ascensore, non ci sono varianti). È **accessibile da tastiera**, ha etichette per screen reader, e rispetta le preferenze di animazioni ridotte.
+L'app è **multilingua** (italiano, inglese, portoghese) con auto-rilevamento al primo avvio. Ricorda le ultime destinazioni cercate. È **accessibile da tastiera**, ha etichette per screen reader, e rispetta le preferenze di animazioni ridotte.
 
-L'**assistente AI è attivo e funzionante in produzione**. Si apre come un foglio dal basso in qualsiasi schermata, riceve risposte in streaming token per token da **Llama 3.3 70B su Groq** (tramite una Supabase Edge Function). Il system prompt è una vera **RAG**: descrive il percorso completo dall'ascensore all'Aula 124 con tutti i landmark (quadro, segnale antincendio, segnale del bagno, segnale grande, doppia porta finale), gestisce il recupero quando l'utente sbaglia strada, sa rispondere a domande tecniche (permessi fotocamera, lingua, problemi comuni), conosce le proprie capacità, e parla del progetto in modo semplice senza scendere in tecnicismi.
+La **schermata AR è stata bonificata da ogni elemento di debug**: spariti il pill DEMO (Wrong turn / Next / Arrive / A11y) e i bbox che evidenziavano gli oggetti riconosciuti. Restano solo il feed camera, la freccia cyan che ruota/cresce/decresce in un alone diffuso, lo status bar in alto, i controlli (chiudi/passa a testuale), il banner informativo quando attivo, e il FAB dell'assistente. YOLO continua a girare nascosto sotto guidando l'avanzamento degli step.
+
+L'**assistente AI è attivo e funzionante in produzione**. Si apre come un foglio dal basso quasi opaco (sand-colored al 97%) in qualsiasi schermata, riceve risposte in streaming token per token da **Llama 3.3 70B su Groq** (tramite una Supabase Edge Function). Il system prompt è una vera **RAG**: descrive il percorso completo dall'ascensore all'Aula 124 con tutti i landmark, gestisce il recupero quando l'utente sbaglia strada, sa rispondere a domande tecniche (permessi fotocamera, lingua, problemi comuni), conosce le proprie capacità, e parla del progetto in modo semplice senza scendere in tecnicismi. **Niente più modalità "guidata Sì/No"** — la chip "Guidami all'Aula 124" ora manda direttamente la richiesta al modello, che risponde in modo naturale grazie alla RAG.
 
 Esiste anche un **backend Python** (FastAPI) con un servizio YOLO, un servizio LLM e un grafo del campus completo (più edifici, piani, stanze). Era pensato come servizio centrale prima che si decidesse di usare Supabase per l'assistente. **Non è collegato alla web app attiva** — resta come riferimento per quando si estenderà la mappa.
 
 ## Cosa funziona oggi
 
 - L'intera interfaccia visiva su mobile e desktop, deployata su Vercel
-- Schermata Splash ridisegnata (logo che galleggia + 3 step card)
-- Favicon con logo Path2Class su tile beige
+- Schermata Splash ridisegnata, favicon, foto reale della porta Aula 124
 - Scansione del QR fisico → apertura diretta dell'app sulla Landing
 - La fotocamera live in modalità AR (con HTTPS via Vercel o ngrok per il dev)
-- **Freccia AR in stile Liquid Glass** con gradient cyan, alone diffuso, riflesso e ombra al suolo — ruota di ±35° per indicare svolte a destra/sinistra
+- **Frecce AR come PNG personalizzati** (`arrow-straight.png`, `arrow-right.png`, `arrow-left.png`) in `public/arrows/` — basta sostituire i file per cambiare grafica. Renderizzate dentro un box 220×220 con `object-fit: contain`. Alone cyan stabile (drop-shadow statico) + pulsazione smooth via `scale` + `opacity`
 - Il riconoscimento oggetti **reale** con il modello YOLOv8n allenato sul corridoio target (CPU backend TF.js, ~3 FPS, NMS post-processing) — 7 classi: `path2class`, `bin`, `door`, `elevator`, `painting`, `signal`, `vent`
-- **Avanzamento automatico degli step** in modalità AR: la freccia ruota e il pallino sulla planimetria avanza quando YOLO riconosce il landmark corretto per N frame consecutivi
-- **Alert "Direzione sbagliata"** in 2 scenari: (1) all'ascensore, se YOLO vede il cestino l'utente sta guardando dalla parte sbagliata; (2) al segnale grande, se l'utente non gira a destra entro 10 secondi probabilmente è andato dritto verso il muro
+- **State machine a 6 step** con avanzamento automatico in modalità AR: la freccia cambia direzione e il pallino sulla planimetria avanza quando YOLO soddisfa una **combinazione di condizioni AND** (conteggi minimi, posizione nel frame, crescita del bbox nel tempo, vicinanza spaziale tra detection)
+- **`minDwellMs` per step**: tempo minimo di permanenza prima che il prossimo trigger possa scattare. Evita avanzamenti fulminei quando step consecutivi condividono landmark
+- **Alert "Direzione sbagliata"** in 2 scenari: (1) all'ascensore, se YOLO vede il cestino l'utente sta guardando dalla parte sbagliata; (2) al segnale grande, se l'utente non gira a destra entro 15 secondi
+- **Banner informativo "Destinazione a destra"** che appare al penultimo step (centrato, in basso, con safe-area inset iOS)
 - Modalità testuale **semplificata in 4 step**, con planimetria a L che riproduce la geometria reale (corridoio principale + braccio perpendicolare con Aula 124 in fondo)
 - L'assistente AI online: streaming token per token, contesto sempre aggiornato (sa dove sei nello step, dove stai andando, cosa la camera ha visto di recente), RAG ricca con percorso completo, capabilities, recovery, FAQ tecniche, info sul progetto
+- Sheet dell'assistente con sfondo opaco (sand al 97%) — non c'è più il "see-through" che mostrava il contenuto dietro
 - Scelta lingua, percorso accessibile, destinazioni recenti salvate localmente
 
 ## Cosa NON funziona ancora
 
 - **Il backend Python non è collegato alla web app**: il vecchio frontend HTML lo usava, il nuovo no. Per ora è "isolato" — utile come riferimento per quando si estenderà la mappa oltre il singolo corridoio.
 - **Mappa limitata**: il sistema gestisce per ora solo un corridoio (1° piano, dall'ascensore all'Aula 124) — l'MVP della demo. Il backend ha un grafo più ampio ma non è collegato alla nuova UI.
-- **Step di navigazione e dialoghi dell'assistente guidato dipendono dai landmark reali**: i 4 step della modalità testuale e il dialogo guidato dell'assistente sono coerenti col percorso descritto a parole, ma vanno verificati camminando fisicamente nel corridoio e affinati se qualcosa non corrisponde.
+- **Step di navigazione e testo dipendono dai landmark reali**: i 4 step della modalità testuale e le stringhe RAG dell'assistente sono coerenti col percorso descritto, ma vanno verificati camminando fisicamente nel corridoio e affinati se qualcosa non corrisponde.
 
 ## Prossimi passi (in ordine di priorità)
 
 1. **Stampare il QR fisico**: il file è già pronto in `docs/qr-elevator.svg` (logo Path2Class al centro, codice scansionabile). Apri il file nel browser, Ctrl+P, stampa A4, plastifica e attacca davanti all'ascensore del 1° piano.
-2. **Testare YOLO nel corridoio reale**: il modello è integrato e funzionante online — verificare le detection sul campo (1° piano, dall'ascensore all'Aula 124). Se accuratezza insufficiente, raccogliere più foto del corridoio e ri-allenare con `python yolo/scripts/train.py`.
+2. **Tarare i trigger YOLO nel corridoio reale**: i 6 step usano condizioni composite (count, position, growing, closeTogether) e tempi di dwell. Probabilmente serviranno aggiustamenti dopo camminate di test. Tutti i parametri vivono in `web/src/data/corridor.json` — cambiare e committare.
 3. **Test su utenti reali**: far provare l'app a 3-5 persone che non conoscono il corridoio. Notare dove si bloccano, cosa fraintendono, se l'assistente AI risponde bene.
 4. **Estendere la mappa oltre il singolo corridoio**: collegare il grafo completo del backend (più edifici e piani) alla nuova interfaccia. Questo è un lavoro più grosso e dipende da quanto si vuole spingere la tesi.
 

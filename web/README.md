@@ -18,7 +18,6 @@ surfaces, warm sand background, and cyan accents.
 - **react-i18next** — IT / EN / PT (IT primary)
 - **Lucide React** — available; custom inline SVG used where 1:1 match matters
 - **@tensorflow/tfjs** — installed, CPU backend, real YOLOv8n inference active
-- **Guided navigation chatbot** — deterministic 5-step Q&A flow inside the assistant sheet, runs client-side without the LLM (works even when Groq isn't configured)
 - **Supabase Edge Functions** — `chat-assistant` streams Groq (Llama 3.3 70B) responses
 
 This is a plain web app, not a PWA — no manifest, no service worker, no "add to home screen". Open it in a mobile browser and use it like any other website.
@@ -27,34 +26,43 @@ This is a plain web app, not a PWA — no manifest, no service worker, no "add t
 
 ```
 web/
-├── public/                 # favicon.svg, logo.png (QR center), logo-splash.png
+├── public/
+│   ├── favicon.svg            # P2 mark on warm beige tile
+│   ├── logo.png               # tightly-cropped P2 mark (QR center)
+│   ├── logo-splash.png        # padded P2 mark for Splash
+│   ├── door-124.jpeg          # real photo of Room 124 door (Destination hero + Arrived thumbnail)
+│   ├── arrows/                # AR PNG arrows (pre-oriented artwork)
+│   │   ├── arrow-straight.png
+│   │   ├── arrow-right.png
+│   │   └── arrow-left.png
+│   └── models/yolov8n_web_model/  # TFJS model shards
 ├── src/
-│   ├── App.tsx             # router + i18n sync + chat-sheet mount
-│   ├── main.tsx            # Vite bootstrap
-│   ├── index.css           # Liquid Glass global tokens + animations
-│   ├── pages/              # Splash, Landing, Destination, CameraPermission,
-│   │                       # ArNav, TextNav, Arrived, DebugGlass
+│   ├── App.tsx                # router + i18n sync + chat-sheet mount
+│   ├── main.tsx               # Vite bootstrap
+│   ├── index.css              # Liquid Glass global tokens + animations
+│   ├── pages/                 # Splash, Landing, Destination, CameraPermission,
+│   │                          # ArNav, TextNav, Arrived, DebugGlass
 │   ├── components/
-│   │   ├── glass/          # GlassCard, GlassButton, GlassChip, GlassIconButton, Icon
-│   │   ├── art/            # DoorArt
-│   │   ├── ar/             # CameraView, AROverlay (Liquid Glass arrow), DeviationAlert
-│   │   ├── text/           # StepList, MiniFloorPlan (L-shape)
-│   │   └── assistant/      # AssistantFab, AssistantSheet, ChatMessage,
-│   │                       # TypingIndicator, SuggestionChips, ChatComposer
+│   │   ├── glass/             # GlassCard, GlassButton, GlassChip, GlassIconButton, Icon
+│   │   ├── art/               # DoorArt (renders /door-124.jpeg)
+│   │   ├── ar/                # CameraView, AROverlay (PNG arrows), DeviationAlert
+│   │   ├── text/              # StepList, MiniFloorPlan (L-shape, 6 nodes)
+│   │   └── assistant/         # AssistantFab, AssistantSheet (opaque), ChatMessage,
+│   │                          # TypingIndicator, SuggestionChips, ChatComposer
 │   ├── services/
 │   │   ├── detectionService.ts   # REAL YOLOv8n via TF.js, 7 classes, CPU backend
 │   │   ├── assistantService.ts   # SSE client → Supabase edge fn
 │   │   ├── assistantContext.ts   # Builds system-prompt payload
 │   │   └── storageService.ts     # Typed localStorage wrapper (p2c.*)
-│   ├── hooks/useStepAdvancer.ts  # YOLO-driven step advancement + deviation
-│   ├── stores/             # useSessionStore, useAssistantStore
-│   ├── i18n/               # init + locales/{it,en,pt}.json
+│   ├── hooks/useStepAdvancer.ts  # composite trigger evaluation + minDwellMs + deviation
+│   ├── stores/                # useSessionStore, useAssistantStore
+│   ├── i18n/                  # init + locales/{it,en,pt}.json
 │   └── data/
-│       ├── corridor.json   # 8-step machine, wrongTrigger on step 0, wrongTimeoutMs on step 5
-│       └── guidedNavigation.ts  # deterministic Yes/No guided dialogue
+│       ├── corridor.json      # 6-step machine, composite AND triggers, per-step dwell
+│       └── guidedNavigation.ts  # legacy Yes/No flow (not invoked by UI)
 ├── tailwind.config.js
 ├── vite.config.ts
-└── .env.example            # VITE_ASSISTANT_ENDPOINT template
+└── .env.example               # VITE_ASSISTANT_ENDPOINT template
 ```
 
 The Supabase edge function lives outside this package at
@@ -106,15 +114,15 @@ Splash → Landing → Destination → CameraPermission → ArNav → Arrived
 ```
 
 - **Splash** `/` — welcome screen seen after scanning the QR. Logo (float-y animation), hero copy with brand inline (`path2class`), 3 step cards (Search · Follow · Arrive), "Get started" CTA. Forwards `?loc=` to `/landing`.
-- **Landing** `/landing` — location card, language (IT/EN/PT cycle), accessibility toggle, search → autocomplete, Recents, Nearby. Accepts `?loc=<key>` QR deeplinks; unknown codes render an error card.
-- **Destination** `/destination` — door art, accessibility chip, ETA + distance, AR / text CTAs.
+- **Landing** `/landing` — location card, language (IT/EN/PT cycle), accessibility toggle, search → autocomplete, Recents, Nearby. The Nearby list now shows *International & Employability Office* (replacing the old generic "Notice board"). Accepts `?loc=<key>` QR deeplinks; unknown codes render an error card.
+- **Destination** `/destination` — real photo of the Aula 124 door (loaded from `/door-124.jpeg`), accessibility chip, ETA (~1 min) + distance (32 m), AR / text CTAs.
 - **CameraPermission** `/permission` — pre-flight explainer.
-- **AR Navigation** `/navigate/ar` — live camera feed + Liquid Glass cyan arrow (rotates ±35° for turns) + bbox highlights from `detectionService` + Demo pill (Wrong turn / Next / Arrive / A11y). No on-screen instruction banner: only the arrow + bbox + deviation alert. Camera errors redirect to `/navigate/text`.
-- **Text Navigation** `/navigate/text` — 4 simple steps + L-shaped mini floor plan (INIZIO marker, perpendicular branch ending at Room 124).
-- **Arrived** `/arrived` — confetti + match-confirmation card. Pushes the destination to `p2c.recent`.
+- **AR Navigation** `/navigate/ar` — live camera feed + cyan PNG arrow + per-step notice banner + deviation alert. **No detection bboxes** are drawn (YOLO runs invisible in the background) and **no demo affordances** (the pill with Wrong turn / Next / Arrive / A11y was removed). Camera errors redirect to `/navigate/text`.
+- **Text Navigation** `/navigate/text` — 4 simple steps + L-shaped mini floor plan (6 nodes following the 6 corridor steps).
+- **Arrived** `/arrived` — confetti + match-confirmation card (same door photo as a 56×56 thumbnail). Pushes the destination to `p2c.recent`.
 - **Debug** `/debug/glass` — renders every glass variant in isolation. Not linked from the main flow.
 
-The **AI Assistant** overlays every screen except Splash / Destination / Permission. Suggestion chips are scoped to the active route.
+The **AI Assistant** overlays every screen except Splash / Destination / Permission. Suggestion chips are scoped to the active route. The sheet is now ~97% opaque (warm-sand) with a strong blur so background content no longer bleeds through; the deterministic "guided Yes/No" mode was removed and the start chip just sends a regular LLM message.
 
 ## State & persistence
 
@@ -122,22 +130,44 @@ The **AI Assistant** overlays every screen except Splash / Destination / Permiss
 
 ## Navigation step machine
 
-The route from elevator to Room 124 is an 8-step machine in [src/data/corridor.json](src/data/corridor.json). Each step has a YOLO `trigger` class — when seen for `minFrames` consecutive frames above `minConfidence`, `useStepAdvancer` advances to the next step. The current step's `arrow` field rotates the AR overlay (`right` / `left` = ±35°, `straight` = 0°).
+The route from elevator to Room 124 is a **6-step** machine in [src/data/corridor.json](src/data/corridor.json). Each step's `trigger` is an array of conditions that must **all** hold (AND) for `minFrames` consecutive frames at `minConfidence`. A condition supports:
+
+- **`class`** — YOLO class (`door` / `signal` / `elevator` / `bin` / `painting` / `vent` / `path2class`)
+- **`minCount`** — minimum number of matching detections (default 1)
+- **`position`** — bbox-center constraint inside the frame: `left` / `right` / `center` / `top` / `middle` / `bottom` and 4 corner combinations (`top-right`, `middle-left`, etc.). Thresholds: x<0.4 = left, x>0.6 = right, y<0.4 = top, y>0.6 = bottom.
+- **`growing`** — the largest matching bbox area must be trending up across a 6-frame rolling window (avg of last 2 > avg of first 2 × 1.2)
+- **`closeTogether`** — with `minCount ≥ 2`, the matching bboxes must be spatially clustered (centers within 0.35 normalised distance)
+
+Plus per-step:
+
+- **`minDwellMs`** — minimum ms on this step before the next trigger is even evaluated. Prevents rapid-fire advancement when consecutive steps share landmarks (e.g. multiple signals visible before *and* after a turn).
+- **`notice`** — i18n key under `ar.notice.*` for an informational banner shown while on this step. Currently used at step 4: "Your destination is on your right".
+
+The current step's `arrow` field rotates the AR overlay (`right` / `left` / `straight`). With the present PNG asset set, the artwork is already pre-oriented so all three render with 0° CSS rotation.
 
 Two deviation alerts are wired:
 - **Step 0 `wrongTrigger: ["bin"]`** — at the elevator, seeing a bin means the user is facing the wrong way.
-- **Step 5 `wrongTimeoutMs: 10000`** — at the large sign, if no `signal` advances the step within 10 s, the user probably went straight into the wall instead of turning right.
+- **Step 3 `wrongTimeoutMs: 15000`** — at the large sign, if 15 s elapse without advancing, the user probably walked past without turning right.
 
 The text-mode equivalent is intentionally simplified to 4 high-level steps; landmarks live in `text_nav.steps_standard` (and `_accessible`) across the 3 locales.
 
-## Modello YOLO integrato
+## AR arrow
 
-Il modello reale è già attivo. La detection service carica da `public/models/yolov8n_web_model/` al primo avvio della schermata AR.
+PNG-driven (`public/arrows/arrow-{straight,right,left}.png`). The artwork itself encodes the turn direction (curved arrows for right/left), so the code applies **0° CSS rotation** to all three. If you swap in flat arrows that all point up, set `DIRECTION_ROTATION.left = -35` and `DIRECTION_ROTATION.right = 35` in [src/components/ar/AROverlay.tsx](src/components/ar/AROverlay.tsx).
 
-**Classi riconosciute** (ordine dal `metadata.yaml`, devono corrispondere a `CLASS_NAMES` in `detectionService.ts`):
+Rendered in a **220×220 px box** with `object-fit: contain` so portrait and landscape arrows fit centred without distortion. Three nested transform layers prevent CSS conflicts:
+- Outer: positions the arrow at `left: 50%, top: 72%` and centers via `translate(-50%,-50%)`
+- Middle: applies the rotation with a 400 ms ease-out tween
+- Inner: runs the `pulse-cyan` scale/opacity animation. The cyan glow uses a **static** `drop-shadow` filter on this element — it grows/shrinks visually because the parent's `transform: scale` also scales the rendered glow, but the blur radius itself doesn't animate. This avoids the chunky size jumps you'd otherwise get from per-frame filter recomputation.
 
-| Indice | Classe | Label |
-|--------|--------|-------|
+## YOLO model integrated
+
+Already active in production. The detection service loads from `public/models/yolov8n_web_model/` on first entry into the AR screen.
+
+**Recognised classes** (order from `metadata.yaml`, must match `CLASS_NAMES` in `detectionService.ts`):
+
+| Index | Class | Label |
+|-------|-------|-------|
 | 0 | `path2class` | QR Path2Class |
 | 1 | `bin` | Cestino |
 | 2 | `door` | Porta |
@@ -146,9 +176,9 @@ Il modello reale è già attivo. La detection service carica da `public/models/y
 | 5 | `signal` | Segnale |
 | 6 | `vent` | Bocchetta |
 
-Per ri-allenare il modello: aggiorna il dataset su Roboflow, ri-esporta con `model.export(format='tfjs', imgsz=320)` in Colab, sostituisci i file in `public/models/yolov8n_web_model/` e aggiorna `CLASS_NAMES` e `DetectionClass` in `detectionService.ts` se le classi cambiano.
+To re-train: update the Roboflow dataset, re-export with `model.export(format='tfjs', imgsz=320)` in Colab, replace the files in `public/models/yolov8n_web_model/` and update `CLASS_NAMES` / `DetectionClass` in `detectionService.ts` only if the class set changes.
 
-La API pubblica del servizio rimane stabile (`subscribe`, `start`, `stop`, `DetectionFrame`, `Detection`, `BBox` normalizzato 0..1).
+The service's public API is stable (`subscribe`, `start`, `stop`, `DetectionFrame`, `Detection`, `BBox` normalised 0..1). Both `useStepAdvancer` and (formerly) `ArNav` subscribed independently — now only `useStepAdvancer` does, since the AR screen no longer draws bboxes.
 
 ## Supabase deployment
 
@@ -215,3 +245,4 @@ Edit the `MODEL` constant at the top of
 
 - **Recents labels are frozen at arrival time** — if the user changes language after arriving, previously-saved destinations still display in the old language. Acceptable for MVP; fix by storing only `nodeId` and looking up localised strings on render.
 - **iOS requires a user gesture before `DeviceOrientationEvent`** — not currently used for AR compass heading (the arrow direction is driven by the session store). Add a permission request on `/permission` when the feature lands.
+- **`guidedNavigation.ts` is dead code** — no longer invoked since the assistant sheet was simplified to a pure LLM chat. Either delete or wire back as an offline fallback.
