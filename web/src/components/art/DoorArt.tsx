@@ -15,7 +15,7 @@ export function DoorArt(_props: DoorArtProps) {
       alt=""
       draggable={false}
       className="w-full h-full"
-      style={{ objectFit: 'cover', display: 'block' }}
+      style={{ objectFit: 'contain', display: 'block' }}
     />
   );
 }
