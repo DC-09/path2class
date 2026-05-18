@@ -188,6 +188,17 @@ export default function ArNav() {
         </div>
       </div>
 
+      {step.notice && (
+        <div className="absolute left-4 right-4 z-20 fade-in pointer-events-none" style={{ bottom: 100 }}>
+          <GlassCard className="px-4 py-3 flex items-center gap-3 cyan-glow">
+            <Icon name="pin" size={16} className="text-[color:var(--cyan)]" />
+            <div className="text-[13px] font-semibold text-[color:var(--navy)] tight">
+              {t(`ar.notice.${step.notice}`)}
+            </div>
+          </GlassCard>
+        </div>
+      )}
+
       {deviation && <DeviationAlert />}
 
       <div className="absolute right-4 z-20" style={{ bottom: 180 }}>

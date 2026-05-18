@@ -1,5 +1,5 @@
 {
-  "version": 5,
+  "version": 6,
   "locationKey": "elevator_corridor_1f",
   "floor": 1,
   "destination": {
@@ -54,6 +54,17 @@
     },
     {
       "id": 4,
+      "kind": "ar",
+      "arrow": "straight",
+      "notice": "destination_right",
+      "trigger": [
+        { "class": "signal", "minCount": 2 }
+      ],
+      "minConfidence": 0.3,
+      "minFrames": 2
+    },
+    {
+      "id": 5,
       "kind": "arrived",
       "arrow": "straight",
       "trigger": [

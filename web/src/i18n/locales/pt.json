@@ -87,6 +87,9 @@
       "aria": "Direção errada, recalculando rota",
       "title": "Direção errada",
       "body": "Recalculando sua rota…"
+    },
+    "notice": {
+      "destination_right": "O destino está à sua direita"
     }
   },
   "text_nav": {

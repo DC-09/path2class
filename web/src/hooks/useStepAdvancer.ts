@@ -45,6 +45,8 @@ export interface NavigationStep {
   wrongMinFrames?: number;
   /** If set, fire deviation after this many ms of no advancement. */
   wrongTimeoutMs?: number;
+  /** Optional i18n key (under ar.notice.*) for an info banner shown while on this step. */
+  notice?: string;
 }
 
 interface AdvancerOptions {

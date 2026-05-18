@@ -87,6 +87,9 @@
       "aria": "Wrong direction, recalculating route",
       "title": "Wrong direction",
       "body": "Recalculating your route…"
+    },
+    "notice": {
+      "destination_right": "Your destination is on your right"
     }
   },
   "text_nav": {

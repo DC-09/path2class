@@ -87,6 +87,9 @@
       "aria": "Direzione sbagliata, ricalcolo del percorso",
       "title": "Direzione sbagliata",
       "body": "Ricalcolo del percorso…"
+    },
+    "notice": {
+      "destination_right": "La destinazione si trova sulla tua destra"
     }
   },
   "text_nav": {
