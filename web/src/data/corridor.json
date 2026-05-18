@@ -4,8 +4,8 @@
   "floor": 1,
   "destination": {
     "nodeId": "room_124",
-    "etaMinutes": { "standard": 2, "accessible": 3 },
-    "distanceMeters": 42
+    "etaMinutes": { "standard": 1, "accessible": 2 },
+    "distanceMeters": 32
   },
   "steps": [
     {
