@@ -11,12 +11,7 @@ import { AssistantFab } from '../components/assistant/AssistantFab';
 import { GlassCard, Icon } from '../components/glass';
 import { detectionService, type Detection } from '../services/detectionService';
 import { useSessionStore } from '../stores/useSessionStore';
-import {
-  useStepAdvancer,
-  summarizeTrigger,
-  countByClass,
-  type NavigationStep,
-} from '../hooks/useStepAdvancer';
+import { useStepAdvancer, type NavigationStep } from '../hooks/useStepAdvancer';
 import corridor from '../data/corridor.json';
 
 const DEVIATION_DURATION_MS = 2200;
@@ -34,7 +29,6 @@ export default function ArNav() {
   const cameraRef = useRef<CameraViewHandle>(null);
 
   const accessibility = useSessionStore((s) => s.accessibility);
-  const toggleAccessibility = useSessionStore((s) => s.toggleAccessibility);
   const currentStep = useSessionStore((s) => s.currentStep);
   const setCurrentStep = useSessionStore((s) => s.setCurrentStep);
   const setArrowDirection = useSessionStore((s) => s.setArrowDirection);
@@ -104,14 +98,6 @@ export default function ArNav() {
         accessibility={accessibility}
       />
 
-      {/* Debug overlay — step machine state visible on screen. */}
-      <DebugOverlay
-        currentStep={currentStep}
-        step={step}
-        nextStep={STEPS[currentStep + 1]}
-        detections={detections}
-      />
-
       {/* Top status bar */}
       <div className="absolute top-12 left-4 right-4 z-20">
         <GlassCard className="px-4 py-2.5 flex items-center justify-between">
@@ -155,39 +141,6 @@ export default function ArNav() {
         </button>
       </div>
 
-      {/* Demo controls pill */}
-      <div className="absolute left-4 bottom-4 z-20">
-        <div className="glass rounded-full px-2 py-1.5 flex items-center gap-1 text-[10px]">
-          <span className="text-[color:var(--navy)]/50 trk-wide uppercase px-2">
-            {t('ar.demo.label')}
-          </span>
-          <button
-            onClick={() => setDeviation(true)}
-            className="glass-dim rounded-full px-2.5 py-1 press transition-smooth text-[color:var(--navy)]"
-          >
-            {t('ar.demo.wrong_turn')}
-          </button>
-          <button
-            onClick={() => setCurrentStep(Math.min(currentStep + 1, STEPS.length - 1))}
-            className="glass-dim rounded-full px-2.5 py-1 press transition-smooth text-[color:var(--navy)]"
-          >
-            Next
-          </button>
-          <button
-            onClick={() => navigate('/arrived')}
-            className="glass-dim rounded-full px-2.5 py-1 press transition-smooth text-[color:var(--navy)]"
-          >
-            {t('ar.demo.arrive')}
-          </button>
-          <button
-            onClick={toggleAccessibility}
-            className="glass-dim rounded-full px-2.5 py-1 press transition-smooth text-[color:var(--navy)]"
-          >
-            {t('ar.demo.a11y')}
-          </button>
-        </div>
-      </div>
-
       {step.notice && (
         <div className="absolute left-4 right-4 z-20 fade-in pointer-events-none" style={{ bottom: 100 }}>
           <GlassCard className="px-4 py-3 flex items-center gap-3 cyan-glow">
@@ -203,67 +156,6 @@ export default function ArNav() {
 
       <div className="absolute right-4 z-20" style={{ bottom: 180 }}>
         <AssistantFab positioned />
-      </div>
-    </div>
-  );
-}
-
-interface DebugOverlayProps {
-  currentStep: number;
-  step: NavigationStep;
-  nextStep: NavigationStep | undefined;
-  detections: readonly Detection[];
-}
-
-function DebugOverlay({ currentStep, step, nextStep, detections }: DebugOverlayProps) {
-  const minConf = nextStep?.minConfidence ?? 0.3;
-  const counts = countByClass(detections, minConf);
-  const seen =
-    Object.entries(counts)
-      .map(([k, v]) => `${k}×${v}`)
-      .join(' ') || '—';
-  const needs = nextStep ? summarizeTrigger(nextStep.trigger) : '—';
-
-  // Live dwell countdown — re-renders every 200ms while a dwell is active.
-  const [stepStartTime, setStepStartTime] = useState(performance.now());
-  useEffect(() => {
-    setStepStartTime(performance.now());
-  }, [currentStep]);
-  const [, setTick] = useState(0);
-  useEffect(() => {
-    if (!step.minDwellMs) return;
-    const id = window.setInterval(() => setTick((n) => n + 1), 200);
-    return () => window.clearInterval(id);
-  }, [step.minDwellMs, currentStep]);
-
-  let dwellLine: string | null = null;
-  if (step.minDwellMs) {
-    const elapsed = performance.now() - stepStartTime;
-    const remaining = Math.max(0, step.minDwellMs - elapsed);
-    dwellLine = `dwell: ${(elapsed / 1000).toFixed(1)}s / ${(step.minDwellMs / 1000).toFixed(1)}s ${
-      remaining > 0 ? '⏳ waiting' : '✓ unlocked'
-    }`;
-  }
-
-  return (
-    <div className="absolute top-[110px] left-4 right-4 z-20 pointer-events-none">
-      <div
-        className="rounded-2xl px-3 py-2 text-[10px] font-mono leading-tight text-[color:var(--navy)]"
-        style={{
-          background: 'rgba(244,243,239,0.85)',
-          backdropFilter: 'blur(8px)',
-          WebkitBackdropFilter: 'blur(8px)',
-          boxShadow: '0 0 0 1px rgba(30,58,95,0.1)',
-        }}
-      >
-        <div className="font-semibold">
-          STEP {currentStep} → {currentStep + 1} · arrow:{step.arrow} · kind:{step.kind}
-        </div>
-        <div>see: {seen}</div>
-        <div>
-          need: {needs} (conf≥{minConf}, frames≥{nextStep?.minFrames ?? 0})
-        </div>
-        {dwellLine && <div>{dwellLine}</div>}
       </div>
     </div>
   );
