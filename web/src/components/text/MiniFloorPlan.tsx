@@ -10,23 +10,19 @@ export interface MiniFloorPlanProps {
  * L-shape: a long horizontal stretch starting at the QR/elevator, then a
  * perpendicular branch on the right ending at Room 124.
  *
- * The 8 step positions map to the 8 entries in `corridor.json` steps.
+ * The 5 node positions map to the 5 entries in `corridor.json` steps.
  */
 export function MiniFloorPlan({ stepIndex }: MiniFloorPlanProps) {
   const { t } = useTranslation();
 
-  // 8 positions, one per corridor.json step. Spaced so the user dot moves
-  // noticeably between consecutive steps. Step 0 sits clearly past the
+  // 5 positions, one per corridor.json step. Step 0 sits clearly past the
   // INIZIO marker so the start label is never obscured by the dot.
   const nodes: Array<[number, number]> = [
-    [78, 50], // 0 — just past INIZIO (elevator / QR)
-    [135, 50], // 1 — painting
-    [185, 50], // 2 — fire-alarm door
-    [230, 50], // 3 — past door
-    [275, 50], // 4 — bathroom sign
-    [305, 50], // 5 — large sign (turn point)
-    [320, 95], // 6 — past the right turn
-    [320, 122], // 7 — at Room 124
+    [78, 50], // 0 — at INIZIO (elevator / QR), facing forward
+    [90, 50], // 1 — same area, after YOLO confirms (arrow → right)
+    [200, 50], // 2 — past the fire-alarm door, mid-corridor
+    [305, 50], // 3 — at the large sign (turn point, arrow → right)
+    [320, 122], // 4 — at Room 124 (two doors close together)
   ];
   const pathD = nodes
     .map((n, i) => (i === 0 ? `M${n[0]} ${n[1]}` : `L${n[0]} ${n[1]}`))

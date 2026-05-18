@@ -1,5 +1,5 @@
 {
-  "version": 4,
+  "version": 5,
   "locationKey": "elevator_corridor_1f",
   "floor": 1,
   "destination": {
@@ -11,68 +11,56 @@
     {
       "id": 0,
       "kind": "qr",
+      "arrow": "straight",
       "trigger": [],
-      "arrow": "right",
       "minConfidence": 0,
       "minFrames": 0,
       "wrongTrigger": ["bin"],
-      "wrongMinFrames": 3
+      "wrongMinFrames": 4
     },
     {
       "id": 1,
       "kind": "ar",
-      "trigger": ["painting"],
-      "arrow": "straight",
-      "minConfidence": 0.5,
+      "arrow": "right",
+      "trigger": [
+        { "class": "signal", "minCount": 3 },
+        { "class": "elevator", "minCount": 2 }
+      ],
+      "minConfidence": 0.4,
       "minFrames": 3
     },
     {
       "id": 2,
       "kind": "ar",
-      "trigger": ["signal"],
       "arrow": "straight",
-      "minConfidence": 0.5,
+      "trigger": [
+        { "class": "door", "position": "left" },
+        { "class": "door", "position": "center", "growing": true }
+      ],
+      "minConfidence": 0.4,
       "minFrames": 3
     },
     {
       "id": 3,
       "kind": "ar",
-      "trigger": ["door"],
-      "arrow": "straight",
-      "minConfidence": 0.5,
-      "minFrames": 3
+      "arrow": "right",
+      "trigger": [
+        { "class": "door", "position": "left" },
+        { "class": "signal", "position": "top" },
+        { "class": "signal", "position": "middle-right" }
+      ],
+      "minConfidence": 0.4,
+      "minFrames": 3,
+      "wrongTimeoutMs": 15000
     },
     {
       "id": 4,
-      "kind": "ar",
-      "trigger": ["signal"],
-      "arrow": "straight",
-      "minConfidence": 0.5,
-      "minFrames": 3
-    },
-    {
-      "id": 5,
-      "kind": "ar",
-      "trigger": ["signal"],
-      "arrow": "right",
-      "minConfidence": 0.5,
-      "minFrames": 3,
-      "wrongTimeoutMs": 10000
-    },
-    {
-      "id": 6,
-      "kind": "ar",
-      "trigger": ["signal"],
-      "arrow": "straight",
-      "minConfidence": 0.5,
-      "minFrames": 3
-    },
-    {
-      "id": 7,
       "kind": "arrived",
-      "trigger": ["door"],
       "arrow": "straight",
-      "minConfidence": 0.5,
+      "trigger": [
+        { "class": "door", "minCount": 2, "position": "right", "closeTogether": true }
+      ],
+      "minConfidence": 0.4,
       "minFrames": 3
     }
   ]
