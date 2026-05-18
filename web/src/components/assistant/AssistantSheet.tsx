@@ -13,18 +13,10 @@ import {
   streamAssistant,
 } from '../../services/assistantService';
 import { buildAssistantContext } from '../../services/assistantContext';
-import { GUIDED_TOTAL_STEPS, interpretYesNo } from '../../data/guidedNavigation';
-
-const GUIDED_START_TOKEN = '__guided_start__';
 
 /**
  * Slide-up bottom sheet with the streaming AI chat.
  * Mounted at root; its visibility is driven by `useAssistantStore.open`.
- *
- * Also hosts the deterministic "guided navigation" flow — a preset Q&A
- * that walks the user from the QR checkpoint to Room 124 without needing
- * the LLM. The flow lives entirely on the client; see
- * `data/guidedNavigation.ts` and the i18n keys under `assistant.guided`.
  */
 export function AssistantSheet() {
   const { t, i18n } = useTranslation();
@@ -37,11 +29,9 @@ export function AssistantSheet() {
   const messages = useAssistantStore((s) => s.messages);
   const isTyping = useAssistantStore((s) => s.isTyping);
   const streaming = useAssistantStore((s) => s.streaming);
-  const guidedStep = useAssistantStore((s) => s.guidedStep);
   const appendMessage = useAssistantStore((s) => s.appendMessage);
   const setIsTyping = useAssistantStore((s) => s.setIsTyping);
   const setStreaming = useAssistantStore((s) => s.setStreaming);
-  const setGuidedStep = useAssistantStore((s) => s.setGuidedStep);
 
   const language = useSessionStore((s) => s.language);
   const accessibility = useSessionStore((s) => s.accessibility);
@@ -78,75 +68,15 @@ export function AssistantSheet() {
     return () => window.removeEventListener('keydown', onKey);
   }, [open, close]);
 
-  const startGuided = useCallback(() => {
-    appendMessage({ role: 'user', content: t('assistant.guided.start_chip') });
-    appendMessage({ role: 'assistant', content: t('assistant.guided.intro') });
-    appendMessage({
-      role: 'assistant',
-      content: t('assistant.guided.steps.1.message'),
-    });
-    setGuidedStep(1);
-  }, [appendMessage, setGuidedStep, t]);
-
-  const advanceGuided = useCallback(
-    (answer: 'yes' | 'no') => {
-      if (guidedStep === null) return;
-      appendMessage({
-        role: 'user',
-        content: t(`assistant.guided.${answer}`),
-      });
-
-      if (answer === 'no') {
-        appendMessage({
-          role: 'assistant',
-          content: t(`assistant.guided.steps.${guidedStep}.help`),
-        });
-        return;
-      }
-
-      const next = guidedStep + 1;
-      if (next > GUIDED_TOTAL_STEPS) {
-        appendMessage({
-          role: 'assistant',
-          content: t('assistant.guided.arrived'),
-        });
-        setGuidedStep(null);
-        return;
-      }
-      appendMessage({
-        role: 'assistant',
-        content: t(`assistant.guided.steps.${next}.message`),
-      });
-      setGuidedStep(next);
-    },
-    [appendMessage, guidedStep, setGuidedStep, t],
-  );
-
   const suggestions = useMemo(() => {
-    if (guidedStep !== null) return [];
     const startChip = t('assistant.guided.start_chip');
-    return [{ id: GUIDED_START_TOKEN, label: startChip }, ...pickSuggestions(location.pathname)];
-  }, [location.pathname, guidedStep, t]);
+    return [{ id: startChip, label: startChip }, ...pickSuggestions(location.pathname)];
+  }, [location.pathname, t]);
 
   const send = useCallback(
     async (text: string) => {
       const trimmed = text.trim();
       if (!trimmed || isTyping || streaming) return;
-
-      // Guided flow: short-circuit the LLM, interpret as Sì/No.
-      if (guidedStep !== null) {
-        const interpreted = interpretYesNo(trimmed);
-        if (interpreted) {
-          advanceGuided(interpreted);
-        } else {
-          appendMessage({ role: 'user', content: trimmed });
-          appendMessage({
-            role: 'assistant',
-            content: t('assistant.guided.didnt_understand'),
-          });
-        }
-        return;
-      }
 
       appendMessage({ role: 'user', content: trimmed });
       setIsTyping(true);
@@ -195,8 +125,6 @@ export function AssistantSheet() {
     [
       isTyping,
       streaming,
-      guidedStep,
-      advanceGuided,
       appendMessage,
       setIsTyping,
       setStreaming,
@@ -210,14 +138,8 @@ export function AssistantSheet() {
   );
 
   const onChipPick = useCallback(
-    (chipId: string) => {
-      if (chipId === GUIDED_START_TOKEN) {
-        startGuided();
-        return;
-      }
-      send(chipId);
-    },
-    [startGuided, send],
+    (label: string) => send(label),
+    [send],
   );
 
   if (!open) return null;
@@ -238,12 +160,14 @@ export function AssistantSheet() {
         onClick={(e) => e.stopPropagation()}
       >
         <div
-          className="glass-strong h-full flex flex-col"
+          className="h-full flex flex-col"
           style={{
             borderTopLeftRadius: 32,
             borderTopRightRadius: 32,
-            borderBottom: 'none',
-            background: 'rgba(255,255,255,0.62)',
+            background: 'rgba(244,243,239,0.97)',
+            backdropFilter: 'blur(24px) saturate(1.4)',
+            WebkitBackdropFilter: 'blur(24px) saturate(1.4)',
+            boxShadow: '0 -8px 40px -4px rgba(30,58,95,0.15), 0 0 0 1px rgba(255,255,255,0.6) inset',
           }}
         >
           {/* drag handle */}
@@ -262,9 +186,7 @@ export function AssistantSheet() {
                   {assistantTitle(i18n.language)}
                 </div>
                 <div className="text-[10px] text-[color:var(--navy)]/55">
-                  {guidedStep !== null
-                    ? `${guidedStepLabel(i18n.language)} ${guidedStep}/${GUIDED_TOTAL_STEPS}`
-                    : 'On-corridor help · Path2Class'}
+                  On-corridor help · Path2Class
                 </div>
               </div>
             </div>
@@ -299,31 +221,10 @@ export function AssistantSheet() {
             )}
           </div>
 
-          {/* Quick-reply row: Sì/No when in guided mode, suggestions otherwise. */}
-          {guidedStep !== null ? (
-            <div className="px-4 pt-1 pb-2 flex gap-2 overflow-x-auto no-scrollbar">
-              <button
-                onClick={() => advanceGuided('yes')}
-                className="glass rounded-full px-4 py-1.5 text-[12px] font-semibold text-[color:var(--navy)] press transition-smooth shrink-0 cyan-glow"
-              >
-                {t('assistant.guided.yes')}
-              </button>
-              <button
-                onClick={() => advanceGuided('no')}
-                className="glass rounded-full px-4 py-1.5 text-[12px] font-semibold text-[color:var(--navy)] press transition-smooth shrink-0"
-              >
-                {t('assistant.guided.no')}
-              </button>
-            </div>
-          ) : (
-            <SuggestionChips
-              suggestions={suggestions.map((s) => s.label)}
-              onPick={(label) => {
-                const match = suggestions.find((s) => s.label === label);
-                onChipPick(match?.id ?? label);
-              }}
-            />
-          )}
+          <SuggestionChips
+            suggestions={suggestions.map((s) => s.label)}
+            onPick={onChipPick}
+          />
 
           <div className="px-4 pb-5 pt-1">
             <ChatComposer
@@ -384,12 +285,6 @@ function assistantTitle(lang: string): string {
   if (lang.startsWith('it')) return 'Assistente';
   if (lang.startsWith('pt')) return 'Assistente';
   return 'Assistant';
-}
-
-function guidedStepLabel(lang: string): string {
-  if (lang.startsWith('it')) return 'Passo guidato';
-  if (lang.startsWith('pt')) return 'Passo guiado';
-  return 'Guided step';
 }
 
 function errorMessage(err: unknown, lang: string): string {
