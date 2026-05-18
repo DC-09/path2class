@@ -9,7 +9,7 @@ import {
 } from '../components/ar';
 import { AssistantFab } from '../components/assistant/AssistantFab';
 import { GlassCard, Icon } from '../components/glass';
-import { detectionService, type Detection } from '../services/detectionService';
+import { detectionService } from '../services/detectionService';
 import { useSessionStore } from '../stores/useSessionStore';
 import { useStepAdvancer, type NavigationStep } from '../hooks/useStepAdvancer';
 import corridor from '../data/corridor.json';
@@ -28,12 +28,10 @@ export default function ArNav() {
   const { t } = useTranslation();
   const cameraRef = useRef<CameraViewHandle>(null);
 
-  const accessibility = useSessionStore((s) => s.accessibility);
   const currentStep = useSessionStore((s) => s.currentStep);
   const setCurrentStep = useSessionStore((s) => s.setCurrentStep);
   const setArrowDirection = useSessionStore((s) => s.setArrowDirection);
 
-  const [detections, setDetections] = useState<readonly Detection[]>([]);
   const [deviation, setDeviation] = useState(false);
 
   const step = STEPS[currentStep] ?? STEPS[STEPS.length - 1];
@@ -47,15 +45,8 @@ export default function ArNav() {
   }, [step.arrow, setArrowDirection]);
 
   useEffect(() => {
-    const unsubscribe = detectionService.subscribe((frame) => {
-      setDetections(frame.detections);
-    });
     detectionService.start();
-    return () => {
-      unsubscribe();
-      detectionService.stop();
-      setDetections([]);
-    };
+    return () => detectionService.stop();
   }, []);
 
   const handleArrived = useCallback(() => {
@@ -92,11 +83,7 @@ export default function ArNav() {
     <div className="fixed inset-0 overflow-hidden bg-black">
       <CameraView ref={cameraRef} onError={handleCameraError} />
 
-      <AROverlay
-        arrowDirection={step.arrow}
-        detections={detections}
-        accessibility={accessibility}
-      />
+      <AROverlay arrowDirection={step.arrow} />
 
       {/* Top status bar */}
       <div className="absolute top-12 left-4 right-4 z-20">
