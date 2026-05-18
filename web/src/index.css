@@ -151,13 +151,13 @@ body {
   0%,
   100% {
     transform: scale(1);
-    opacity: 0.94;
-    filter: drop-shadow(0 0 14px rgba(168, 227, 245, 0.55));
+    opacity: 1;
+    filter: drop-shadow(0 0 12px rgba(168, 227, 245, 0.7));
   }
   50% {
-    transform: scale(1.025);
-    opacity: 1;
-    filter: drop-shadow(0 0 22px rgba(168, 227, 245, 0.85));
+    transform: scale(1.05);
+    opacity: 0.85;
+    filter: drop-shadow(0 0 28px rgba(168, 227, 245, 1));
   }
 }
 @keyframes pulse-amber {
@@ -237,7 +237,7 @@ body {
   animation: float-y 4s ease-in-out infinite;
 }
 .pulse-cyan {
-  animation: pulse-cyan 3.8s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+  animation: pulse-cyan 2s ease-in-out infinite;
 }
 .pulse-amber {
   animation: pulse-amber 1.8s ease-in-out infinite;
