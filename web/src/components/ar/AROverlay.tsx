@@ -10,10 +10,16 @@ export interface AROverlayProps {
   accessibility: boolean;
 }
 
+/**
+ * Per-direction CSS rotation applied on top of the PNG. The current PNG set
+ * is pre-oriented (the right/left assets already curve toward their target),
+ * so all three sit at 0°. If you swap in flat arrows that all point up,
+ * change `left` to -35 and `right` to 35.
+ */
 const DIRECTION_ROTATION: Record<ArrowDirection, number> = {
   straight: 0,
-  left: -35,
-  right: 35,
+  left: 0,
+  right: 0,
 };
 
 const ARROW_ASSET: Record<ArrowDirection, string> = {
@@ -22,9 +28,12 @@ const ARROW_ASSET: Record<ArrowDirection, string> = {
   right: '/arrows/arrow-right.png',
 };
 
-/** Rendered size on screen — PNGs should be at least 2× this for crisp retina. */
-const ARROW_WIDTH = 130;
-const ARROW_HEIGHT = 150;
+/**
+ * Square bounding box the arrow art is scaled to fit. `object-fit: contain`
+ * preserves the PNG's intrinsic aspect ratio, so vertical straight and
+ * landscape curved arrows both sit centered in the same footprint.
+ */
+const ARROW_BOX = 160;
 
 /**
  * AR overlay layer — pulsing cyan arrow + per-detection highlight rectangles.
@@ -73,17 +82,25 @@ export function AROverlay({ arrowDirection, detections, accessibility }: AROverl
             transition: 'transform 400ms ease-out',
           }}
         >
-          <div className="pulse-cyan">
+          <div
+            className="pulse-cyan"
+            style={{
+              width: ARROW_BOX,
+              height: ARROW_BOX,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
             <img
               src={arrowSrc}
               alt=""
-              width={ARROW_WIDTH}
-              height={ARROW_HEIGHT}
               draggable={false}
               style={{
                 display: 'block',
-                width: ARROW_WIDTH,
-                height: ARROW_HEIGHT,
+                maxWidth: '100%',
+                maxHeight: '100%',
+                objectFit: 'contain',
                 userSelect: 'none',
               }}
             />
