@@ -36,8 +36,8 @@
       "trigger": [
         { "class": "door", "minCount": 2 }
       ],
-      "minConfidence": 0.4,
-      "minFrames": 3
+      "minConfidence": 0.3,
+      "minFrames": 1
     },
     {
       "id": 3,
