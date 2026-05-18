@@ -224,6 +224,27 @@ function DebugOverlay({ currentStep, step, nextStep, detections }: DebugOverlayP
       .join(' ') || '—';
   const needs = nextStep ? summarizeTrigger(nextStep.trigger) : '—';
 
+  // Live dwell countdown — re-renders every 200ms while a dwell is active.
+  const [stepStartTime, setStepStartTime] = useState(performance.now());
+  useEffect(() => {
+    setStepStartTime(performance.now());
+  }, [currentStep]);
+  const [, setTick] = useState(0);
+  useEffect(() => {
+    if (!step.minDwellMs) return;
+    const id = window.setInterval(() => setTick((n) => n + 1), 200);
+    return () => window.clearInterval(id);
+  }, [step.minDwellMs, currentStep]);
+
+  let dwellLine: string | null = null;
+  if (step.minDwellMs) {
+    const elapsed = performance.now() - stepStartTime;
+    const remaining = Math.max(0, step.minDwellMs - elapsed);
+    dwellLine = `dwell: ${(elapsed / 1000).toFixed(1)}s / ${(step.minDwellMs / 1000).toFixed(1)}s ${
+      remaining > 0 ? '⏳ waiting' : '✓ unlocked'
+    }`;
+  }
+
   return (
     <div className="absolute top-[110px] left-4 right-4 z-20 pointer-events-none">
       <div
@@ -242,6 +263,7 @@ function DebugOverlay({ currentStep, step, nextStep, detections }: DebugOverlayP
         <div>
           need: {needs} (conf≥{minConf}, frames≥{nextStep?.minFrames ?? 0})
         </div>
+        {dwellLine && <div>{dwellLine}</div>}
       </div>
     </div>
   );

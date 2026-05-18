@@ -47,6 +47,13 @@ export interface NavigationStep {
   wrongTimeoutMs?: number;
   /** Optional i18n key (under ar.notice.*) for an info banner shown while on this step. */
   notice?: string;
+  /**
+   * Minimum ms the user must spend on this step before forward-advancement
+   * checks even begin. Useful when the next step's trigger could be satisfied
+   * by the same scene as the current step (e.g. multiple signals visible
+   * before and after a turn).
+   */
+  minDwellMs?: number;
 }
 
 interface AdvancerOptions {
@@ -70,6 +77,8 @@ interface State {
   deviationFiredForStep: number;
   /** Rolling area window per (class+position) key, reset on step change. */
   areaWindows: Map<string, number[]>;
+  /** Timestamp (performance.now) at which the current step was entered. */
+  stepEnteredAt: number;
 }
 
 function bboxCenter(b: BBox): { x: number; y: number } {
@@ -230,6 +239,7 @@ export function useStepAdvancer({
     arrivedFired: false,
     deviationFiredForStep: -1,
     areaWindows: new Map(),
+    stepEnteredAt: 0,
   });
 
   useEffect(() => {
@@ -238,6 +248,7 @@ export function useStepAdvancer({
       stateRef.current.wrongConsecutive = 0;
       stateRef.current.lastStep = currentStep;
       stateRef.current.areaWindows.clear();
+      stateRef.current.stepEnteredAt = performance.now();
     }
   }, [currentStep]);
 
@@ -287,6 +298,18 @@ export function useStepAdvancer({
           }
         } else {
           stateRef.current.wrongConsecutive = 0;
+        }
+      }
+
+      // Dwell gate: don't even consider advancing until the user has spent
+      // at least step.minDwellMs on this step. Avoids rapid-fire advancement
+      // when consecutive steps share landmarks (e.g. many signals visible
+      // both before and after a turn).
+      if (step.minDwellMs) {
+        const elapsed = performance.now() - stateRef.current.stepEnteredAt;
+        if (elapsed < step.minDwellMs) {
+          stateRef.current.consecutive = 0;
+          return;
         }
       }
 

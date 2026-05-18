@@ -23,11 +23,12 @@
       "kind": "ar",
       "arrow": "right",
       "trigger": [
-        { "class": "signal", "minCount": 3 },
+        { "class": "signal", "minCount": 2 },
         { "class": "elevator", "minCount": 2 }
       ],
       "minConfidence": 0.4,
-      "minFrames": 3
+      "minFrames": 3,
+      "minDwellMs": 2500
     },
     {
       "id": 2,
@@ -45,11 +46,11 @@
       "arrow": "right",
       "trigger": [
         { "class": "door", "position": "left" },
-        { "class": "signal", "position": "top" },
-        { "class": "signal", "position": "middle-right" }
+        { "class": "signal", "position": "top" }
       ],
       "minConfidence": 0.4,
       "minFrames": 3,
+      "minDwellMs": 4000,
       "wrongTimeoutMs": 15000
     },
     {
@@ -61,7 +62,8 @@
         { "class": "signal", "minCount": 2 }
       ],
       "minConfidence": 0.3,
-      "minFrames": 2
+      "minFrames": 2,
+      "minDwellMs": 3000
     },
     {
       "id": 5,
