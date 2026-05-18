@@ -151,13 +151,11 @@ body {
   0%,
   100% {
     transform: scale(1);
-    opacity: 1;
-    filter: drop-shadow(0 0 12px rgba(168, 227, 245, 0.7));
+    opacity: 0.95;
   }
   50% {
     transform: scale(1.05);
-    opacity: 0.85;
-    filter: drop-shadow(0 0 28px rgba(168, 227, 245, 1));
+    opacity: 1;
   }
 }
 @keyframes pulse-amber {
@@ -238,6 +236,7 @@ body {
 }
 .pulse-cyan {
   animation: pulse-cyan 2s ease-in-out infinite;
+  filter: drop-shadow(0 0 20px rgba(168, 227, 245, 0.85));
 }
 .pulse-amber {
   animation: pulse-amber 1.8s ease-in-out infinite;
