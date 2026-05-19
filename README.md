@@ -116,32 +116,6 @@ Full directory tree with annotations: [`HANDOFF.md`](HANDOFF.md#directory-struct
 
 ---
 
-## What's done · what's not
-
-**Done**
-- Full UI on production (Splash → Landing → Destination → CameraPermission → AR/Text → Arrived)
-- Real client-side YOLO inference, 6-step machine with composite AND triggers + dwell throttling
-- Two-channel deviation alert (wrong class · wrong timeout)
-- Per-step `notice` banner (currently "Your destination is on your right" at step 4)
-- Real photo of the target classroom door on Destination & Arrived screens
-- AR view production-clean: no demo affordances, no debug overlay, no detection bboxes
-- Liquid Glass design system, full a11y wiring (ARIA, focus rings, prefers-reduced-motion, safe-area insets)
-- Multilingual (IT / EN / PT), language auto-detected on first visit
-- AI assistant streaming live from Groq with a rich RAG system prompt
-
-**Open / known limits**
-- YOLO trigger thresholds and dwell times are first-pass values — need on-site tuning
-- Accessible-route toggle currently mirrors the standard route (no separate stair-free path modelled yet)
-- `backend/` is unused — pending decision on whether to delete, keep as reference, or wire as server-side YOLO
-- Map is a single corridor; extending to multiple buildings/floors is the bigger next step
-- No tests yet
-
-See [`HANDOFF.md`](HANDOFF.md#implementation-status) for the full status breakdown and [`HANDOFF.md`](HANDOFF.md#next-steps-prioritized) for the prioritized next-steps list.
-
----
-
 ## Credits
 
-Master's project by Diego Casati. Built with Claude Code assistance.
-
-Liquid Glass visual language: original prototype in [`PROTOTYPE_REFERENCE.html`](PROTOTYPE_REFERENCE.html).
+Master's project by Diego Casati, Niccolo Asti and Lidia Sapienza
