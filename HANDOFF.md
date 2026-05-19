@@ -188,8 +188,8 @@ Progetto/
 │
 └── yolo/                       # Training pipeline (Roboflow dataset v3)
     ├── config/campus_dataset.yaml
-    ├── datasets/campus/        # empty in repo (committed shards in web/public/models/)
-    └── scripts/                # train.py, evaluate.py, export_model.py
+    ├── models/.gitkeep         # trained weights stay local; deployed shards live in web/public/models/
+    └── scripts/                # train.py, evaluate.py, export_model.py, create_sample_data.py
 ```
 
 ---
