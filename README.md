@@ -76,13 +76,15 @@ The dev server is HTTP only, so the camera doesn't work locally. For mobile/AR t
 ```
 path2class/
 ├── README.md                   This file
-├── HANDOFF.md                  Developer handoff (detailed)
-├── STATO_PROGETTO.md           Non-technical project status (Italian)
+├── LICENSE                     MIT
 ├── Path2Class_Planning_e_Progettazione.md   Original planning doc
 ├── PROTOTYPE_*.{html,jsx}      Static visual prototypes (reference only)
 ├── vercel.json                 Vercel build config (cd web && npm run build)
 │
-├── docs/                       Print-ready QR
+├── docs/
+│   ├── HANDOFF.md              Developer handoff (detailed, English)
+│   ├── PROJECT_STATUS.md       Non-technical project status (English)
+│   └── qr-elevator.svg         Print-ready QR
 ├── scripts/                    Node utilities (QR + favicon generators)
 │
 ├── web/                        ACTIVE FRONTEND
@@ -101,18 +103,18 @@ path2class/
     └── scripts/                train.py · evaluate.py · export_model.py · create_sample_data.py
 ```
 
-Full directory tree with annotations: [`HANDOFF.md`](HANDOFF.md#directory-structure)
+Full directory tree with annotations: [`docs/HANDOFF.md`](docs/HANDOFF.md#directory-structure)
 
 ---
 
 ## Documentation
 
-| Doc | Audience | Language |
-|---|---|---|
-| [`README.md`](README.md) | Anyone visiting the repo (you're here) | English |
-| [`HANDOFF.md`](HANDOFF.md) | A developer picking up the project | English, detailed |
-| [`STATO_PROGETTO.md`](STATO_PROGETTO.md) | Project stakeholders, non-technical reviewers | Italian |
-| [`web/README.md`](web/README.md) | Frontend developers | English, deploy + screen flow + step machine reference |
+| Doc | Audience |
+|---|---|
+| [`README.md`](README.md) | Anyone visiting the repo (you're here) |
+| [`docs/PROJECT_STATUS.md`](docs/PROJECT_STATUS.md) | Project stakeholders, non-technical reviewers |
+| [`docs/HANDOFF.md`](docs/HANDOFF.md) | A developer picking up the project — detailed technical reference |
+| [`web/README.md`](web/README.md) | Frontend developers — deploy, screen flow, step machine reference |
 
 ---
 

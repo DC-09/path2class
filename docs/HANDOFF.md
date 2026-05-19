@@ -81,8 +81,8 @@ The web app **does not call the FastAPI backend**. It calls the Supabase edge fu
 ```
 Progetto/
 ├── .gitignore
-├── HANDOFF.md                  # This file
-├── STATO_PROGETTO.md           # Italian, non-technical state-of-project doc
+├── README.md                   # GitHub landing page (tagline, demo link, quick start)
+├── LICENSE                     # MIT
 ├── Path2Class_Planning_e_Progettazione.md   # Original planning doc (legacy)
 ├── PROTOTYPE_GLASS.jsx         # Source-of-truth React prototype (Liquid Glass, legacy)
 ├── PROTOTYPE_REFERENCE.html    # Single-file static prototype (visual reference)
@@ -91,6 +91,8 @@ Progetto/
 ├── .vercel/                    # Local Vercel project link (committed)
 │
 ├── docs/
+│   ├── HANDOFF.md              # This file (developer handoff, English)
+│   ├── PROJECT_STATUS.md       # Non-technical project status (English)
 │   └── qr-elevator.svg         # Print-ready QR with Path2Class logo,
 │                               # encodes path2class.vercel.app/?loc=elevator_corridor_1f
 │
