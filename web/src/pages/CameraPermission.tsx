@@ -34,7 +34,7 @@ export default function CameraPermission() {
             </GlassButton>
             <GlassButton
               onClick={() => navigate('/navigate/text')}
-              className="w-full py-3.5 text-[15px] font-semibold"
+              className="w-full py-3.5 text-[14px]"
             >
               {t('permission.use_text')}
             </GlassButton>

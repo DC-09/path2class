@@ -238,27 +238,6 @@ body {
   animation: pulse-cyan 2s ease-in-out infinite;
   filter: drop-shadow(0 0 20px rgba(168, 227, 245, 0.85));
 }
-
-/* Gemini-style AI gradient pulse: same scale/opacity beat as pulse-cyan
-   but with a warm multi-hue drop-shadow so the AssistantFab reads as
-   "AI / futuristic" instead of brand-cyan. */
-.pulse-ai {
-  animation: pulse-cyan 2.4s ease-in-out infinite;
-  filter: drop-shadow(0 0 18px rgba(155, 114, 203, 0.55));
-}
-
-/* Slow continuous rotation for the conic-gradient shimmer behind the FAB. */
-@keyframes ai-shimmer-rotate {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-.ai-shimmer-rotate {
-  animation: ai-shimmer-rotate 7s linear infinite;
-}
 .pulse-amber {
   animation: pulse-amber 1.8s ease-in-out infinite;
 }
@@ -297,11 +276,9 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .float-y,
   .pulse-cyan,
-  .pulse-ai,
   .pulse-amber,
   .pulse-dot,
   .typing-dot,
-  .ai-shimmer-rotate,
   .fade-in,
   .slide-up,
   .confetti-piece {
